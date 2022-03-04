@@ -86,7 +86,7 @@ sub setLabelData {
 sub getElementData {
     my ($self, $label_id) = @_;
 
-    my $sth = $self->dbh->do("SELECT * FROM ".$self->elements." where label_id =?;", undef, $label_id);
+    my $sth = $self->dbh->do("SELECT * FROM ".$self->elements." where label_id = ?;", undef, $label_id);
     return $sth->fetchrow_hashref;
 
 }
