@@ -120,7 +120,7 @@ sub createTables {
     my $dbh = C4::Context->dbh;
 
     my $labelsTable = $self->get_qualified_table_name('labels');
-    my $elementsTable = $self->get_qualified_table_name('fields');
+    my $fieldsTable = $self->get_qualified_table_name('fields');
 
     $dbh->do("CREATE TABLE IF NOT EXISTS `$labelsTable` (
         `id` int(11) NOT NULL,
@@ -137,7 +137,7 @@ sub createTables {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
     ");
 
-    $dbh->do("CREATE TABLE IF NOT EXISTS `$elementsTable` (
+    $dbh->do("CREATE TABLE IF NOT EXISTS `$fieldsTable` (
         `id` int(11) NOT NULL,
         `label_id` int(11) NOT NULL,
         `type` ENUM('label','signum') NOT NULL,
