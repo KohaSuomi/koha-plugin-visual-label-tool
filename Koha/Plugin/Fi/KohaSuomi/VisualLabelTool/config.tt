@@ -1,0 +1,234 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<title>Koha-Suomi - Tarratulostustyökalu</title>
+	<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<!-- Bootstrap core CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+        <link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
+		<!-- Custom styles for this template-->
+		<script src="https://unpkg.com/vue@2.6.14/dist/vue.min.js"></script>
+		<script src="https://unpkg.com/vuex@3.6.2/dist/vuex.min.js"></script>
+        <script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
+		<script src="https://unpkg.com/vuejs-datepicker"></script>
+		<script src="https://unpkg.com/vuejs-datepicker/dist/locale/translations/fi.js"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+	</head>
+	<body>
+		<!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="main-breadcrumb">
+            <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/cgi-bin/koha/mainpage.pl">Etusivu</a></li>
+            <li class="breadcrumb-item"><a href="/cgi-bin/koha/plugins/plugins-home.pl">Plugit</a></li>
+            <li class="breadcrumb-item"><a href="/cgi-bin/koha/plugins/plugins-home.pl">Tarratulostustyökalu</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Asetukset</li>
+            </ol>
+        </nav>
+        <!-- /Breadcrumb -->
+        <div id="content-wrapper">
+			<div class="container-fluid">
+				<main role="main" class="ml-sm-auto pt-3 px-4">
+					<div id="configApp">
+						<div class="row justify-content-center alert alert-info" role="alert">
+							<ul class="nav">
+								<li class="nav-item pl-2">
+                                    <multiselect v-model="label" value="value" :options="savedLabels" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="Tallennetut pohjat" @input="onLabelChange"></multiselect>
+								</li>
+								<li v-if="label" class="nav-item pl-2">
+                                   <button class="btn btn-info" @click="testPrint($event)">Tulosta testi</button>
+								</li>
+								<li v-if="label" class="nav-item pl-2">
+                                   <button class="btn btn-success" @click="saveLabel($event)">Tallenna</button>
+								</li>
+								<li class="nav-item pl-2">
+									<div class="dropdown float-left mr-2">
+										<button class="btn btn-primary dropdown-toggle" type="button" id="dropdownMenuButton" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+											Luo uusi
+										</button>
+										<div class="dropdown-menu" aria-labelledby="dropdownMenuButton">
+											<a class="dropdown-item" href="#" @click="createLabel()">Tarra</a>
+											<a class="dropdown-item" href="#" @click="createLabel('signum')">Tarra+signum</a>
+										</div>
+									</div>
+								</li>
+							</ul>
+						</div>
+						<div v-if="label" class="container">
+							<div class="row gutters-sm">
+								<div class="col-md-7">
+									<div class="card">
+										<div class="row justify-content-center mt-5"><span class="mr-2">Leveys: {{totalWidth}}mm</span><span>Korkeus: {{totalHeight}}mm</span></div>
+										<div class="row justify-content-center card-body mt-3 mb-5">
+											<div :style="label.dimensions" style="background: #EAF0F6;">
+												<div style="background: #FFF; height: 100%;" class="position-relative">
+													<span v-for="(field, index) in label.fields" :style="field.dimensions" class="position-absolute">
+														{{field.name}}
+													</span>
+												</div>
+											</div>
+											<div v-if="label.signum":style="label.signum.dimensions" style="background: #EAF0F6;">
+												<div style="background: #FFF; height: 100%;" class="position-relative">
+													<span v-for="(field, index) in label.signum.fields" :style="field.dimensions" class="position-absolute">
+														{{field.name}}
+													</span>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+								<div class="col-md-5">
+									<div class="card">
+										<div class="card-header">
+											<ul class="nav nav-tabs card-header-tabs" role="tablist">
+												<li class="nav-item">
+												<a class="nav-link" :class="{active: showTab == 'labelSettings'}" href="#" role="tab" aria-controls="labelSettings" aria-selected="true" @click="showTabs('labelSettings')">Tarra</a>
+												</li>
+												<li class="nav-item">
+												<a class="nav-link"  href="#" :class="{active: showTab == 'labelFields'}" role="tab" aria-controls="labelFields" aria-selected="false" @click="showTabs('labelFields')">Tarran kentät</a>
+												</li>
+												<li v-if="label.signum" class="nav-item">
+												<a class="nav-link" href="#" :class="{active: showTab == 'signumSettings'}" role="tab" aria-controls="signumSettings" aria-selected="false" @click="showTabs('signumSettings')">Signum</a>
+												</li>
+												<li v-if="label.signum" class="nav-item">
+												<a class="nav-link" href="#" :class="{active: showTab == 'signumFields'}" role="tab" aria-controls="signumFields" aria-selected="false" @click="showTabs('signumFields')">Signum kentät</a>
+												</li>
+											</ul>
+										</div>
+										<div class="card-body tab-content">
+											<form>
+												<div v-if="showTab == 'labelSettings'" class="tab-pane active" id="label" role="tabpanel">
+													<div class="form-group">
+														<label for="labelName">Nimi</label>
+														<input type="text" class="form-control" name="labelName" v-model="label.name"/>
+													</div>
+													<div class="form-group">
+														<label for="labelCount">Tarraa arkilla</label>
+														<input type="text" class="form-control" name="labelCount" v-model="label.labelcount"/>
+													</div>
+													<div class="form-group">
+														<label for="labelWidth">Leveys</label>
+														<input type="text" class="form-control" name="labelWidth" v-model="label.dimensions.width"/>
+													</div>
+													<div class="form-group">
+														<label for="labelHeight">Korkeus</label>
+														<input type="text" class="form-control" name="labelHeight" v-model="label.dimensions.height"/>
+													</div>
+													<div class="form-group">
+														<label for="paddingTop">Ylämarginaali </label>
+														<input type="text"  class="form-control" name="paddingTop" v-model="label.dimensions.paddingTop"/>
+													</div>
+													<div class="form-group">
+														<label for="paddingBottom">Alamarginaali </label>
+														<input type="text"  class="form-control" name="paddingBottom" v-model="label.dimensions.paddingBottom"/>
+													</div>
+													<div class="form-group">
+														<label for="paddingLeft">Vasen marginaali </label>
+														<input type="text"  class="form-control" name="paddingLeft" v-model="label.dimensions.paddingLeft"/>
+													</div>
+													<div class="form-group">
+														<label for="paddingRight">Oikea marginaali </label>
+														<input type="text"  class="form-control" name="paddingRight" v-model="label.dimensions.paddingRight"/>
+													</div>
+												</div>
+												<div v-if="showTab == 'labelFields'" class="tab-pane active" id="labelFields" role="tabpanel">
+													<div class="form-group">
+														<div class="input-group mb-3">
+															<span class="mr-3">
+																<multiselect class="float-left" v-model="selectedField" value="value" :options="label.fields" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="Valitse"></multiselect>
+															</span>
+															<span>
+																<div class="input-group mb-3">
+																	<input type="text" class="form-control" name="fieldName"  v-model="fieldName" placeholder="Uusi kenttä" aria-label="Uusi kenttä"/>
+																	<div class="input-group-append">
+																		<button class="btn btn-success" @click="addField($event)">+</button>
+																	</div>
+																</div>
+															</span>
+														</div>
+														<div v-if="selectedField" class="form-group pb-2 border-bottom">
+															<label>Nimi:</label> <input type="text"  class="form-control" name="field" :value="selectedField.name"/>
+															<label>X:</label> <input type="text" v-model="selectedField.dimensions.left"  class="form-control" name="field" :value="selectedField.dimensions.left" @change="updateDimension($event)"/>
+															<label>Y:</label> <input type="text" v-model="selectedField.dimensions.top"  class="form-control" name="field" :value="selectedField.dimensions.top" @change="updateDimension($event)"/>
+															<label>Kirjasinkoko:</label> <input type="text" v-model="selectedField.dimensions.fontSize"  class="form-control" name="field" :value="selectedField.dimensions.fontSize" @change="updateDimension($event)"/>
+														</div>
+													</div>
+												</div>
+												<div v-if="showTab == 'signumSettings' && label.signum" class="tab-pane active" id="signum" role="tabpanel">
+													<div class="form-group">
+														<label for="labelWidth">Leveys</label>
+														<input type="text" class="form-control" name="labelWidth" v-model="label.signum.dimensions.width"/>
+													</div>
+													<div class="form-group">
+														<label for="labelHeight">Korkeus</label>
+														<input type="text" class="form-control" name="labelHeight" v-model="label.signum.dimensions.height"/>
+													</div>
+													<div class="form-group">
+														<label for="paddingTop">Ylämarginaali </label>
+														<input type="text"  class="form-control" name="paddingTop" v-model="label.signum.dimensions.paddingTop"/>
+													</div>
+													<div class="form-group">
+														<label for="paddingBottom">Alamarginaali </label>
+														<input type="text"  class="form-control" name="paddingBottom" v-model="label.signum.dimensions.paddingBottom"/>
+													</div>
+													<div class="form-group">
+														<label for="paddingLeft">Vasen marginaali </label>
+														<input type="text"  class="form-control" name="paddingLeft" v-model="label.signum.dimensions.paddingLeft"/>
+													</div>
+													<div class="form-group">
+														<label for="paddingRight">Oikea marginaali </label>
+														<input type="text"  class="form-control" name="paddingRight" v-model="label.signum.dimensions.paddingRight"/>
+													</div>
+												</div>
+												<div v-if="showTab == 'signumFields' && label.signum" class="tab-pane active" id="signumFields" role="tabpanel">
+													<div class="form-group">
+														<div class="input-group mb-3">
+															<span class="mr-3">
+																<multiselect class="float-left" v-model="selectedField" value="value" :options="label.signum.fields" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="Valitse"></multiselect>
+															</span>
+															<span>
+																<div class="input-group mb-3">
+																	<input type="text" class="form-control" name="fieldName"  v-model="fieldName" placeholder="Uusi kenttä" aria-label="Uusi kenttä"/>
+																	<div class="input-group-append">
+																		<button class="btn btn-success" @click="addField($event, 'signum')">+</button>
+																	</div>
+																</div>
+															</span>
+														</div>
+														<div v-if="selectedField" class="form-group pb-2 border-bottom">
+															<label>Nimi:</label> <input type="text"  class="form-control" name="field" :value="selectedField.name"/>
+															<label>X:</label> <input type="text" v-model="selectedField.dimensions.left"  class="form-control" name="field" :value="selectedField.dimensions.left" @change="updateDimension($event)"/>
+															<label>Y:</label> <input type="text" v-model="selectedField.dimensions.top"  class="form-control" name="field" :value="selectedField.dimensions.top" @change="updateDimension($event)"/>
+															<label>Kirjasinkoko:</label> <input type="text" v-model="selectedField.dimensions.fontSize"  class="form-control" name="field" :value="selectedField.dimensions.fontSize" @change="updateDimension($event)"/>
+														</div>
+													</div>
+												</div>
+											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</main>
+			</div>
+		</div>
+		<!-- Bootstrap core JavaScript
+		================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+		<!-- Icons -->
+		<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+		<script>
+			feather.replace();
+		</script>
+		<script type="module" src="[% PLUGIN_PATH %]/js/config.js"></script>
+	</body>
+</html>

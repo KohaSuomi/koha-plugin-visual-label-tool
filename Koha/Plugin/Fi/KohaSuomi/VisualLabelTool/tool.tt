@@ -1,0 +1,80 @@
+<!DOCTYPE html>
+<html>
+	<head>
+	<title>Koha-Suomi - Tarratulostustyökalu</title>
+	<meta charset="UTF-8">
+		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+		<meta name="description" content="">
+		<meta name="author" content="">
+
+		<!-- Bootstrap core CSS -->
+		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+		<!-- Custom styles for this template-->
+		<script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
+		<script src="https://unpkg.com/vuex@3.6.2/dist/vuex.min.js"></script>
+		<script src="https://unpkg.com/vuejs-datepicker"></script>
+		<script src="https://unpkg.com/vuejs-datepicker/dist/locale/translations/fi.js"></script>
+		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+		<script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+		<link rel="stylesheet" type="text/css" href="https://printjs-4de6.kxcdn.com/print.min.css">
+	</head>
+	<body>
+
+		<!-- Breadcrumb -->
+        <nav aria-label="breadcrumb" class="main-breadcrumb">
+            <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="/cgi-bin/koha/mainpage.pl">Etusivu</a></li>
+            <li class="breadcrumb-item"><a href="/cgi-bin/koha/plugins/plugins-home.pl">Plugit</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Tarratulostustyökalu</li>
+            </ol>
+        </nav>
+        <!-- /Breadcrumb -->
+		<div id="content-wrapper">
+			<div class="container-fluid">
+				<main role="main" class="ml-sm-auto pt-3 px-4">
+				<div id="viewApp">
+				</div>
+				</main>
+			</div>
+		<!-- Bootstrap core JavaScript
+		================================================== -->
+		<!-- Placed at the end of the document so the pages load faster -->
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js" integrity="sha384-ApNbgh9B+Y1QKtv3Rn7W3mgPxhU9K/ScQsAP7hUibX39j7fakFPskvXusvfa0b4Q" crossorigin="anonymous"></script>
+		<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js" integrity="sha384-JZR6Spejh4U02d8jOt6vLEHfe/JQGiRRSQQxSfFWpi1MquVdAyjUar5+76PVCmYl" crossorigin="anonymous"></script>
+		<!-- Icons -->
+		<script src="https://unpkg.com/feather-icons/dist/feather.min.js"></script>
+		<script>
+			feather.replace();
+		</script>
+		<script type="module" src="[% PLUGIN_PATH %]/js/main.js"></script>
+		<link rel="stylesheet" href="[% PLUGIN_PATH %]/css/pdf.css">
+		<style>
+			.odd-cell {
+				background-color: #eee;
+			}
+			.badgebox
+			{
+				opacity: 0;
+			}
+			.badgebox + .badge
+			{
+				text-indent: -999999px;
+				width: 27px;
+				background: #fff;
+			}
+			.badgebox:focus + .badge
+			{
+				box-shadow: inset 0px 0px 5px;
+			}
+
+			.badgebox:checked + .badge
+			{
+				text-indent: 0;
+				color: #000;
+			}
+		</style>
+	</body>
+</html>

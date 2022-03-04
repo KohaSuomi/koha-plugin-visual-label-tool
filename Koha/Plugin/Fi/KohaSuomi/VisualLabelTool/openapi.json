@@ -1,0 +1,52 @@
+{
+  "/labels": {
+    "get": {
+      "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::LabelController#get",
+      "operationId": "GetLabels",
+      "tags": [
+        "labels"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "responses": {
+        "200": {
+          "description": "Saved labels",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "404": {
+          "description": "An error occured",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Labels not found",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::LabelController#set",
+      "operationId": "SetLabels",
+      "tags": [
+        "labels"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "responses": {
+        "201": {
+          "description": "New label created",
+          "schema": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  }
+}
