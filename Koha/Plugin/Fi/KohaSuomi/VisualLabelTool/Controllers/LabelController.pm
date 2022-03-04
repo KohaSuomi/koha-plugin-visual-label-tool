@@ -26,12 +26,12 @@ use Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Labels;
 
 =cut
 
-sub get {
+sub list {
     my $c = shift->openapi->valid_input or return;
 
     try {
-        my $config = Koha::Plugin::Fi::KohaSuomi::OverdueTool::Modules::Config->new();
-        my $response = $config->getConfig();
+        my $labels = Koha::Plugin::Fi::KohaSuomi::OverdueTool::Modules::Labels->new();
+        my $response = $labels->listLabels();
         return $c->render(status => 200, openapi => $response);
     } catch {
         my $error = $_;
@@ -44,8 +44,8 @@ sub set {
 
     my $req  = $c->req->json;
     try {
-        my $config = Koha::Plugin::Fi::KohaSuomi::OverdueTool::Modules::Config->new($req);
-        $config->setConfig();
+        my $labels = Koha::Plugin::Fi::KohaSuomi::OverdueTool::Modules::Labels->new($req);
+        $labels->setLabel();
         return $c->render(status => 200, openapi => {message => "Success"});
     } catch {
         my $error = $_;

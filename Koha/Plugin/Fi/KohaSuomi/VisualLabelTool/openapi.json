@@ -1,8 +1,8 @@
 {
   "/labels": {
     "get": {
-      "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::LabelController#get",
-      "operationId": "GetLabels",
+      "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::LabelController#list",
+      "operationId": "ListLabels",
       "tags": [
         "labels"
       ],

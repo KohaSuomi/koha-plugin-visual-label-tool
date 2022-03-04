@@ -118,14 +118,14 @@ sub createTables {
 
     my $dbh = C4::Context->dbh;
 
-    my $sheetTable = $self->get_qualified_table_name('label_sheets');
-    my $elementTable = $self->get_qualified_table_name('label_elements');
+    my $labelsTable = $self->get_qualified_table_name('labels');
+    my $elementsTable = $self->get_qualified_table_name('elements');
 
-    $dbh->do("CREATE TABLE IF NOT EXISTS `$sheetTable` (
+    $dbh->do("CREATE TABLE IF NOT EXISTS `$labelsTable` (
         `id` int(11) NOT NULL,
         `name` varchar(100) NOT NULL,
         `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
-        `labels` int(11) DEFAULT NULL,
+        `labelcount` int(11) DEFAULT NULL,
         `width` varchar(10) DEFAULT NULL,
         `height` varchar(10) DEFAULT NULL,
         `top` varchar(10) DEFAULT NULL,
@@ -136,17 +136,17 @@ sub createTables {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
     ");
 
-    $dbh->do("CREATE TABLE IF NOT EXISTS `$elementTable` (
+    $dbh->do("CREATE TABLE IF NOT EXISTS `$elementsTable` (
         `id` int(11) NOT NULL,
-        `sheets_id` int(11) NOT NULL,
+        `label_id` int(11) NOT NULL,
         `type` ENUM('label','signum') NOT NULL,
         `name` varchar(100) NOT NULL,
         `top` varchar(10) DEFAULT NULL,
         `left` varchar(10) DEFAULT NULL,
         `fontsize` varchar(10) DEFAULT NULL,
         PRIMARY KEY `id` (`id`),
-        KEY (`sheets_id`),
-        CONSTRAINT `label_sheets_ibfk_1` FOREIGN KEY (`sheets_id`) REFERENCES `$sheetTable` (`id`)
+        KEY (`label_id`),
+        CONSTRAINT `label_ibfk_1` FOREIGN KEY (`label_id`) REFERENCES `$labelsTable` (`id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
     ");
 }

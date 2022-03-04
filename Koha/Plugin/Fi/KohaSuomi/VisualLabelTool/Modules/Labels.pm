@@ -23,6 +23,7 @@ use Scalar::Util qw( blessed );
 use Try::Tiny;
 use JSON;
 use Koha::Plugin::Fi::KohaSuomi::VisualLabelTool;
+use Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Database;
 use C4::Context;
 
 =head new
@@ -37,6 +38,17 @@ sub new {
     $self->{_params} = $params;
     bless($self, $class);
     return $self;
+
+}
+
+sub db {
+    my ($self) = @_;
+    return Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Database->new;
+}
+
+sub listLabels {
+    my ($self) = @_;
+
 
 }
 
