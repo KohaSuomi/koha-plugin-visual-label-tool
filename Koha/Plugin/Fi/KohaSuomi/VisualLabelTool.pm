@@ -120,7 +120,7 @@ sub createTables {
     my $dbh = C4::Context->dbh;
 
     my $labelsTable = $self->get_qualified_table_name('labels');
-    my $elementsTable = $self->get_qualified_table_name('elements');
+    my $elementsTable = $self->get_qualified_table_name('fields');
 
     $dbh->do("CREATE TABLE IF NOT EXISTS `$labelsTable` (
         `id` int(11) NOT NULL,

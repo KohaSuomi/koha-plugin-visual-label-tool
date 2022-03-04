@@ -50,9 +50,9 @@ sub labels {
     return $self->plugin->get_qualified_table_name('labels');
 }
 
-sub elements {
+sub fields {
     my ($self) = @_;
-    return $self->plugin->get_qualified_table_name('elements');
+    return $self->plugin->get_qualified_table_name('fields');
 }
 
 sub dbh {
@@ -83,18 +83,18 @@ sub setLabelData {
     
 }
 
-sub getElementData {
+sub getFieldData {
     my ($self, $label_id) = @_;
 
-    my $sth = $self->dbh->do("SELECT * FROM ".$self->elements." where label_id = ?;", undef, $label_id);
+    my $sth = $self->dbh->do("SELECT * FROM ".$self->fields." where label_id = ?;", undef, $label_id);
     return $sth->fetchrow_hashref;
 
 }
 
-sub setElementData {
+sub setFieldData {
     my ($self, $params) = @_;
 
-    my $sth=$self->dbh->prepare("INSERT INTO ".$self->elements." (label_id,name,type,top,left,fontsize) VALUES (?,?,?,?,?,?)");
+    my $sth=$self->dbh->prepare("INSERT INTO ".$self->fields." (label_id,name,type,top,left,fontsize) VALUES (?,?,?,?,?,?)");
     return $sth->execute($params);
 
 }
