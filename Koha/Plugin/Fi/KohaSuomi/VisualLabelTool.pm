@@ -9,6 +9,7 @@ use base qw(Koha::Plugins::Base);
 ## We will also need to include any Koha libraries we want to access
 use C4::Context;
 use utf8;
+use JSON;
 
 ## Here we set our plugin version
 our $VERSION = "1.0.0";
