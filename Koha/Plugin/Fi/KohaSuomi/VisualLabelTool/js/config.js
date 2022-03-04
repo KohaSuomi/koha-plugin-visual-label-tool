@@ -116,6 +116,14 @@ new Vue({
     },
     saveLabel(e) {
       e.preventDefault();
+      axios
+        .post('/api/v1/contrib/kohasuomi/labels', this.label)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error);
+        });
     },
     testPrint(e) {
       e.preventDefault();

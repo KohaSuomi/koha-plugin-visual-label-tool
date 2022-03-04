@@ -30,7 +30,7 @@ sub list {
     my $c = shift->openapi->valid_input or return;
 
     try {
-        my $labels = Koha::Plugin::Fi::KohaSuomi::OverdueTool::Modules::Labels->new();
+        my $labels = Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Labels->new();
         my $response = $labels->listLabels();
         return $c->render(status => 200, openapi => $response);
     } catch {
@@ -44,12 +44,12 @@ sub set {
 
     my $req  = $c->req->json;
     try {
-        my $labels = Koha::Plugin::Fi::KohaSuomi::OverdueTool::Modules::Labels->new($req);
-        $labels->setLabel();
-        return $c->render(status => 200, openapi => {message => "Success"});
+        my $labels = Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Labels->new();
+        $labels->setLabel($req);
+        return $c->render(status => 201, openapi => {message => "Success"});
     } catch {
         my $error = $_;
-        return $c->render(status => 400, openapi => {message => $error->message});
+        return $c->render(status => 500, openapi => {message => $error->message});
     }
 }
 

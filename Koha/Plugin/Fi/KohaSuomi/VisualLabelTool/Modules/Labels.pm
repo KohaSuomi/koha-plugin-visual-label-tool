@@ -52,4 +52,14 @@ sub listLabels {
 
 }
 
+sub getLabel {
+    my ($self) = @_;
+}
+
+sub setLabel {
+    my ($self, $params) = @_;
+
+    warn Data::Dumper::Dumper $params;
+}
+
 1;

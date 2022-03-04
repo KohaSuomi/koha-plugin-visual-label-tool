@@ -2,7 +2,7 @@
   "/labels": {
     "get": {
       "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::LabelController#list",
-      "operationId": "ListLabels",
+      "operationId": "listLabels",
       "tags": [
         "labels"
       ],
@@ -32,9 +32,20 @@
     },
     "post": {
       "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::LabelController#set",
-      "operationId": "SetLabels",
+      "operationId": "SetLabel",
       "tags": [
         "labels"
+      ],
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "description": "A JSON object containing updated fields",
+          "required": false,
+          "schema": {
+            "type": "object"
+          }
+        }
       ],
       "produces": [
         "application/json"
