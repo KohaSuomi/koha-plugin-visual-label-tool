@@ -62,7 +62,7 @@ sub set {
 sub update {
     my $c = shift->openapi->valid_input or return;
 
-    my $id = $c->validation->param('id');
+    my $id = $c->validation->param('label_id');
     my $req  = $c->req->json;
     try {
         my $labels = Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Labels->new();

@@ -69,7 +69,7 @@
       }
     }
   },
-  "/labels/{id}": {
+  "/labels/{label_id}": {
     "put": {
       "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::LabelController#update",
       "operationId": "UpdateLabel",
@@ -78,7 +78,7 @@
       ],
       "parameters": [
         {
-          "name": "id",
+          "name": "label_id",
           "in": "path",
           "description": "Label identifier",
           "required": true,
