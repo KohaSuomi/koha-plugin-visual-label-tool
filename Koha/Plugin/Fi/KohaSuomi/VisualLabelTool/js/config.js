@@ -14,50 +14,12 @@ new Vue({
     showTab: 'labelSettings',
     totalWidth: '',
     totalHeight: '',
-    savedLabels: [
-      {
-        name: 'Pohja',
-        dimensions: {
-          paddingTop: '5mm',
-          paddingBottom: '5mm',
-          paddingLeft: '5mm',
-          paddingRight: '5mm',
-          width: '100mm',
-          height: '50mm',
-        },
-        fields: [
-          {
-            name: 'title',
-            dimensions: {
-              top: '1mm',
-              left: '1mm',
-              fontSize: '20px',
-            },
-          },
-          {
-            name: 'juupas',
-            dimensions: {
-              top: '5mm',
-              left: '1mm',
-              fontSize: '20px',
-            },
-          },
-        ],
-      },
-    ],
+    savedLabels: [],
     label: null,
-    default: {
-      name: '',
-      dimensions: {
-        paddingTop: '5mm',
-        paddingBottom: '5mm',
-        paddingLeft: '5mm',
-        paddingRight: '5mm',
-        width: '100mm',
-        height: '50mm',
-      },
-      fields: [],
-    },
+    updateButton: false,
+  },
+  created() {
+    this.fetchLabels();
   },
   methods: {
     onLabelChange() {
@@ -69,6 +31,8 @@ new Vue({
         parseInt(this.label.dimensions.height) +
         parseInt(this.label.dimensions.paddingBottom) +
         parseInt(this.label.dimensions.paddingTop);
+      this.updateButton = true;
+      this.selectedField = undefined;
     },
     updateDimension(e) {
       this.label.fields.forEach((element) => {
@@ -78,7 +42,19 @@ new Vue({
       });
     },
     createLabel(type) {
-      const object = Object.create(this.default);
+      this.label = null;
+      this.updateButton = false;
+      const object = Object.create({});
+      object.name = '';
+      object.dimensions = {
+        paddingTop: '5mm',
+        paddingBottom: '5mm',
+        paddingLeft: '5mm',
+        paddingRight: '5mm',
+        width: '100mm',
+        height: '50mm',
+      };
+      object.fields = [];
       if (type == 'signum') {
         object.signum = {
           dimensions: {
@@ -96,6 +72,7 @@ new Vue({
     },
     addField(e, type) {
       e.preventDefault();
+      this.selectedField = undefined;
       const object = Object.create({});
       object.name = this.fieldName;
       object.dimensions = {
@@ -112,7 +89,18 @@ new Vue({
       this.fieldName = '';
     },
     showTabs(val) {
+      this.selectedField = undefined;
       this.showTab = val;
+    },
+    fetchLabels() {
+      axios
+        .get('/api/v1/contrib/kohasuomi/labels')
+        .then((response) => {
+          this.savedLabels = response.data;
+        })
+        .catch((error) => {
+          console.log(error.response.data.message);
+        });
     },
     saveLabel(e) {
       e.preventDefault();
@@ -122,7 +110,18 @@ new Vue({
           console.log(response);
         })
         .catch((error) => {
-          console.log(error);
+          console.log(error.response.data.message);
+        });
+    },
+    updateLabel(e) {
+      e.preventDefault();
+      axios
+        .put('/api/v1/contrib/kohasuomi/labels/' + this.label.id, this.label)
+        .then((response) => {
+          console.log(response);
+        })
+        .catch((error) => {
+          console.log(error.response.data.message);
         });
     },
     testPrint(e) {

@@ -123,7 +123,7 @@ sub createTables {
     my $fieldsTable = $self->get_qualified_table_name('fields');
 
     $dbh->do("CREATE TABLE IF NOT EXISTS `$labelsTable` (
-        `id` int(11) NOT NULL,
+        `id` int(11) NOT NULL AUTO_INCREMENT,
         `name` varchar(100) NOT NULL,
         `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         `labelcount` int(11) DEFAULT NULL,
@@ -133,12 +133,18 @@ sub createTables {
         `left` varchar(10) DEFAULT NULL,
         `right` varchar(10) DEFAULT NULL,
         `bottom` varchar(10) DEFAULT NULL,
+        `signum_width` varchar(10) DEFAULT NULL,
+        `signum_height` varchar(10) DEFAULT NULL,
+        `signum_top` varchar(10) DEFAULT NULL,
+        `signum_left` varchar(10) DEFAULT NULL,
+        `signum_right` varchar(10) DEFAULT NULL,
+        `signum_bottom` varchar(10) DEFAULT NULL,
         PRIMARY KEY `id` (`id`)
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
     ");
 
     $dbh->do("CREATE TABLE IF NOT EXISTS `$fieldsTable` (
-        `id` int(11) NOT NULL,
+        `id` int(11) NOT NULL AUTO_INCREMENT,
         `label_id` int(11) NOT NULL,
         `type` ENUM('label','signum') NOT NULL,
         `name` varchar(100) NOT NULL,

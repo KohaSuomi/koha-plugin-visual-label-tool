@@ -63,40 +63,66 @@ sub dbh {
 sub getLabelsData {
     my ($self) = @_;
 
-    my $sth = $self->dbh->do("SELECT * FROM ".$self->labels.";");
-    return $sth->fetchrow_hashref;
+    my $sth = $self->dbh->prepare("SELECT * FROM ".$self->labels.";");
+    $sth->execute();
+    return $sth->fetchall_arrayref({});
 }
 
 sub getLabelData {
     my ($self, $id) = @_;
 
-    my $sth = $self->dbh->do("SELECT * FROM ".$self->labels." WHERE id = ?;", undef, $id);
+    my $sth = $self->dbh->prepare("SELECT * FROM ".$self->labels." WHERE id = ?;");
+    $sth->execute($id);
     return $sth->fetchrow_hashref;
 
 }
 
 sub setLabelData {
-    my ($self, $params) = @_;
+    my ($self, @params) = @_;
+    
+    my $sth=$self->dbh->prepare("INSERT INTO ".$self->labels." 
+    (name,labelcount,width,height,top,bottom,`left`,`right`,signum_width,signum_height,signum_top,signum_bottom,signum_left,signum_right) 
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
+    $sth->execute(@params);
+    return $sth->{mysql_insertid};
+    
+}
 
-    my $sth=$self->dbh->prepare("INSERT INTO ".$self->labels." (name,labelcount,width,height,top,bottom,left,right) VALUES (?,?,?,?,?,?,?,?)");
-    return $sth->execute($params);
+sub updateLabelData {
+    my ($self, @params) = @_;
+    
+    my $sth=$self->dbh->prepare("UPDATE ".$self->labels." SET 
+    name = ?,labelcount = ?,width = ?,height = ? ,top = ?,bottom = ?,`left` = ?,`right` = ?,signum_width = ?,signum_height = ?,signum_top = ?,signum_bottom = ?,signum_left = ?,signum_right = ? 
+    WHERE id = ?;");
+    return $sth->execute(@params);
     
 }
 
 sub getFieldData {
     my ($self, $label_id) = @_;
 
-    my $sth = $self->dbh->do("SELECT * FROM ".$self->fields." where label_id = ?;", undef, $label_id);
-    return $sth->fetchrow_hashref;
+    my $sth = $self->dbh->prepare("SELECT * FROM ".$self->fields." where label_id = ?;");
+    $sth->execute($label_id);
+    return $sth->fetchall_arrayref({});
 
 }
 
 sub setFieldData {
-    my ($self, $params) = @_;
+    my ($self, @params) = @_;
 
-    my $sth=$self->dbh->prepare("INSERT INTO ".$self->fields." (label_id,name,type,top,left,fontsize) VALUES (?,?,?,?,?,?)");
-    return $sth->execute($params);
+    my $sth=$self->dbh->prepare("INSERT INTO ".$self->fields." (label_id,name,type,top,`left`,fontsize) VALUES (?,?,?,?,?,?)");
+    return $sth->execute(@params);
 
+}
+
+sub updateFieldData {
+    my ($self, @params) = @_;
+    
+    my $sth=$self->dbh->prepare("UPDATE ".$self->fields." SET 
+    label_id = ?, name = ?,type = ?, top = ?, `left` = ?,fontsize = ? 
+    WHERE id = ?;");
+    return $sth->execute(@params);
+    
 }
 
 

@@ -35,6 +35,7 @@ sub list {
         return $c->render(status => 200, openapi => $response);
     } catch {
         my $error = $_;
+        warn Data::Dumper::Dumper $error;
         return $c->render(status => 400, openapi => {message => $error->message});
     }
 }
@@ -45,11 +46,36 @@ sub set {
     my $req  = $c->req->json;
     try {
         my $labels = Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Labels->new();
-        $labels->setLabel($req);
-        return $c->render(status => 201, openapi => {message => "Success"});
+        my ($response, $error) = $labels->setLabel($req);
+        if ($error) {
+            return $c->render(status => 400, openapi => {message => $error});
+        } else {
+            return $c->render(status => 201, openapi => {message => "Success"});
+        }
     } catch {
         my $error = $_;
-        return $c->render(status => 500, openapi => {message => $error->message});
+        warn Data::Dumper::Dumper $error;
+        return $c->render(status => 500, openapi => {message => "Something went wrong, check the logs"});
+    }
+}
+
+sub update {
+    my $c = shift->openapi->valid_input or return;
+
+    my $id = $c->validation->param('id');
+    my $req  = $c->req->json;
+    try {
+        my $labels = Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Labels->new();
+        my ($response, $error) = $labels-> updateLabel($id, $req);
+        if ($error) {
+            return $c->render(status => 400, openapi => {message => $error});
+        } else {
+            return $c->render(status => 200, openapi => {message => "Success"});
+        }
+    } catch {
+        my $error = $_;
+        warn Data::Dumper::Dumper $error;
+        return $c->render(status => 500, openapi => {message => "Something went wrong, check the logs"});
     }
 }
 

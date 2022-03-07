@@ -43,8 +43,11 @@
 								<li v-if="label" class="nav-item pl-2">
                                    <button class="btn btn-info" @click="testPrint($event)">Tulosta testi</button>
 								</li>
-								<li v-if="label" class="nav-item pl-2">
+								<li v-if="label && !updateButton" class="nav-item pl-2">
                                    <button class="btn btn-success" @click="saveLabel($event)">Tallenna</button>
+								</li>
+								<li v-if="label && updateButton" class="nav-item pl-2">
+                                   <button class="btn btn-success" @click="updateLabel($event)">Päivitä</button>
 								</li>
 								<li class="nav-item pl-2">
 									<div class="dropdown float-left mr-2">
@@ -66,14 +69,14 @@
 										<div class="row justify-content-center mt-5"><span class="mr-2">Leveys: {{totalWidth}}mm</span><span>Korkeus: {{totalHeight}}mm</span></div>
 										<div class="row justify-content-center card-body mt-3 mb-5">
 											<div :style="label.dimensions" style="background: #EAF0F6;">
-												<div style="background: #FFF; height: 100%;" class="position-relative">
+												<div style="background: #FFF; height: 100%; overflow:hidden;" class="position-relative">
 													<span v-for="(field, index) in label.fields" :style="field.dimensions" class="position-absolute">
 														{{field.name}}
 													</span>
 												</div>
 											</div>
 											<div v-if="label.signum":style="label.signum.dimensions" style="background: #EAF0F6;">
-												<div style="background: #FFF; height: 100%;" class="position-relative">
+												<div style="background: #FFF; height: 100%; overflow:hidden;" class="position-relative">
 													<span v-for="(field, index) in label.signum.fields" :style="field.dimensions" class="position-absolute">
 														{{field.name}}
 													</span>
