@@ -98,6 +98,14 @@ sub updateLabelData {
     
 }
 
+sub deleteLabelData {
+    my ($self, $id) = @_;
+
+    my $sth = $self->dbh->prepare("DELETE FROM ".$self->labels." WHERE id = ?;");
+    return $sth->execute($id);
+
+}
+
 sub getFieldData {
     my ($self, $label_id) = @_;
 

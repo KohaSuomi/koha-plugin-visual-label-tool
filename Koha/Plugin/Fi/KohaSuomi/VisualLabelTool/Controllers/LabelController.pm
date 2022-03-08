@@ -32,6 +32,7 @@ sub list {
     try {
         my $labels = Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Labels->new();
         my $response = $labels->listLabels();
+        $response = [] unless $response;
         return $c->render(status => 200, openapi => $response);
     } catch {
         my $error = $_;
@@ -50,7 +51,7 @@ sub set {
         if ($error) {
             return $c->render(status => 400, openapi => {message => $error});
         } else {
-            return $c->render(status => 201, openapi => {message => "Success"});
+            return $c->render(status => 201, openapi => $response);
         }
     } catch {
         my $error = $_;
@@ -66,12 +67,28 @@ sub update {
     my $req  = $c->req->json;
     try {
         my $labels = Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Labels->new();
-        my ($response, $error) = $labels-> updateLabel($id, $req);
+        my ($response, $error) = $labels->updateLabel($id, $req);
         if ($error) {
             return $c->render(status => 400, openapi => {message => $error});
         } else {
             return $c->render(status => 200, openapi => {message => "Success"});
         }
+    } catch {
+        my $error = $_;
+        warn Data::Dumper::Dumper $error;
+        return $c->render(status => 500, openapi => {message => "Something went wrong, check the logs"});
+    }
+}
+
+sub delete {
+    my $c = shift->openapi->valid_input or return;
+
+    my $id = $c->validation->param('label_id');
+
+    try {
+        my $labels = Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Labels->new();
+        $labels->deleteLabel($id);
+        return $c->render(status => 200, openapi => {message => "Success"});
     } catch {
         my $error = $_;
         warn Data::Dumper::Dumper $error;

@@ -35,6 +35,15 @@
 			<div class="container-fluid">
 				<main role="main" class="ml-sm-auto pt-3 px-4">
 					<div id="configApp">
+						<div class="alert alert-danger" role="alert" v-if="errors.length">
+							<b>Tapahtui virhe:</b>
+							<ul class="text-danger">
+								<li v-for="error in errors">{{ error }}</li>
+							</ul>
+						</div>
+						<div class="alert alert-success" role="alert" v-if="saved">
+							<b>Tallennus onnistui!</b>
+						</div>
 						<div class="row justify-content-center alert alert-info" role="alert">
 							<ul class="nav">
 								<li class="nav-item pl-2">
@@ -48,6 +57,9 @@
 								</li>
 								<li v-if="label && updateButton" class="nav-item pl-2">
                                    <button class="btn btn-success" @click="updateLabel($event)">Päivitä</button>
+								</li>
+								<li v-if="label && updateButton" class="nav-item pl-2">
+                                   <button class="btn btn-danger" @click="deleteLabel($event)">Poista</button>
 								</li>
 								<li class="nav-item pl-2">
 									<div class="dropdown float-left mr-2">

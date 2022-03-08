@@ -153,7 +153,7 @@ sub createTables {
         `fontsize` varchar(10) DEFAULT NULL,
         PRIMARY KEY `id` (`id`),
         KEY (`label_id`),
-        CONSTRAINT `label_ibfk_1` FOREIGN KEY (`label_id`) REFERENCES `$labelsTable` (`id`)
+        CONSTRAINT `label_ibfk_1` FOREIGN KEY (`label_id`) REFERENCES `$labelsTable` (`id`) ON DELETE CASCADE
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
     ");
 }

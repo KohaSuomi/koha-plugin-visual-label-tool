@@ -17,6 +17,8 @@ new Vue({
     savedLabels: [],
     label: null,
     updateButton: false,
+    saved: false,
+    errors: [],
   },
   created() {
     this.fetchLabels();
@@ -99,30 +101,50 @@ new Vue({
           this.savedLabels = response.data;
         })
         .catch((error) => {
-          console.log(error.response.data.message);
+          this.errors.push(error.response.data.message);
         });
     },
     saveLabel(e) {
       e.preventDefault();
+      this.saved = false;
       axios
         .post('/api/v1/contrib/kohasuomi/labels', this.label)
         .then((response) => {
-          console.log(response);
+          this.saved = true;
+          this.updateButton = true;
+          this.label = response.data;
+          this.fetchLabels();
         })
         .catch((error) => {
-          console.log(error.response.data.message);
+          this.errors.push(error.response.data.message);
         });
     },
     updateLabel(e) {
       e.preventDefault();
+      this.saved = false;
       axios
         .put('/api/v1/contrib/kohasuomi/labels/' + this.label.id, this.label)
-        .then((response) => {
-          console.log(response);
+        .then(() => {
+          this.saved = true;
         })
         .catch((error) => {
-          console.log(error.response.data.message);
+          this.errors.push(error.response.data.message);
         });
+    },
+    deleteLabel(e) {
+      e.preventDefault();
+      if (confirm('Haluatko varmasti poistaa tarran ' + this.label.name)) {
+        axios
+          .delete('/api/v1/contrib/kohasuomi/labels/' + this.label.id)
+          .then(() => {
+            this.label = null;
+            this.saved = false;
+            this.fetchLabels();
+          })
+          .catch((error) => {
+            this.errors.push(error.response.data.message);
+          });
+      }
     },
     testPrint(e) {
       e.preventDefault();

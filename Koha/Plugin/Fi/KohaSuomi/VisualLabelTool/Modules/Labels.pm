@@ -150,7 +150,16 @@ sub listLabels {
 }
 
 sub getLabel {
-    my ($self) = @_;
+    my ($self, $label_id) = @_;
+
+    my $label = $self->db->getLabelData($label_id);
+    my $wrap = $self->wrapLabel($label);
+    my $fields = $self->db->getFieldData($label_id);
+    my ($labelFields, $signumFields) = $self->wrapFields($fields);
+    $wrap->{fields} = $labelFields;
+    $wrap->{signum}->{fields} = $signumFields if $wrap->{signum};
+
+    return $wrap;
 }
 
 sub setLabel {
@@ -167,6 +176,7 @@ sub setLabel {
         foreach my $field (@{$params->{signum}->{fields}}) {
             $self->db->setFieldData($self->parseField($label_id, 'signum', $field));
         };
+        $response = $self->getLabel($label_id);
     }
     return ($response, $error);
 }
@@ -195,6 +205,14 @@ sub updateLabel {
     }
     return ($response, $error);
 }
+
+sub deleteLabel {
+    my ($self, $label_id) = @_;
+    
+    $self->db->deleteLabelData($label_id);
+    
+}
+
 
 sub parseLabel {
     my ($self, $params) = @_;
