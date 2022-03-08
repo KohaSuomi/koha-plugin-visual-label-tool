@@ -70,17 +70,17 @@
 							<div class="row gutters-sm">
 								<div class="col-md-6">
 									<div class="card">
-										<div class="row justify-content-center mt-5"><span class="mr-2">Leveys: {{totalWidth}}mm</span><span>Korkeus: {{totalHeight}}mm</span></div>
+										<div v-if="totalWidth && totalHeight" class="row justify-content-center mt-5"><span class="mr-2">Leveys: {{totalWidth}}mm</span><span>Korkeus: {{totalHeight}}mm</span></div>
 										<div class="row justify-content-center card-body mt-3 mb-5">
 											<div :style="label.dimensions" style="background: #EAF0F6;">
-												<div style="background: #FFF; height: 100%; overflow:hidden;" class="position-relative">
+												<div style="background: #FFF; height: 100%; overflow:hidden;" class="position-relative border">
 													<span v-for="(field, index) in label.fields" :style="field.dimensions" class="position-absolute">
 														{{field.name}}
 													</span>
 												</div>
 											</div>
 											<div v-if="label.signum":style="label.signum.dimensions" style="background: #EAF0F6;">
-												<div style="background: #FFF; height: 100%; overflow:hidden;" class="position-relative">
+												<div style="background: #FFF; height: 100%; overflow:hidden;" class="position-relative border">
 													<span v-for="(field, index) in label.signum.fields" :style="field.dimensions" class="position-absolute">
 														{{field.name}}
 													</span>
