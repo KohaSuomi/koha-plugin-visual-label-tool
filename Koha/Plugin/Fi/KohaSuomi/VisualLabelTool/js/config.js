@@ -19,12 +19,24 @@ new Vue({
     updateButton: false,
     saved: false,
     errors: [],
+    labelTypes: [
+      { name: 'A4/14', value: '14' },
+      { name: 'A4/12', value: '12' },
+      { name: 'A4/10', value: '10' },
+      { name: 'Rulla', value: 'roll' },
+      { name: 'A4/signum', value: 'signum' },
+    ],
+    showSignum: false,
+    selectedType: null,
   },
   created() {
     this.fetchLabels();
   },
   methods: {
     onLabelChange() {
+      this.saved = false;
+      this.showSignum = false;
+      this.selectedType = null;
       this.totalWidth =
         parseInt(this.label.dimensions.width) +
         parseInt(this.label.dimensions.paddingLeft) +
@@ -43,33 +55,25 @@ new Vue({
         }
       });
     },
-    createLabel(type) {
+    createLabel() {
+      this.showTabs('labelSettings');
       this.label = null;
       this.updateButton = false;
       const object = Object.create({});
       object.name = '';
+      object.type = this.selectedType.value;
+      if (parseInt(this.selectedType.value)) {
+        object.labelcount = this.selectedType.value;
+      }
       object.dimensions = {
-        paddingTop: '5mm',
-        paddingBottom: '5mm',
-        paddingLeft: '5mm',
-        paddingRight: '5mm',
-        width: '100mm',
-        height: '50mm',
+        paddingTop: '1mm',
+        paddingBottom: '1mm',
+        paddingLeft: '1mm',
+        paddingRight: '1mm',
+        width: '90mm',
+        height: '40mm',
       };
       object.fields = [];
-      if (type == 'signum') {
-        object.signum = {
-          dimensions: {
-            paddingTop: '5mm',
-            paddingBottom: '5mm',
-            paddingLeft: '5mm',
-            paddingRight: '5mm',
-            width: '20mm',
-            height: '50mm',
-          },
-          fields: [],
-        };
-      }
       this.label = object;
     },
     addField(e, type) {
@@ -89,6 +93,28 @@ new Vue({
         this.label.fields.push(this.selectedField);
       }
       this.fieldName = '';
+    },
+    addSignum(e) {
+      e.preventDefault();
+      this.showSignum = true;
+      const object = Object.create({});
+      object.dimensions = {
+        paddingTop: '1mm',
+        paddingBottom: '1mm',
+        paddingLeft: '1mm',
+        paddingRight: '1mm',
+        width: '20mm',
+        height: '20mm',
+      };
+      object.fields = [];
+      this.label.signum = object;
+      this.showTabs('signumSettings');
+    },
+    deleteSignum(e) {
+      e.preventDefault();
+      delete this.label['signum'];
+      this.showSignum = false;
+      this.showTabs('labelSettings');
     },
     showTabs(val) {
       this.selectedField = undefined;

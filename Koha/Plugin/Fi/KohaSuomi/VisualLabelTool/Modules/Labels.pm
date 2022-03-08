@@ -219,6 +219,7 @@ sub parseLabel {
     
     return (
         $params->{name},
+        $params->{type},
         $params->{labelcount},
         $params->{dimensions}->{width},
         $params->{dimensions}->{height},

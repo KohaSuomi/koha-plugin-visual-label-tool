@@ -125,6 +125,7 @@ sub createTables {
     $dbh->do("CREATE TABLE IF NOT EXISTS `$labelsTable` (
         `id` int(11) NOT NULL AUTO_INCREMENT,
         `name` varchar(100) NOT NULL,
+        `type` ENUM('14','12','10','roll','signum') NOT NULL,
         `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         `labelcount` int(11) DEFAULT NULL,
         `width` varchar(10) DEFAULT NULL,

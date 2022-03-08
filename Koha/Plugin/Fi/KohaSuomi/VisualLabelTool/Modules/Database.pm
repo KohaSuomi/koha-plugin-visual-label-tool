@@ -81,8 +81,8 @@ sub setLabelData {
     my ($self, @params) = @_;
     
     my $sth=$self->dbh->prepare("INSERT INTO ".$self->labels." 
-    (name,labelcount,width,height,top,bottom,`left`,`right`,signum_width,signum_height,signum_top,signum_bottom,signum_left,signum_right) 
-    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
+    (name,type,labelcount,width,height,top,bottom,`left`,`right`,signum_width,signum_height,signum_top,signum_bottom,signum_left,signum_right) 
+    VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
     $sth->execute(@params);
     return $sth->{mysql_insertid};
     
@@ -92,7 +92,7 @@ sub updateLabelData {
     my ($self, @params) = @_;
     
     my $sth=$self->dbh->prepare("UPDATE ".$self->labels." SET 
-    name = ?,labelcount = ?,width = ?,height = ? ,top = ?,bottom = ?,`left` = ?,`right` = ?,signum_width = ?,signum_height = ?,signum_top = ?,signum_bottom = ?,signum_left = ?,signum_right = ? 
+    name = ?,type = ?,labelcount = ?,width = ?,height = ? ,top = ?,bottom = ?,`left` = ?,`right` = ?,signum_width = ?,signum_height = ?,signum_top = ?,signum_bottom = ?,signum_left = ?,signum_right = ? 
     WHERE id = ?;");
     return $sth->execute(@params);
     
