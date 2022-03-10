@@ -3,10 +3,30 @@ const Multiselect = Vue.component(
   window.VueMultiselect.default
 );
 
+const barcode = Vue.component('barcode', {
+  template: '<svg ref="barcode"></svg>',
+  props: ['value', 'fontsize'],
+  mounted() {
+    this.init();
+  },
+  methods: {
+    init() {
+      console.log(this.fontsize);
+      JsBarcode(this.$refs.barcode, this.value, {
+        fontSize: parseInt(this.fontsize),
+        height: 35,
+        width: 2,
+        margin: 0,
+      });
+    },
+  },
+});
+
 new Vue({
   el: '#configApp',
   components: {
     Multiselect,
+    barcode,
   },
   data: {
     fieldName: '',
@@ -28,9 +48,14 @@ new Vue({
     ],
     showSignum: false,
     selectedType: null,
+    fields: [],
+    showField: false,
+    showTest: false,
+    prints: [],
   },
   created() {
     this.fetchLabels();
+    this.fetchFields();
   },
   methods: {
     onLabelChange() {
@@ -76,15 +101,15 @@ new Vue({
       object.fields = [];
       this.label = object;
     },
-    addField(e, type) {
-      e.preventDefault();
+    addField(type) {
       this.selectedField = undefined;
       const object = Object.create({});
       object.name = this.fieldName;
       object.dimensions = {
         top: '0mm',
         left: '0mm',
-        fontSize: '20px',
+        right: '0mm',
+        fontSize: '14px',
       };
       this.selectedField = object;
       if (type == 'signum') {
@@ -93,6 +118,7 @@ new Vue({
         this.label.fields.push(this.selectedField);
       }
       this.fieldName = '';
+      this.showField = true;
     },
     addSignum(e) {
       e.preventDefault();
@@ -125,6 +151,16 @@ new Vue({
         .get('/api/v1/contrib/kohasuomi/labels')
         .then((response) => {
           this.savedLabels = response.data;
+        })
+        .catch((error) => {
+          this.errors.push(error.response.data.message);
+        });
+    },
+    fetchFields() {
+      axios
+        .get('/api/v1/contrib/kohasuomi/labels/fields')
+        .then((response) => {
+          this.fields = response.data;
         })
         .catch((error) => {
           this.errors.push(error.response.data.message);
@@ -172,8 +208,53 @@ new Vue({
           });
       }
     },
+    deleteField(e) {
+      e.preventDefault();
+      if (
+        this.selectedField.id &&
+        confirm('Haluatko varmasti poistaa kentän ' + this.selectedField.name)
+      ) {
+        axios
+          .delete(
+            '/api/v1/contrib/kohasuomi/labels/fields/' + this.selectedField.id
+          )
+          .then(() => {
+            this.selectedField = undefined;
+            this.showField = false;
+          })
+          .catch((error) => {
+            this.errors.push(error.response.data.message);
+          });
+      } else {
+        this.selectedField = undefined;
+        this.showField = false;
+      }
+    },
     testPrint(e) {
       e.preventDefault();
+      var searchParams = new URLSearchParams();
+      searchParams.append('test', true);
+      axios
+        .get('/api/v1/contrib/kohasuomi/labels/print/' + this.label.id, {
+          params: searchParams,
+        })
+        .then((response) => {
+          this.prints = response.data;
+          this.showTest = true;
+        })
+        .catch((error) => {
+          this.errors.push(error.response.data.message);
+        });
+    },
+    back() {
+      this.showTest = false;
+    },
+    printTest() {
+      printJS({
+        printable: 'printTest',
+        type: 'html',
+        css: '/plugin/Koha/Plugin/Fi/KohaSuomi/VisualLabelTool/css/print.css',
+      });
     },
   },
 });

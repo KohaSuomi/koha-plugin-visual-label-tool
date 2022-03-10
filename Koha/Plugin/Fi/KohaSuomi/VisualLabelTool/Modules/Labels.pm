@@ -118,12 +118,15 @@ sub _validateFieldParams {
         unless ($field->{name}) {
             return "Missing name value";
         }
-        unless ($field->{dimensions}->{top}) {
-            return "Missing top value";
-        }
-        unless ($field->{dimensions}->{left}) {
-            return "Missing left value";
-        }
+        # unless ($field->{dimensions}->{top}) {
+        #     return "Missing top value";
+        # }
+        # unless ($field->{dimensions}->{left}) {
+        #     return "Missing left value";
+        # }
+        # unless ($field->{dimensions}->{right}) {
+        #     return "Missing right value";
+        # }
         unless ($field->{dimensions}->{fontSize}) {
             return "Missing fontSize value";
         }
@@ -192,14 +195,22 @@ sub updateLabel {
         $self->db->updateLabelData(@data);
         foreach my $field (@{$params->{fields}}) {
             my @fieldData = $self->parseField($label_id, 'label', $field);
-            push @fieldData, $field->{id};
-            $self->db->updateFieldData(@fieldData);
+            if ($field->{id}) {
+                push @fieldData, $field->{id};
+                $self->db->updateFieldData(@fieldData);
+            } else {
+                $self->db->setFieldData($self->parseField($label_id, 'label', $field));
+            }
         };
 
         foreach my $field (@{$params->{signum}->{fields}}) {
             my @fieldData = $self->parseField($label_id, 'signum', $field);
-            push @fieldData, $field->{id};
-            $self->db->updateFieldData(@fieldData);
+            if ($field->{id}) {
+                push @fieldData, $field->{id};
+                $self->db->updateFieldData(@fieldData);
+            } else {
+                $self->db->setFieldData($self->parseField($label_id, 'signum', $field));
+            }
         };
 
     }
@@ -245,6 +256,7 @@ sub parseField {
         $type,
         $field->{dimensions}->{top},
         $field->{dimensions}->{left},
+        $field->{dimensions}->{right},
         $field->{dimensions}->{fontSize}
     );
 }
@@ -292,6 +304,7 @@ sub wrapFields {
             dimensions => {
                 top => $field->{top},
                 left => $field->{left},
+                right => $field->{right},
                 fontSize => $field->{fontsize}
             }
         };

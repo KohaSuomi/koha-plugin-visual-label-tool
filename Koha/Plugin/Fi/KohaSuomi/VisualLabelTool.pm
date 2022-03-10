@@ -151,6 +151,7 @@ sub createTables {
         `name` varchar(100) NOT NULL,
         `top` varchar(10) DEFAULT NULL,
         `left` varchar(10) DEFAULT NULL,
+        `right` varchar(10) DEFAULT NULL,
         `fontsize` varchar(10) DEFAULT NULL,
         PRIMARY KEY `id` (`id`),
         KEY (`label_id`),

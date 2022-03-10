@@ -118,7 +118,7 @@ sub getFieldData {
 sub setFieldData {
     my ($self, @params) = @_;
 
-    my $sth=$self->dbh->prepare("INSERT INTO ".$self->fields." (label_id,name,type,top,`left`,fontsize) VALUES (?,?,?,?,?,?)");
+    my $sth=$self->dbh->prepare("INSERT INTO ".$self->fields." (label_id,name,type,top,`left`,`right`,fontsize) VALUES (?,?,?,?,?,?,?)");
     return $sth->execute(@params);
 
 }
@@ -127,10 +127,18 @@ sub updateFieldData {
     my ($self, @params) = @_;
     
     my $sth=$self->dbh->prepare("UPDATE ".$self->fields." SET 
-    label_id = ?, name = ?,type = ?, top = ?, `left` = ?,fontsize = ? 
+    label_id = ?, name = ?,type = ?, top = ?, `left` = ?,`right` = ?,fontsize = ? 
     WHERE id = ?;");
     return $sth->execute(@params);
     
+}
+
+sub deleteFieldData {
+    my ($self, $id) = @_;
+
+    my $sth = $self->dbh->prepare("DELETE FROM ".$self->fields." WHERE id = ?;");
+    return $sth->execute($id);
+
 }
 
 

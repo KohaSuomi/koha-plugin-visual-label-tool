@@ -157,5 +157,132 @@
         }
       }
     }
+  },
+  "/labels/print/{label_id}": {
+    "get": {
+      "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::PrintController#get",
+      "operationId": "printLabel",
+      "tags": [
+        "labels"
+      ],
+      "parameters": [
+        {
+          "name": "label_id",
+          "in": "path",
+          "description": "Label identifier",
+          "required": true,
+          "type": "integer"
+        },
+        {
+          "name": "test",
+          "in": "query",
+          "description": "Test run",
+          "required": false,
+          "type": "boolean"
+        }
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "responses": {
+        "200": {
+          "description": "Print label",
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "404": {
+          "description": "An error occured",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Label not found",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/labels/fields": {
+    "get": {
+      "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::FieldController#list",
+      "operationId": "listFields",
+      "tags": [
+        "labels"
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "responses": {
+        "200": {
+          "description": "Fields",
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "string"
+            }
+          }
+        },
+        "404": {
+          "description": "An error occured",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Labels not found",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/labels/fields/{field_id}": {
+    "delete": {
+      "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::FieldController#delete",
+      "operationId": "DeleteField",
+      "tags": [
+        "labels"
+      ],
+      "parameters": [
+        {
+          "name": "field_id",
+          "in": "path",
+          "description": "Field identifier",
+          "required": true,
+          "type": "integer"
+        }
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "responses": {
+        "200": {
+          "description": "Field deleted",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "404": {
+          "description": "Not found",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "500": {
+          "description": "Missing parameter",
+          "schema": {
+            "type": "object"
+          }
+        }
+      }
+    }
   }
 }

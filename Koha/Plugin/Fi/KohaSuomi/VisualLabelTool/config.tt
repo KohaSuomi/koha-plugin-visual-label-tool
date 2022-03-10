@@ -19,6 +19,8 @@
 		<script src="https://unpkg.com/vuejs-datepicker/dist/locale/translations/fi.js"></script>
 		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
+		<script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+		<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/barcodes/JsBarcode.code128.min.js"></script>
 	</head>
 	<body>
 		<!-- Breadcrumb -->
@@ -45,7 +47,15 @@
 							<b>Tallennus onnistui!</b>
 						</div>
 						<div class="row justify-content-center alert alert-info" role="alert">
-							<ul class="nav">
+							<ul v-if="showTest" class="nav">
+								<li class="nav-item pr-2">
+									<button class="btn btn-default" @click="back()">Takaisin</button>
+								</li>
+								<li class="nav-item pr-2">
+									<button class="btn btn-success" @click="printTest()">Tulosta</button>
+								</li>
+							</ul>
+							<ul v-else class="nav">
 								<li class="nav-item pl-2">
                                     <multiselect v-model="label" value="value" :options="savedLabels" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="Tallennetut pohjat" @input="onLabelChange"></multiselect>
 								</li>
@@ -66,7 +76,7 @@
 								</li>
 							</ul>
 						</div>
-						<div v-if="label" class="container">
+						<div v-if="label && !showTest" class="container">
 							<div class="row gutters-sm">
 								<div class="col-md-6">
 									<div class="card">
@@ -75,7 +85,8 @@
 											<div :style="label.dimensions" style="background: #EAF0F6;">
 												<div style="background: #FFF; height: 100%; overflow:hidden;" class="position-relative border">
 													<span v-for="(field, index) in label.fields" :style="field.dimensions" class="position-absolute">
-														{{field.name}}
+														<span v-if="field.name == 'items.barcode'"><barcode :value="66620201001453" :fontsize="field.dimensions.fontSize"></barcode></span>
+														<span v-else>{{field.name}}</span>
 													</span>
 												</div>
 											</div>
@@ -150,22 +161,23 @@
 													<div class="form-group">
 														<div class="input-group mb-3">
 															<span class="mr-3">
-																<multiselect class="float-left" v-model="selectedField" value="value" :options="label.fields" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="Valitse"></multiselect>
+																<multiselect class="float-left" v-model="selectedField" value="value" :options="label.fields" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="Valitse" @input="showField = true"></multiselect>
 															</span>
 															<span>
 																<div class="input-group mb-3">
-																	<input type="text" class="form-control" name="fieldName"  v-model="fieldName" placeholder="Uusi kenttä" aria-label="Uusi kenttä"/>
-																	<div class="input-group-append">
-																		<button class="btn btn-success" @click="addField($event)">+</button>
-																	</div>
+																	<multiselect class="float-left" v-model="fieldName" value="value" :options="fields" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Uusi kenttä" @input="addField()"></multiselect>
 																</div>
 															</span>
 														</div>
-														<div v-if="selectedField" class="form-group pb-2 border-bottom">
-															<label>Nimi:</label> <input type="text"  class="form-control" name="field" :value="selectedField.name"/>
-															<label>X:</label> <input type="text" v-model="selectedField.dimensions.left"  class="form-control" name="field" :value="selectedField.dimensions.left" @change="updateDimension($event)"/>
-															<label>Y:</label> <input type="text" v-model="selectedField.dimensions.top"  class="form-control" name="field" :value="selectedField.dimensions.top" @change="updateDimension($event)"/>
+														<div v-if="selectedField && showField" class="form-group pb-2 border-bottom">
+															<label>Nimi:</label> <input type="text"  class="form-control" name="field" :value="selectedField.name" disabled/>
+															<label>Ylhäältä:</label> <input type="text" v-model="selectedField.dimensions.top"  class="form-control" name="field" :value="selectedField.dimensions.top" @change="updateDimension($event)"/>
+															<label>Vasemmalta:</label> <input type="text" v-model="selectedField.dimensions.left"  class="form-control" name="field" :value="selectedField.dimensions.left" @change="updateDimension($event)"/>
+															<label>Oikealta:</label> <input type="text" v-model="selectedField.dimensions.right"  class="form-control" name="field" :value="selectedField.dimensions.right" @change="updateDimension($event)"/>
 															<label>Kirjasinkoko:</label> <input type="text" v-model="selectedField.dimensions.fontSize"  class="form-control" name="field" :value="selectedField.dimensions.fontSize" @change="updateDimension($event)"/>
+															<div class="form-group">
+																<button class="btn btn-danger" @click="deleteField($event)">Poista</button>
+															</div>
 														</div>
 													</div>
 												</div>
@@ -206,22 +218,60 @@
 															</span>
 															<span>
 																<div class="input-group mb-3">
-																	<input type="text" class="form-control" name="fieldName"  v-model="fieldName" placeholder="Uusi kenttä" aria-label="Uusi kenttä"/>
-																	<div class="input-group-append">
-																		<button class="btn btn-success" @click="addField($event, 'signum')">+</button>
-																	</div>
+																	<multiselect class="float-left" v-model="fieldName" value="value" :options="fields" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Uusi kenttä" @input="addField('signum')"></multiselect>
 																</div>
 															</span>
 														</div>
 														<div v-if="selectedField" class="form-group pb-2 border-bottom">
-															<label>Nimi:</label> <input type="text"  class="form-control" name="field" :value="selectedField.name"/>
-															<label>X:</label> <input type="text" v-model="selectedField.dimensions.left"  class="form-control" name="field" :value="selectedField.dimensions.left" @change="updateDimension($event)"/>
-															<label>Y:</label> <input type="text" v-model="selectedField.dimensions.top"  class="form-control" name="field" :value="selectedField.dimensions.top" @change="updateDimension($event)"/>
+															<label>Nimi:</label> <input type="text"  class="form-control" name="field" :value="selectedField.name" disabled/>
+															<label>Ylhäältä:</label> <input type="text" v-model="selectedField.dimensions.top"  class="form-control" name="field" :value="selectedField.dimensions.top" @change="updateDimension($event)"/>
+															<label>Vasemmalta:</label> <input type="text" v-model="selectedField.dimensions.left"  class="form-control" name="field" :value="selectedField.dimensions.left" @change="updateDimension($event)"/>
+															<label>Oikealta:</label> <input type="text" v-model="selectedField.dimensions.right"  class="form-control" name="field" :value="selectedField.dimensions.right" @change="updateDimension($event)"/>
 															<label>Kirjasinkoko:</label> <input type="text" v-model="selectedField.dimensions.fontSize"  class="form-control" name="field" :value="selectedField.dimensions.fontSize" @change="updateDimension($event)"/>
 														</div>
 													</div>
 												</div>
 											</form>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+						<div v-if="showTest">
+							<div class="flex-row">
+								<!--<div :class="{'d-none': !showLoader }">
+									<div class="row w-100 p-3">
+										<div class="col text-center">
+											<i class="fas fa-circle-notch fa-spin fa-3x"></i>
+										</div>
+									</div>
+								</div>-->
+								<div class="d-flex justify-content-center pb-2">
+									<div id="printTest">
+										<div class="a4-width print-row">
+											<div class="print-row" :style="label.signum ? 'width:90%;' : 'width:100%;'">
+												<div v-for="label in prints">
+													<div :style="label.dimensions">
+														<div style="height: 100%; position:relative; border: 1px solid;">
+															<span v-for="(field, index) in label.fields" :style="field.dimensions" style="position:absolute;">
+																<span v-if="field.name == 'items.barcode'"><barcode :value="field.value" :fontsize="field.dimensions.fontSize"></barcode></span>
+																<span v-else>{{field.value}}</span>
+															</span>
+														</div>
+													</div>
+												</div>
+											</div>
+											<div v-if="label.signum">
+												<div v-for="label in prints">
+													<div style="width:20mm; height:20mm;">
+														<div style="height: 100%; position:relative; border: 1px solid; margin-left:2mm">
+															<span v-for="(field, index) in label.signum.fields" :style="field.dimensions" style="position:absolute;">
+																juu
+															</span>
+														</div>
+													</div>
+												</div>
+											</div>
 										</div>
 									</div>
 								</div>
@@ -243,5 +293,6 @@
 			feather.replace();
 		</script>
 		<script type="module" src="[% PLUGIN_PATH %]/js/config.js"></script>
+		<link rel="stylesheet" href="[% PLUGIN_PATH %]/css/print.css">
 	</body>
 </html>

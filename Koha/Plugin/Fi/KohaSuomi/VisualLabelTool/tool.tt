@@ -50,7 +50,7 @@
 			feather.replace();
 		</script>
 		<script type="module" src="[% PLUGIN_PATH %]/js/main.js"></script>
-		<link rel="stylesheet" href="[% PLUGIN_PATH %]/css/pdf.css">
+		<link rel="stylesheet" href="[% PLUGIN_PATH %]/css/print.css">
 		<style>
 			.odd-cell {
 				background-color: #eee;
