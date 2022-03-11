@@ -24,6 +24,7 @@ use Try::Tiny;
 use JSON;
 use Koha::Plugin::Fi::KohaSuomi::VisualLabelTool;
 use Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Labels;
+use Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Fields;
 use C4::Context;
 use Koha::Items;
 use Koha::Libraries;
@@ -46,6 +47,11 @@ sub new {
 sub labels {
     my ($self) = @_;
     return Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Labels->new();
+}
+
+sub fields {
+    my ($self) = @_;
+    return Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Fields->new();
 }
 
 sub printLabel {
@@ -100,6 +106,8 @@ sub getDescriptionName {
 
     my $response = $data->{$key}->{$value};
     return Koha::Libraries->find($response)->branchname if $value eq "homebranch";
+    return $self->fields->signumYKL($data->{$key}->{'itemcallnumber'}) if $value eq "signumYKL";
+    return $self->fields->signumLoc($data->{$key}->{'itemcallnumber'}) if $value eq "signumLoc";
     return $response;
 }
 

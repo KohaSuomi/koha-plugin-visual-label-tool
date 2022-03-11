@@ -78,7 +78,9 @@ sub getItem {
         'items.ccode', 
         'items.cn_source', 
         'items.cn_sort', 
-        'items.enumchron'
+        'items.enumchron',
+        'items.signumYKL',
+        'items.signumLoc'
     );
 }
 
@@ -133,6 +135,36 @@ sub getBiblioItem {
 sub getMarcFields {
     my ($self) = @_;
     return ()
+}
+
+sub signumLoc {
+    my ($self, $itemcallnumber) = @_;
+
+    return $self->yklFirst($itemcallnumber) unless ($self->yklFirst($itemcallnumber) =~/-*\d+\.\d+/);
+    my @parts = split(/\s+/, $itemcallnumber);
+    return ($parts[2]) ? $parts[2] : undef;
+}
+
+sub signumYKL {
+    my ($self, $itemcallnumber) = @_;
+    
+    return $self->yklFirst($itemcallnumber) if ($self->yklFirst($itemcallnumber) =~/-*\d+\.\d+/);
+    return $self->yklSecond($itemcallnumber);
+}
+
+
+sub yklSecond {
+    my ($self, $itemcallnumber) = @_;
+    #PKM 84.4 MAG
+    my @parts = split(/\s+/, $itemcallnumber);
+    return ($parts[1]) ? $parts[1] : undef;
+}
+
+sub yklFirst {
+    my ($self, $itemcallnumber) = @_;
+    #84.2 SLO PK N
+    my @parts = split(/\s+/, $itemcallnumber);
+    return ($parts[0]) ? $parts[0] : undef;
 }
 
 1;

@@ -11,7 +11,6 @@ const barcode = Vue.component('barcode', {
   },
   methods: {
     init() {
-      console.log(this.fontsize);
       JsBarcode(this.$refs.barcode, this.value, {
         fontSize: parseInt(this.fontsize),
         height: 35,
@@ -77,6 +76,15 @@ new Vue({
       this.label.fields.forEach((element) => {
         if (element.name == this.selectedField.name) {
           element = this.selectedField;
+        }
+      });
+    },
+    removeFromLabels() {
+      this.label.fields.forEach((element, index) => {
+        if (element.name == this.selectedField.name && !element.id) {
+          this.label.fields.splice(index, 1);
+        } else if (element.id == this.selectedField.id) {
+          this.label.fields.splice(index, 1);
         }
       });
     },
@@ -219,6 +227,7 @@ new Vue({
             '/api/v1/contrib/kohasuomi/labels/fields/' + this.selectedField.id
           )
           .then(() => {
+            this.removeFromLabels();
             this.selectedField = undefined;
             this.showField = false;
           })
@@ -226,6 +235,7 @@ new Vue({
             this.errors.push(error.response.data.message);
           });
       } else {
+        this.removeFromLabels();
         this.selectedField = undefined;
         this.showField = false;
       }

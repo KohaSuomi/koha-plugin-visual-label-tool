@@ -266,7 +266,7 @@
 													<div style="width:20mm; height:20mm;">
 														<div style="height: 100%; position:relative; border: 1px solid; margin-left:2mm">
 															<span v-for="(field, index) in label.signum.fields" :style="field.dimensions" style="position:absolute;">
-																juu
+																{{field.value}}
 															</span>
 														</div>
 													</div>
