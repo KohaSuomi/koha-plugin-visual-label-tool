@@ -91,6 +91,12 @@ sub processFields {
         
     }
 
+    foreach my $field (@{$label->{signum}->{fields}}) {
+        my ($key, $value) = split /\./, $field->{name};
+        $field->{value} = $self->getDescriptionName($data, $key, $value);
+        
+    }
+
     return $label;
 
 }
