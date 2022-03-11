@@ -263,7 +263,7 @@
 											</div>
 											<div v-if="label.signum">
 												<div v-for="label in prints">
-													<div style="width:20mm; height:20mm;">
+													<div :style="label.signum.dimensions">
 														<div style="height: 100%; position:relative; border: 1px solid; margin-left:2mm">
 															<span v-for="(field, index) in label.signum.fields" :style="field.dimensions" style="position:absolute;">
 																{{field.value}}
@@ -294,5 +294,18 @@
 		</script>
 		<script type="module" src="[% PLUGIN_PATH %]/js/config.js"></script>
 		<link rel="stylesheet" href="[% PLUGIN_PATH %]/css/print.css">
+		<style>
+			.multiselect .multiselect__content-wrapper {
+				min-width: 100%;
+				width: auto;
+				border-top: 1px solid #e8e8e8;
+				overflow-x: hidden;
+			}
+
+			.multiselect--active .multiselect__tags {
+				border-bottom: none;
+			}
+
+		</style>
 	</body>
 </html>
