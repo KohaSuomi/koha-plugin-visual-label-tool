@@ -121,6 +121,8 @@ sub createTables {
 
     my $labelsTable = $self->get_qualified_table_name('labels');
     my $fieldsTable = $self->get_qualified_table_name('fields');
+    my $printedTable = $self->get_qualified_table_name('printed');
+    my $printQueueTable = $self->get_qualified_table_name('print_queue');
 
     $dbh->do("CREATE TABLE IF NOT EXISTS `$labelsTable` (
         `id` int(11) NOT NULL AUTO_INCREMENT,
@@ -141,7 +143,7 @@ sub createTables {
         `signum_right` varchar(10) DEFAULT NULL,
         `signum_bottom` varchar(10) DEFAULT NULL,
         PRIMARY KEY `id` (`id`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     ");
 
     $dbh->do("CREATE TABLE IF NOT EXISTS `$fieldsTable` (
@@ -156,7 +158,29 @@ sub createTables {
         PRIMARY KEY `id` (`id`),
         KEY (`label_id`),
         CONSTRAINT `label_ibfk_1` FOREIGN KEY (`label_id`) REFERENCES `$labelsTable` (`id`) ON DELETE CASCADE
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8 COLLATE=utf8_unicode_ci;
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    ");
+
+    $dbh->do("CREATE TABLE IF NOT EXISTS `$printedTable` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `label_id` int(11) NOT NULL,
+        `itemnumber` int(11) NOT NULL,
+        `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY `id` (`id`),
+        KEY (`label_id`),
+        KEY (`itemnumber`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
+    ");
+
+    $dbh->do("CREATE TABLE IF NOT EXISTS `$printQueueTable` (
+        `id` int(11) NOT NULL AUTO_INCREMENT,
+        `borrowernumber` int(11) NOT NULL,
+        `itemnumber` int(11) NOT NULL,
+        `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        PRIMARY KEY `id` (`id`),
+        KEY (`borrowernumber`),
+        KEY (`itemnumber`)
+        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     ");
 }
 

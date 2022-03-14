@@ -25,6 +25,7 @@ use JSON;
 use Koha::Plugin::Fi::KohaSuomi::VisualLabelTool;
 use Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Labels;
 use Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Fields;
+use Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Database;
 use C4::Context;
 use Koha::Items;
 use Koha::Libraries;
@@ -44,6 +45,11 @@ sub new {
 
 }
 
+sub db {
+    my ($self) = @_;
+    return Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Database->new;
+}
+
 sub labels {
     my ($self) = @_;
     return Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Labels->new();
@@ -55,15 +61,29 @@ sub fields {
 }
 
 sub printLabel {
-    my ($self, $label_id, $test) = @_;
-    my $label = $self->labels->getLabel($label_id);
-    return $self->printTest($label) if $test;
-    return;
+    my ($self, $label_id, $test, $items) = @_;
+    return $self->printTest($label_id) if $test;
+    my @printLabels;
+    foreach my $item (@{$items}) {
+        my $label = $self->labels->getLabel($label_id);
+        my $itemData = Koha::Items->find($item->{itemnumber});
+        my ($biblio, $biblioitem) = $self->getBiblioData($itemData);
+        my $data = {
+            items => $itemData->unblessed,
+            biblio => $biblio,
+            biblioitems => $biblioitem
+        };
+
+        my $valueLabel = $self->processFields($label, $data);
+        push @printLabels, $valueLabel;
+    }
+
+    return \@printLabels;
 }
 
 sub printTest {
-    my ($self, $label) = @_;
-
+    my ($self, $label_id) = @_;
+    my $label = $self->labels->getLabel($label_id);
     my $item = Koha::Items->search({}, {rows => 1})->next;
     my ($biblio, $biblioitem) = $self->getBiblioData($item);
     my $data = {
@@ -115,6 +135,26 @@ sub getDescriptionName {
     return $self->fields->signumYKL($data->{$key}->{'itemcallnumber'}) if $value eq "signumYKL";
     return $self->fields->signumLoc($data->{$key}->{'itemcallnumber'}) if $value eq "signumLoc";
     return $response;
+}
+
+sub getPrintQueue {
+    my ($self, $borrowernumber) = @_;
+
+    my $items = $self->db->getPrintQueue($borrowernumber);
+    my $response;
+    foreach my $item (@$items) {
+        my $itemData = Koha::Items->find($item->{itemnumber});
+        push @$response, $itemData;
+    }
+
+    return $response;
+}
+
+sub setPrintQueue {
+    my ($self, $body) = @_;
+
+    my @params = ($body->{borrowernumber}, $body->{itemnumber});
+    $self->db->setPrintQueue(@params);
 }
 
 1;

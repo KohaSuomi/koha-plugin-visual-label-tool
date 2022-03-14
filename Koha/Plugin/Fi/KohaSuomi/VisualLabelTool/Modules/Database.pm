@@ -55,6 +55,16 @@ sub fields {
     return $self->plugin->get_qualified_table_name('fields');
 }
 
+sub printed {
+    my ($self) = @_;
+    return $self->plugin->get_qualified_table_name('printed');
+}
+
+sub printQueue {
+    my ($self) = @_;
+    return $self->plugin->get_qualified_table_name('print_queue');
+}
+
 sub dbh {
     my ($self) = @_;
     return C4::Context->dbh;
@@ -139,6 +149,21 @@ sub deleteFieldData {
     my $sth = $self->dbh->prepare("DELETE FROM ".$self->fields." WHERE id = ?;");
     return $sth->execute($id);
 
+}
+
+sub getPrintQueue {
+    my ($self, $borrowernumber) = @_;
+
+    my $sth = $self->dbh->prepare("SELECT * FROM ".$self->printQueue." where borrowernumber = ?;");
+    $sth->execute($borrowernumber);
+    return $sth->fetchall_arrayref({});
+}
+
+sub setPrintQueue {
+    my ($self, @params) = @_;
+
+    my $sth=$self->dbh->prepare("INSERT INTO ".$self->printQueue." (borrowernumber,itemnumber) VALUES (?,?)");
+    return $sth->execute(@params);
 }
 
 

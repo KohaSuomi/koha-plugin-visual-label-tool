@@ -31,9 +31,10 @@ sub get {
 
     my $label_id = $c->validation->param('label_id');
     my $test = $c->validation->param('test');
+    my $req  = $c->req->json;
     try {
         my $print= Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Print->new();
-        my $response = $print->printLabel($label_id, $test);
+        my $response = $print->printLabel($label_id, $test, $req);
         $response = [] unless $response;
         return $c->render(status => 200, openapi => $response);
     } catch {
@@ -42,5 +43,23 @@ sub get {
         return $c->render(status => 400, openapi => {message => $error->message});
     }
 }
+
+sub setQueue {
+    my $c = shift->openapi->valid_input or return;
+
+    my $req  = $c->req->json;
+    my $user = $c->stash('koha.user');
+    $req->{borrowernumber} = $user->borrowernumber unless $req->{borrowernumber};
+    try {
+        my $print= Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Print->new();
+        my $response = $print->setPrintQueue($req);
+        return $c->render(status => 200, openapi => {message => "Success"});
+    } catch {
+        my $error = $_;
+        warn Data::Dumper::Dumper $error;
+        return $c->render(status => 400, openapi => {message => $error});
+    }
+}
+
 
 1;

@@ -1,25 +1,8 @@
+import barcode from './barcode.js';
 const Multiselect = Vue.component(
   'vue-multiselect',
   window.VueMultiselect.default
 );
-
-const barcode = Vue.component('barcode', {
-  template: '<svg ref="barcode"></svg>',
-  props: ['value', 'fontsize'],
-  mounted() {
-    this.init();
-  },
-  methods: {
-    init() {
-      JsBarcode(this.$refs.barcode, this.value, {
-        fontSize: parseInt(this.fontsize),
-        height: 35,
-        width: 2,
-        margin: 0,
-      });
-    },
-  },
-});
 
 new Vue({
   el: '#configApp',
@@ -245,7 +228,7 @@ new Vue({
       var searchParams = new URLSearchParams();
       searchParams.append('test', true);
       axios
-        .get('/api/v1/contrib/kohasuomi/labels/print/' + this.label.id, {
+        .post('/api/v1/contrib/kohasuomi/labels/print/' + this.label.id, {
           params: searchParams,
         })
         .then((response) => {

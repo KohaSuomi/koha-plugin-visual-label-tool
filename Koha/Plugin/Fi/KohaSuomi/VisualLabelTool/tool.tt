@@ -10,15 +10,22 @@
 		<!-- Bootstrap core CSS -->
 		<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/css/bootstrap.min.css" integrity="sha384-Gn5384xqQ1aoWXA+058RXPxPg6fy4IWvTNh0E263XmFcJlSAwiGgFAW/dAiS6JXm" crossorigin="anonymous">
 		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.4.1/css/all.css" integrity="sha384-5sAR7xN1Nv6T6+dT2mhtzEpVJvfS3NScPQTrOxhwjIuvcA67KV2R5Jz6kr4abQsz" crossorigin="anonymous">
+		<link rel="stylesheet" href="https://unpkg.com/vue-multiselect@2.1.0/dist/vue-multiselect.min.css">
 		<!-- Custom styles for this template-->
 		<script src="https://unpkg.com/vue@2.6.14/dist/vue.js"></script>
 		<script src="https://unpkg.com/vuex@3.6.2/dist/vuex.min.js"></script>
+		<script src="https://unpkg.com/vue-multiselect@2.1.0"></script>
 		<script src="https://unpkg.com/vuejs-datepicker"></script>
 		<script src="https://unpkg.com/vuejs-datepicker/dist/locale/translations/fi.js"></script>
 		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
 		<script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
 		<link rel="stylesheet" type="text/css" href="https://printjs-4de6.kxcdn.com/print.min.css">
+		<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/barcodes/JsBarcode.code128.min.js"></script>
+		<!-- CDNJS :: Sortable (https://cdnjs.com/) -->
+		<script src="//cdn.jsdelivr.net/npm/sortablejs@1.8.4/Sortable.min.js"></script>
+		<!-- CDNJS :: Vue.Draggable (https://cdnjs.com/) -->
+		<script src="//cdnjs.cloudflare.com/ajax/libs/Vue.Draggable/2.20.0/vuedraggable.umd.min.js"></script>
 	</head>
 	<body>
 
@@ -35,9 +42,121 @@
 			<div class="container-fluid">
 				<main role="main" class="ml-sm-auto pt-3 px-4">
 				<div id="viewApp">
+					<div class="alert alert-danger" role="alert" v-if="errors.length">
+						<b>Tapahtui virhe:</b>
+						<ul class="text-danger">
+							<li v-for="error in errors">{{ error }}</li>
+						</ul>
+					</div>
+					<div class="row justify-content-center alert alert-info" role="alert">
+						<ul v-if="showPrinting" class="nav">
+							<li class="nav-item pr-2">
+								<button class="btn btn-default" @click="back()">Takaisin</button>
+							</li>
+							<li class="nav-item pr-2">
+								<button class="btn btn-success" @click="print()">Tulosta</button>
+							</li>
+						</ul>
+						<ul v-else class="nav">
+							<li class="nav-item pl-2">
+								<multiselect v-model="label" value="value" :options="savedLabels" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="Tallennetut pohjat"></multiselect>
+							</li>
+							<li v-if="label" class="nav-item pl-2">
+								<button class="btn btn-info" @click="printLabels($event)">Tulostus</button>
+							</li>
+						</ul>
+					</div>
+					<div v-if="showPrinting">
+						<div class="flex-row">
+							<!--<div :class="{'d-none': !showLoader }">
+								<div class="row w-100 p-3">
+									<div class="col text-center">
+										<i class="fas fa-circle-notch fa-spin fa-3x"></i>
+									</div>
+								</div>
+							</div>-->
+							<div class="d-flex justify-content-center pb-2">
+								<div id="printLabel">
+									<div class="a4-width print-row">
+										<div class="print-row" :style="label.signum ? 'width:90%;' : 'width:100%;'">
+											<div v-for="label in labels">
+												<div :style="label.dimensions">
+													<div style="height: 100%; position:relative; border: 1px solid;">
+														<span v-for="(field, index) in label.fields" :style="field.dimensions" style="position:absolute;">
+															<span v-if="field.name == 'items.barcode'"><barcode :value="field.value" :fontsize="field.dimensions.fontSize"></barcode></span>
+															<span v-else>{{field.value}}</span>
+														</span>
+													</div>
+												</div>
+											</div>
+										</div>
+										<div v-if="label.signum">
+											<div v-for="label in labels">
+												<div :style="label.signum.dimensions">
+													<div style="height: 100%; position:relative; border: 1px solid; margin-left:2mm">
+														<span v-for="(field, index) in label.signum.fields" :style="field.dimensions" style="position:absolute;">
+															{{field.value}}
+														</span>
+													</div>
+												</div>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+					<div v-else class="container">
+						<div class="row">
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header">
+										<multiselect v-model="type" value="value" :options="printingType" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="Valitse lista" @input="fetchItems()"></multiselect>
+									</div>
+									<div class="card-body">
+										<draggable
+											class="dragArea list-group"
+											:list="items"
+											:group="{ name: 'item', put: false }">
+											<div
+											class="list-group-item"
+											v-for="element in items"
+											:key="element.itemnumber"
+											>
+											{{ element.barcode }}
+											</div>
+										</draggable>						
+									</div>
+								</div>
+							</div>
+							<div class="col-md-6">
+								<div class="card">
+									<div class="card-header">
+										<h5>Tulostettavat niteet</h5>
+									</div>
+									<div class="card-body">
+										<draggable
+											class="dragArea list-group"
+											:list="prints"
+											:group="{ name: 'item', pull: true }">
+											<div
+											class="list-group-item"
+											v-for="(element, index) in prints"
+											:key="element.itemnumber"
+											>
+											{{ element.barcode }}
+											<a href="#" class="ml-1" @click="removeFromPrint(index)"><i class="fas fa-minus text-danger"></i></a>
+											</div>
+										</draggable>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
 				</div>
 				</main>
 			</div>
+		</div>
 		<!-- Bootstrap core JavaScript
 		================================================== -->
 		<!-- Placed at the end of the document so the pages load faster -->
