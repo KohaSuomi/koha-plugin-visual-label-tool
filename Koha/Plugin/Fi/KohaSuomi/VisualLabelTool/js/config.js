@@ -228,7 +228,7 @@ new Vue({
       var searchParams = new URLSearchParams();
       searchParams.append('test', true);
       axios
-        .post('/api/v1/contrib/kohasuomi/labels/print/' + this.label.id, {
+        .post('/api/v1/contrib/kohasuomi/labels/print/' + this.label.id, [], {
           params: searchParams,
         })
         .then((response) => {
