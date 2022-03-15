@@ -39,7 +39,7 @@ Add items to printing queue with intranetuserjs
     function setPrintQueue(element) {
     let searchParams = new URLSearchParams(element.parent().parent().find(".print_label a").attr("href"));
     $.ajax({
-    url: "/api/v1/contrib/kohasuomi/labels/print",
+    url: "/api/v1/contrib/kohasuomi/labels/print/queue",
     type: "POST",
     dataType: "json",
     contentType: "application/json; charset=utf-8",

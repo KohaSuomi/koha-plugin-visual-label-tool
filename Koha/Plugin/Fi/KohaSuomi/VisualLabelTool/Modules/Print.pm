@@ -165,4 +165,11 @@ sub deleteFromPrintQueue {
     
 }
 
+sub updatePrintQueue {
+    my ($self, $body) = @_;
+
+    my @params = ($body->{borrowernumber}, $body->{itemnumber}, $body->{printed}, $body->{queue_id});
+    $self->db->updatePrintQueue(@params);
+}
+
 1;

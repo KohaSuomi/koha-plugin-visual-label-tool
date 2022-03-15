@@ -158,49 +158,6 @@
       }
     }
   },
-  "/labels/print": {
-    "post": {
-      "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::PrintController#setQueue",
-      "operationId": "setPrintQueue",
-      "tags": [
-        "labels"
-      ],
-      "parameters": [
-        {
-          "name": "body",
-          "in": "body",
-          "description": "A JSON object containing printing data",
-          "required": true,
-          "schema": {
-            "type": "object"
-          }
-        }
-      ],
-      "produces": [
-        "application/json"
-      ],
-      "responses": {
-        "200": {
-          "description": "Print label",
-          "schema": {
-            "type": "object"
-          }
-        },
-        "404": {
-          "description": "An error occured",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "error": {
-                "description": "Label not found",
-                "type": "string"
-              }
-            }
-          }
-        }
-      }
-    }
-  },
   "/labels/print/queue": {
     "get": {
       "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::PrintController#listItems",
@@ -237,6 +194,47 @@
             "properties": {
               "error": {
                 "description": "Labels not found",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    },
+    "post": {
+      "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::PrintController#setQueue",
+      "operationId": "setPrintQueue",
+      "tags": [
+        "labels"
+      ],
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "description": "A JSON object containing printing data",
+          "required": true,
+          "schema": {
+            "type": "object"
+          }
+        }
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "responses": {
+        "200": {
+          "description": "Print label",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "404": {
+          "description": "An error occured",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Label not found",
                 "type": "string"
               }
             }
