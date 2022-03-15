@@ -152,17 +152,32 @@ sub deleteFieldData {
 }
 
 sub getPrintQueue {
-    my ($self, $borrowernumber) = @_;
+    my ($self, $borrowernumber, $printed) = @_;
 
-    my $sth = $self->dbh->prepare("SELECT * FROM ".$self->printQueue." where borrowernumber = ?;");
-    $sth->execute($borrowernumber);
+    my $sth = $self->dbh->prepare("SELECT * FROM ".$self->printQueue." where borrowernumber = ? and printed = ?;");
+    $sth->execute($borrowernumber, $printed);
     return $sth->fetchall_arrayref({});
 }
 
 sub setPrintQueue {
     my ($self, @params) = @_;
 
-    my $sth=$self->dbh->prepare("INSERT INTO ".$self->printQueue." (borrowernumber,itemnumber) VALUES (?,?)");
+    my $sth=$self->dbh->prepare("INSERT INTO ".$self->printQueue." (borrowernumber,itemnumber, printed) VALUES (?,?,?)");
+    return $sth->execute(@params);
+}
+
+sub deletePrintQueueData {
+    my ($self, $id) = @_;
+
+    my $sth = $self->dbh->prepare("DELETE FROM ".$self->printQueue." WHERE id = ?;");
+    return $sth->execute($id);
+
+}
+
+sub updatePrintQueue {
+    my ($self, @params) = @_;
+
+    my $sth=$self->dbh->prepare("UPDATE ".$self->printQueue." SET borrowernumber = ?, itemnumber = ?, printed = ? WHERE id = ?");
     return $sth->execute(@params);
 }
 

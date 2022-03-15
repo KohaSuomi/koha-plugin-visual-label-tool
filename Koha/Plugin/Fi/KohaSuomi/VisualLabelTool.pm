@@ -161,22 +161,12 @@ sub createTables {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     ");
 
-    $dbh->do("CREATE TABLE IF NOT EXISTS `$printedTable` (
-        `id` int(11) NOT NULL AUTO_INCREMENT,
-        `label_id` int(11) NOT NULL,
-        `itemnumber` int(11) NOT NULL,
-        `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
-        PRIMARY KEY `id` (`id`),
-        KEY (`label_id`),
-        KEY (`itemnumber`)
-        ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
-    ");
-
     $dbh->do("CREATE TABLE IF NOT EXISTS `$printQueueTable` (
         `id` int(11) NOT NULL AUTO_INCREMENT,
         `borrowernumber` int(11) NOT NULL,
         `itemnumber` int(11) NOT NULL,
-        `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP,
+        `printed` tinyint(1) NOT NULL DEFAULT 0,
+        `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY `id` (`id`),
         KEY (`borrowernumber`),
         KEY (`itemnumber`)

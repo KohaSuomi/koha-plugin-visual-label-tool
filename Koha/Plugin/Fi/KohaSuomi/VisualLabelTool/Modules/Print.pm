@@ -138,12 +138,13 @@ sub getDescriptionName {
 }
 
 sub getPrintQueue {
-    my ($self, $borrowernumber) = @_;
+    my ($self, $borrowernumber, $printed) = @_;
 
-    my $items = $self->db->getPrintQueue($borrowernumber);
+    my $items = $self->db->getPrintQueue($borrowernumber, $printed);
     my $response;
     foreach my $item (@$items) {
-        my $itemData = Koha::Items->find($item->{itemnumber});
+        my $itemData = Koha::Items->find($item->{itemnumber})->unblessed;
+        $itemData->{queue_id} = $item->{id};
         push @$response, $itemData;
     }
 
@@ -153,8 +154,15 @@ sub getPrintQueue {
 sub setPrintQueue {
     my ($self, $body) = @_;
 
-    my @params = ($body->{borrowernumber}, $body->{itemnumber});
+    my @params = ($body->{borrowernumber}, $body->{itemnumber}, $body->{printed});
     $self->db->setPrintQueue(@params);
+}
+
+sub deleteFromPrintQueue {
+    my ($self, $queue_id) = @_;
+    
+    $self->db->deletePrintQueueData($queue_id);
+    
 }
 
 1;

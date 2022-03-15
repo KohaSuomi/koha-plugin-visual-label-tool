@@ -8,7 +8,6 @@ new Vue({
   el: '#viewApp',
   components: {
     Multiselect,
-    vuedraggable,
     barcode,
   },
   created() {
@@ -23,8 +22,9 @@ new Vue({
     label: null,
     showPrinting: false,
     printingType: [
-      { name: 'Oma lista', value: 'list' },
+      { name: 'Oma tulostusjono', value: 'list' },
       { name: 'Tänään vastaanotettu', value: 'received' },
+      { name: 'Itse tulostetut', value: 'printed' },
     ],
     type: null,
   },
@@ -44,7 +44,9 @@ new Vue({
       var searchParams = new URLSearchParams();
       searchParams.append('type', this.type.value);
       axios
-        .get('/api/v1/contrib/kohasuomi/labels/items', { params: searchParams })
+        .get('/api/v1/contrib/kohasuomi/labels/print/queue', {
+          params: searchParams,
+        })
         .then((response) => {
           this.items = response.data;
         })
@@ -78,12 +80,45 @@ new Vue({
     print() {
       printJS({
         printable: 'printLabel',
+        onPrintDialogClose: this.setPrinted(),
         type: 'html',
         css: '/plugin/Koha/Plugin/Fi/KohaSuomi/VisualLabelTool/css/print.css',
       });
     },
     removeFromPrint(index) {
       this.prints.splice(index, 1);
+    },
+    removeFromItems(index) {
+      if (
+        confirm('Haluatko varmasti poistaa niteen ' + this.items[index].barcode)
+      ) {
+        axios
+          .delete(
+            '/api/v1/contrib/kohasuomi/labels/print/queue/' +
+              this.items[index].queue_id
+          )
+          .then(() => {
+            this.items.splice(index, 1);
+          })
+          .catch((error) => {
+            this.errors.push(error.response.data.message);
+          });
+      }
+    },
+    addToPrints(index) {
+      if (index >= 0) {
+        this.prints.push(this.items[index]);
+      } else {
+        this.items.forEach((element) => {
+          this.prints.push(element);
+        });
+      }
+    },
+    clearPrints() {
+      this.prints = [];
+    },
+    setPrinted() {
+      console.log('hep');
     },
   },
 });

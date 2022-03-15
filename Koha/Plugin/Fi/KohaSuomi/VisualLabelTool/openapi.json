@@ -201,6 +201,91 @@
       }
     }
   },
+  "/labels/print/queue": {
+    "get": {
+      "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::PrintController#listItems",
+      "operationId": "listPrintQueueItems",
+      "tags": [
+        "labels"
+      ],
+      "parameters": [
+        {
+          "name": "type",
+          "in": "query",
+          "description": "Type value",
+          "required": true,
+          "type": "string"
+        }
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "responses": {
+        "200": {
+          "description": "Items",
+          "schema": {
+            "type": "array",
+            "items": {
+              "type": "object"
+            }
+          }
+        },
+        "404": {
+          "description": "An error occured",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Labels not found",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
+  "/labels/print/queue/{queue_id}": {
+    "delete": {
+      "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::PrintController#removeFromQueue",
+      "operationId": "deleteFromPrintQueue",
+      "tags": [
+        "labels"
+      ],
+      "parameters": [
+        {
+          "name": "queue_id",
+          "in": "path",
+          "description": "Queue identifier",
+          "required": true,
+          "type": "integer"
+        }
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "responses": {
+        "200": {
+          "description": "Deleted from the queue",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "404": {
+          "description": "An error occured",
+          "schema": {
+            "type": "object",
+            "properties": {
+              "error": {
+                "description": "Label not found",
+                "type": "string"
+              }
+            }
+          }
+        }
+      }
+    }
+  },
   "/labels/print/{label_id}": {
     "post": {
       "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::PrintController#get",
@@ -335,50 +420,6 @@
           "description": "Missing parameter",
           "schema": {
             "type": "object"
-          }
-        }
-      }
-    }
-  },
-  "/labels/items": {
-    "get": {
-      "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::ItemController#list",
-      "operationId": "listLabelItems",
-      "tags": [
-        "labels"
-      ],
-      "parameters": [
-        {
-          "name": "type",
-          "in": "query",
-          "description": "Type value",
-          "required": true,
-          "type": "string"
-        }
-      ],
-      "produces": [
-        "application/json"
-      ],
-      "responses": {
-        "200": {
-          "description": "Items",
-          "schema": {
-            "type": "array",
-            "items": {
-              "type": "object"
-            }
-          }
-        },
-        "404": {
-          "description": "An error occured",
-          "schema": {
-            "type": "object",
-            "properties": {
-              "error": {
-                "description": "Labels not found",
-                "type": "string"
-              }
-            }
           }
         }
       }
