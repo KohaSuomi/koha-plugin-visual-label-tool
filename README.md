@@ -27,3 +27,28 @@ Once set up is complete you will need to alter your UseKohaPlugins system prefer
 # Downloading
 
 From the release page you can download the latest \*.kpz file
+
+# Configure
+
+Add items to printing queue with intranetuserjs
+
+    $(document).ready(function() {
+        $(".print_label").after('<li><a href="#" onclick="setPrintQueue($(this))">Tulostusjonoon</a></li>');
+    });
+
+    function setPrintQueue(element) {
+    let searchParams = new URLSearchParams(element.parent().parent().find(".print_label a").attr("href"));
+    $.ajax({
+    url: "/api/v1/contrib/kohasuomi/labels/print",
+    type: "POST",
+    dataType: "json",
+    contentType: "application/json; charset=utf-8",
+    data: JSON.stringify({ itemnumber: searchParams.get('number_list'), printed: 0 }),
+    success: function (result) {
+        alert("Nide lisätty jonoon!");
+        },
+        error: function (err) {
+            alert("Lisäys epäonnistui!");
+        }
+    });
+    }
