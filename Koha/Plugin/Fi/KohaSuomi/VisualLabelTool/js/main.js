@@ -80,7 +80,9 @@ new Vue({
     print() {
       printJS({
         printable: 'printLabel',
-        onPrintDialogClose: this.setPrinted(),
+        onPrintDialogClose: () => {
+          this.updatePrintQueue();
+        },
         type: 'html',
         css: '/plugin/Koha/Plugin/Fi/KohaSuomi/VisualLabelTool/css/print.css',
       });
@@ -117,8 +119,25 @@ new Vue({
     clearPrints() {
       this.prints = [];
     },
-    setPrinted() {
-      console.log('hep');
+    async updatePrintQueue() {
+      const promises = [];
+      this.prints.forEach((element) => {
+        promises.push(
+          axios
+            .put('/api/v1/contrib/kohasuomi/labels/print/queue', {
+              itemnumber: element.itemnumber,
+              printed: 1,
+              queue_id: element.queue_id,
+            })
+            .then(() => {})
+            .catch((error) => {
+              this.errors.push(error.response.data.message);
+            })
+        );
+      });
+      await Promise.all(promises).then(() => {
+        this.clearPrints();
+      });
     },
   },
 });

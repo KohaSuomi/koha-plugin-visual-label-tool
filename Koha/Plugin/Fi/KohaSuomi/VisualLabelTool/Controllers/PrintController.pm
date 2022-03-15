@@ -106,9 +106,15 @@ sub updateQueue {
     my $c = shift->openapi->valid_input or return;
 
     my $req  = $c->req->json;
+    my $user = $c->stash('koha.user');
+    $req->{borrowernumber} = $user->borrowernumber unless $req->{borrowernumber};
     try {
         my $print= Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Print->new();
-        #my $response = $print->deleteFromPrintQueue();
+        if ($req->{queue_id}) {
+            $print->updatePrintQueue($req);
+        } else {
+            $print->setPrintQueue($req);
+        }
         return $c->render(status => 200, openapi => {message => "Success"});
     } catch {
         my $error = $_;

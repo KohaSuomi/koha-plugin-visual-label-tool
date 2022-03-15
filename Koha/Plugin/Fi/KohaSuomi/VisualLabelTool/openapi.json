@@ -241,6 +241,41 @@
           }
         }
       }
+    },
+    "put": {
+      "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::PrintController#updateQueue",
+      "operationId": "updatePrintQueue",
+      "tags": [
+        "labels"
+      ],
+      "parameters": [
+        {
+          "name": "body",
+          "in": "body",
+          "description": "A JSON object containing updated fields",
+          "required": false,
+          "schema": {
+            "type": "object"
+          }
+        }
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "responses": {
+        "200": {
+          "description": "Print queue updated",
+          "schema": {
+            "type": "object"
+          }
+        },
+        "500": {
+          "description": "Missing parameter",
+          "schema": {
+            "type": "object"
+          }
+        }
+      }
     }
   },
   "/labels/print/queue/{queue_id}": {
