@@ -62,6 +62,7 @@ sub listItems {
             my $print = Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Print->new();
             $items = $print->getPrintQueue($user->borrowernumber, 0);
         }
+        $items = [] unless $items;
         return $c->render(status => 200, openapi => $items);
     } catch {
         my $error = $_;
