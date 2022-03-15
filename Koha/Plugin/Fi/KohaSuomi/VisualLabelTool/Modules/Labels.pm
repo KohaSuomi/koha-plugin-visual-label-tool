@@ -267,6 +267,7 @@ sub wrapLabel {
     my $wrap = {
         id => $label->{id},
         name => $label->{name},
+        type => $label->{type},
         labelcount => $label->{labelcount},
         dimensions => { 
             width => $label->{width},
