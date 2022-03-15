@@ -36,6 +36,11 @@
     "post": {
       "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::LabelController#set",
       "operationId": "SetLabel",
+      "x-koha-authorization": {
+        "permissions": {
+          "plugins": "configure"
+        }
+      },
       "tags": [
         "labels"
       ],
@@ -73,6 +78,11 @@
     "put": {
       "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::LabelController#update",
       "operationId": "UpdateLabel",
+      "x-koha-authorization": {
+        "permissions": {
+          "plugins": "configure"
+        }
+      },
       "tags": [
         "labels"
       ],
@@ -121,6 +131,11 @@
     "delete": {
       "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::LabelController#delete",
       "operationId": "DeleteLabel",
+      "x-koha-authorization": {
+        "permissions": {
+          "plugins": "configure"
+        }
+      },
       "tags": [
         "labels"
       ],
@@ -162,6 +177,11 @@
     "get": {
       "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::PrintController#listItems",
       "operationId": "listPrintQueueItems",
+      "x-koha-authorization": {
+        "permissions": {
+          "plugins": "tool"
+        }
+      },
       "tags": [
         "labels"
       ],
@@ -204,6 +224,11 @@
     "post": {
       "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::PrintController#setQueue",
       "operationId": "setPrintQueue",
+      "x-koha-authorization": {
+        "permissions": {
+          "editcatalogue": "edit_items"
+        }
+      },
       "tags": [
         "labels"
       ],
@@ -245,6 +270,11 @@
     "put": {
       "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::PrintController#updateQueue",
       "operationId": "updatePrintQueue",
+      "x-koha-authorization": {
+        "permissions": {
+          "editcatalogue": "edit_items"
+        }
+      },
       "tags": [
         "labels"
       ],
@@ -282,6 +312,11 @@
     "delete": {
       "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::PrintController#removeFromQueue",
       "operationId": "deleteFromPrintQueue",
+      "x-koha-authorization": {
+        "permissions": {
+          "editcatalogue": "edit_items"
+        }
+      },
       "tags": [
         "labels"
       ],
@@ -323,6 +358,11 @@
     "post": {
       "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::PrintController#get",
       "operationId": "printLabel",
+      "x-koha-authorization": {
+        "permissions": {
+          "plugins": "tool"
+        }
+      },
       "tags": [
         "labels"
       ],
@@ -386,6 +426,11 @@
     "get": {
       "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::FieldController#list",
       "operationId": "listFields",
+      "x-koha-authorization": {
+        "permissions": {
+          "plugins": "configure"
+        }
+      },
       "tags": [
         "labels"
       ],
@@ -421,6 +466,11 @@
     "delete": {
       "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::FieldController#delete",
       "operationId": "DeleteField",
+      "x-koha-authorization": {
+        "permissions": {
+          "plugins": "configure"
+        }
+      },
       "tags": [
         "labels"
       ],
