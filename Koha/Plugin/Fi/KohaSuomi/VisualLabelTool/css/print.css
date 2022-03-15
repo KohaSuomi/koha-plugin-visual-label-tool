@@ -1,9 +1,20 @@
+/*@media print {
+  body {
+    width: 100mm;
+    height: 50mm;
+  }
+}*/
+
 @page {
   margin: 0;
 }
 
 .a4-width {
   max-width: 229mm;
+}
+
+.roll-width {
+  max-width: 110mm;
 }
 
 .print-row {
