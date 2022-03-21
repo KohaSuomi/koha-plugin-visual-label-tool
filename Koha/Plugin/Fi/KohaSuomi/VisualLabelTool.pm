@@ -16,14 +16,14 @@ our $VERSION = "1.0.0";
 
 ## Here is our metadata, some keys are required, some are optional
 our $metadata = {
-    name            => 'Visual label tool',
+    name            => 'Tarratulostustyökalu',
     author          => 'Johanna Räisä',
     date_authored   => '2021-02-25',
     date_updated    => "2021-02-25",
     minimum_version => '21.11.00.000',
     maximum_version => undef,
     version         => $VERSION,
-    description     => 'Create printing labels with drag and drop tool and print them',
+    description     => 'Tee ja tulosta tarroja.',
 };
 
 ## This is the minimum code required for a plugin's 'new' method
