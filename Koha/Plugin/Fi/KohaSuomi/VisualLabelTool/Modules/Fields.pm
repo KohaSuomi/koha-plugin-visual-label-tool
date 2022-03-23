@@ -28,7 +28,6 @@ use Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Database;
 use C4::Context;
 use Koha::Items;
 use Koha::Database;
-
 =head new
 
     my $fields = Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Fields->new($params);
@@ -56,6 +55,7 @@ sub listFields {
     push @$columns, $self->getItem();
     push @$columns, $self->getBiblio();
     push @$columns, $self->getBiblioItem();
+    push @$columns, $self->getMarcFields();
 
     return $columns;
 }
@@ -134,7 +134,14 @@ sub getBiblioItem {
 
 sub getMarcFields {
     my ($self) = @_;
-    return ()
+    return ('marc.title',
+    'marc.author',
+    'marc.unititle',
+    'marc.description',
+    'marc.publication',
+    'marc.localnote',
+    'marc.volume'
+    );
 }
 
 sub signumLoc {
@@ -165,6 +172,133 @@ sub yklFirst {
     #84.2 SLO PK N
     my @parts = split(/\s+/, $itemcallnumber);
     return ($parts[0]) ? $parts[0] : undef;
+}
+
+sub marcField {
+    my ($self, $data, $field) = @_;
+
+    if ($field eq 'title') {
+        return $self->marcTitle($data);
+    }
+
+    if ($field eq 'author') {
+        return $self->marcAuthor($data);
+    }
+
+    if ($field eq 'unititle') {
+        return $self->marcUnititle($data);
+    }
+
+    if ($field eq 'description') {
+        return $self->marcDescription($data);
+    }
+
+    if ($field eq 'publication') {
+        return $self->marcPublication($data);
+    }
+
+    if ($field eq 'localnote') {
+        return $self->marcLocalNote($data);
+    }
+
+    if ($field eq 'volume') {
+        return $self->marcVolume($data);
+    }
+}
+
+sub marcTitle {
+    my ($self, $record) = @_;
+
+    my $title = '';
+    if (my $f245 = $record->field('245')) {
+        my $sfA = $f245->subfield('a');
+        my $sfB = $f245->subfield('b');
+        my $sfN = $f245->subfield('n');
+        my $sfP = $f245->subfield('p');
+
+        $title .= $sfA if $sfA;
+        $title .= $sfB if $sfB;
+        $title .= $sfN if $sfN;
+        $title .= $sfP if $sfP;
+        $title = 'no subfields in $245' unless $title;
+    }
+    elsif (my $f111 = $record->field('111')) {
+        my $sfA = $f111->subfield('a');
+        $title = $sfA;
+    }
+    elsif (my $f130 = $record->field('130')) {
+        my $sfA = $f130->subfield('a');
+        $title = $sfA;
+    }
+    return $title;
+}
+
+sub marcAuthor {
+    my ($self, $record) = @_;
+
+    my $author = '';
+
+    if ($record->subfield('942','i')) {
+        $author .= $record->subfield('942','i');
+    }
+    elsif ($record->subfield('100','a')) {
+        $author .= $record->subfield('100','a');
+    }
+
+    if ($record->subfield('100','c')) {
+        $author .= $record->subfield('100','c');
+    }
+    elsif ($record->subfield('110','a')) {
+        $author .= $record->subfield('110','a');
+    }
+    elsif ($record->subfield('111','a')) {
+        $author .= $record->subfield('111','a');
+    }
+
+    return $author;
+}
+
+sub marcUnititle {
+    my ($self, $record) = @_;
+
+    my $unititle = '';
+    $unititle .= $record->subfield('130','a') if $record->subfield('130','a');
+    $unititle .= $record->subfield('130','l') if $record->subfield('130','l');
+    return $unititle;
+}
+
+sub marcDescription {
+    my ($self, $record) = @_;
+
+    my $value = '';
+    $value .= $record->subfield('300','a') if $record->subfield('300','a');
+    $value .= $record->subfield('300','e') if $record->subfield('300','e');
+    $value .= $record->subfield('347','b') if $record->subfield('347','b');
+    return $value;
+}
+
+sub marcPublication {
+    my ($self, $record) = @_;
+
+    my $value = '';
+    $value .= $record->subfield('260','c') || $record->subfield('264','c');
+    return $value;
+}
+
+sub marcLocalNote {
+    my ($self, $record) = @_;
+
+    my $value = '';
+    $value .= $record->subfield('591','a');
+    return $value;
+}
+
+sub marcVolume {
+    my ($self, $record) = @_;
+
+    my $value = '';
+    $value .= $record->subfield('262','a') || $record->subfield('049','a');
+    return $value;
 }
 
 1;

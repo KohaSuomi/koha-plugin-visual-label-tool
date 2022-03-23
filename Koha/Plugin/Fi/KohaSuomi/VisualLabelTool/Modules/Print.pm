@@ -85,11 +85,12 @@ sub printTest {
     my ($self, $label_id) = @_;
     my $label = $self->labels->getLabel($label_id);
     my $item = Koha::Items->search({}, {rows => 1})->next;
-    my ($biblio, $biblioitem) = $self->getBiblioData($item);
+    my ($biblio, $biblioitem, $marc) = $self->getBiblioData($item);
     my $data = {
         items => $item->unblessed,
         biblio => $biblio,
-        biblioitems => $biblioitem
+        biblioitems => $biblioitem,
+        marc => $marc
     };
 
     my @testLabels;
@@ -124,7 +125,7 @@ sub processFields {
 sub getBiblioData {
     my ($self, $item) = @_;
 
-    return ($item->biblio->unblessed, $item->biblio->biblioitem->unblessed);
+    return ($item->biblio->unblessed, $item->biblio->biblioitem->unblessed, $item->biblio->metadata->record);
 }
 
 sub getDescriptionName {
@@ -134,6 +135,7 @@ sub getDescriptionName {
     return Koha::Libraries->find($response)->branchname if $value eq "homebranch";
     return $self->fields->signumYKL($data->{$key}->{'itemcallnumber'}) if $value eq "signumYKL";
     return $self->fields->signumLoc($data->{$key}->{'itemcallnumber'}) if $value eq "signumLoc";
+    return $self->fields->marcField($data->{$key},$value) if $key eq "marc";
     return $response;
 }
 
