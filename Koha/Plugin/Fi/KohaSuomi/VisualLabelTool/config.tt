@@ -228,6 +228,9 @@
 															<label>Vasemmalta:</label> <input type="text" v-model="selectedField.dimensions.left"  class="form-control" name="field" :value="selectedField.dimensions.left" @change="updateDimension($event)"/>
 															<label>Oikealta:</label> <input type="text" v-model="selectedField.dimensions.right"  class="form-control" name="field" :value="selectedField.dimensions.right" @change="updateDimension($event)"/>
 															<label>Kirjasinkoko:</label> <input type="text" v-model="selectedField.dimensions.fontSize"  class="form-control" name="field" :value="selectedField.dimensions.fontSize" @change="updateDimension($event)"/>
+															<div class="form-group">
+																<button class="btn btn-danger" @click="deleteField($event)">Poista</button>
+															</div>
 														</div>
 													</div>
 												</div>

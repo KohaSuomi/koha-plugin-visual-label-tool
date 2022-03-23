@@ -212,7 +212,7 @@ sub updateLabel {
                 $self->db->setFieldData($self->parseField($label_id, 'signum', $field));
             }
         };
-
+        $response = $self->getLabel($label_id);
     }
     return ($response, $error);
 }

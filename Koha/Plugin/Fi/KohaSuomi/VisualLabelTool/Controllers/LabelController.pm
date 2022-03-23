@@ -71,7 +71,7 @@ sub update {
         if ($error) {
             return $c->render(status => 400, openapi => {message => $error});
         } else {
-            return $c->render(status => 200, openapi => {message => "Success"});
+            return $c->render(status => 200, openapi => $response);
         }
     } catch {
         my $error = $_;

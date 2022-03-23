@@ -63,13 +63,23 @@ new Vue({
       });
     },
     removeFromLabels() {
-      this.label.fields.forEach((element, index) => {
-        if (element.name == this.selectedField.name && !element.id) {
-          this.label.fields.splice(index, 1);
-        } else if (element.id == this.selectedField.id) {
-          this.label.fields.splice(index, 1);
-        }
-      });
+      if (this.showTab == 'labelFields') {
+        this.label.fields.forEach((element, index) => {
+          if (element.name == this.selectedField.name && !element.id) {
+            this.label.fields.splice(index, 1);
+          } else if (element.id == this.selectedField.id) {
+            this.label.fields.splice(index, 1);
+          }
+        });
+      } else {
+        this.label.signum.fields.forEach((element, index) => {
+          if (element.name == this.selectedField.name && !element.id) {
+            this.label.signum.fields.splice(index, 1);
+          } else if (element.id == this.selectedField.id) {
+            this.label.signum.fields.splice(index, 1);
+          }
+        });
+      }
     },
     createLabel() {
       this.showTabs('labelSettings');
@@ -104,7 +114,12 @@ new Vue({
       };
       this.selectedField = object;
       if (type == 'signum') {
-        this.label.signum.fields.push(this.selectedField);
+        if (this.label.signum.fields) {
+          this.label.signum.fields.push(this.selectedField);
+        } else {
+          this.label.signum.fields = [];
+          this.label.signum.fields.push(this.selectedField);
+        }
       } else {
         this.label.fields.push(this.selectedField);
       }
@@ -135,6 +150,7 @@ new Vue({
     },
     showTabs(val) {
       this.selectedField = undefined;
+      this.fieldName = '';
       this.showTab = val;
     },
     fetchLabels() {
@@ -177,7 +193,8 @@ new Vue({
       this.saved = false;
       axios
         .put('/api/v1/contrib/kohasuomi/labels/' + this.label.id, this.label)
-        .then(() => {
+        .then((response) => {
+          this.label = response.data;
           this.saved = true;
         })
         .catch((error) => {
