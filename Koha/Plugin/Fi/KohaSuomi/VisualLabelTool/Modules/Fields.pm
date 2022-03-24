@@ -338,7 +338,6 @@ sub _evalSegment {
             push(@payload, $val) if $val;
         }
         elsif (my $dbSel = $self->_isDBSelector($op)) {
-            warn Data::Dumper::Dumper $dbSel;
             my $val = $self->_getDBSelectorValue($dbSel, $data);
             push(@payload, $val) if $val;
         }
