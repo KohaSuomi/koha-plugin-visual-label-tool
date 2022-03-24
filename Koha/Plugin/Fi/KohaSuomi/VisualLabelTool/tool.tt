@@ -55,7 +55,7 @@
 						</ul>
 						<ul v-else class="nav">
 							<li class="nav-item pl-2">
-								<multiselect v-model="label" value="value" :options="savedLabels" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="Tallennetut pohjat"></multiselect>
+								<multiselect v-model="label" value="value" :options="savedLabels" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="Valitse pohja"></multiselect>
 							</li>
 							<li v-if="label" class="nav-item pl-2">
 								<button class="btn btn-info" @click="printLabels($event)">Tulostus</button>
