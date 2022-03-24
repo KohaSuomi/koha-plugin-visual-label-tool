@@ -28,6 +28,7 @@ use Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Database;
 use C4::Context;
 use Koha::Items;
 use Koha::Database;
+use Text::ParseWords;
 =head new
 
     my $fields = Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Fields->new($params);
@@ -56,6 +57,7 @@ sub listFields {
     push @$columns, $self->getBiblio();
     push @$columns, $self->getBiblioItem();
     push @$columns, $self->getMarcFields();
+    push @$columns, 'custom';
 
     return $columns;
 }
@@ -139,7 +141,6 @@ sub getMarcFields {
     'marc.unititle',
     'marc.description',
     'marc.publication',
-    'marc.localnote',
     'marc.volume'
     );
 }
@@ -174,6 +175,19 @@ sub yklFirst {
     return ($parts[0]) ? $parts[0] : undef;
 }
 
+sub customField {
+    my ($self, $data, $field) = @_;
+
+    my $ors = $self->_splitToLogicSegments($field);
+
+    ##Evaluate 'or'-segments in order.
+    foreach my $or (@$ors) {
+        my $payload = $self->_evalSegment($or, $data);
+        my $val = join(' ', @$payload);
+        return $val if $val;
+    }
+}
+
 sub marcField {
     my ($self, $data, $field) = @_;
 
@@ -195,10 +209,6 @@ sub marcField {
 
     if ($field eq 'publication') {
         return $self->marcPublication($data);
-    }
-
-    if ($field eq 'localnote') {
-        return $self->marcLocalNote($data);
     }
 
     if ($field eq 'volume') {
@@ -285,20 +295,109 @@ sub marcPublication {
     return $value;
 }
 
-sub marcLocalNote {
-    my ($self, $record) = @_;
-
-    my $value = '';
-    $value .= $record->subfield('591','a');
-    return $value;
-}
-
 sub marcVolume {
     my ($self, $record) = @_;
 
     my $value = '';
     $value .= $record->subfield('262','a') || $record->subfield('049','a');
     return $value;
+}
+
+sub _splitToLogicSegments {
+    my ($self, $directive) = @_;
+
+    my @tokens = Text::ParseWords::quotewords('\s+', 'keep', $directive);
+    my @ors;
+    my $segments = [];
+    foreach my $token (@tokens) {
+        if ($token =~ /^(or|\|\|)$/) { #Split using '||' or 'or'
+            push(@ors, $segments);
+            $segments = [];
+        }
+        else {
+            push(@$segments, $token) if (not($token =~ /^(and|&&|\.|\+)$/));
+        }
+    }
+    #if the last token wasn't a or-clause, add the remainder to logic segments. This way we prevent adding a trailing or two times.
+    if (not($tokens[scalar(@tokens)-1] =~ /^or|\|\|$/)) {
+        push(@ors, $segments);
+    }
+
+    return \@ors;
+    ##First split to 'or'-segments
+    #my @ors = split(/ or | \|\| /, $directive); #Split using '||' or 'or'
+    #return \@ors;
+}
+
+sub _evalSegment {
+    my ($self, $or, $data) = @_;
+    my @payload; #Collect results of source definition matchings here.
+    foreach my $op (@$or) {
+        if (my $marcSel = $self->_isMARCSelector($op)) {
+            my $val = $self->_getMARCValue($marcSel, $data->{marc});
+            push(@payload, $val) if $val;
+        }
+        elsif (my $dbSel = $self->_isDBSelector($op)) {
+            warn Data::Dumper::Dumper $dbSel;
+            my $val = $self->_getDBSelectorValue($dbSel, $data);
+            push(@payload, $val) if $val;
+        }
+        elsif (my $text = $self->_isText($op)) {
+            push(@payload, $text) if $text;
+        }
+        else {
+            my @cc = caller(0);
+            die $cc[3]."($op):> Couldn't parse this source definition '$op'";
+        }
+    }
+    return \@payload;
+}
+
+sub _getMARCValue {
+    my ($self, $selector, $record) = @_;
+
+    my @fields = $record->field( $selector->{field} );
+    foreach my $f (@fields) {
+        my $sf = $f->subfield( $selector->{subfield} );
+        return $sf if $sf;
+    }
+    return undef;
+}
+
+sub _isMARCSelector {
+    my ($self, $op) = @_;
+    if ($op =~ /^\s*(\d{3})\$(\w)\s*$/) { #Eg. 245$a
+        return {field => "$1", subfield => "$2"};
+    }
+    return undef;
+}
+sub _isDBSelector {
+    my ($self,$op) = @_;
+    if ($op =~ /^\s*(\w+)\.(\w+)\s*$/) { #Eg. biblio.3_little_musketeers
+        return {table => "$1", column => "$2"};
+    }
+    return undef;
+}
+sub _isText {
+    my ($self, $op) = @_;
+    if ($op =~ /^"(.+)"$/) { #Eg. biblio.3_little_musketeers
+        return $1;
+    }
+    return undef;
+}
+
+sub _getDBSelectorValue {
+    my ($self, $selector, $dbData) = @_;
+    my $table = $dbData->{$selector->{table}};
+    unless ($table) {
+        my @cc = caller(0);
+        die $cc[3]."():> data source requests table '".$selector->{table}."', but that table is not available.";
+    }
+    unless (exists($table->{ $selector->{column} })) {
+        my @cc = caller(0);
+        die $cc[3]."():> data source requests table '".$selector->{table}."' and column '".$selector->{column}."', but that column is not available.";
+    }
+    return $table->{ $selector->{column} };
 }
 
 1;

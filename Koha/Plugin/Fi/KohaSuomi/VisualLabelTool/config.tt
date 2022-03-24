@@ -161,7 +161,7 @@
 													<div class="form-group">
 														<div class="input-group mb-3">
 															<span class="mr-3">
-																<multiselect class="float-left" v-model="selectedField" value="value" :options="label.fields" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="Valitse" @input="showField = true"></multiselect>
+																<multiselect class="float-left" v-model="selectedField" value="value" :options="label.fields" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="Valitse" @input="showFieldData($event)"></multiselect>
 															</span>
 															<span>
 																<div class="input-group mb-3">
@@ -170,7 +170,7 @@
 															</span>
 														</div>
 														<div v-if="selectedField && showField" class="form-group pb-2 border-bottom">
-															<label>Nimi:</label> <input type="text"  class="form-control" name="field" :value="selectedField.name" disabled/>
+															<label>Nimi:</label> <input type="text"  class="form-control" name="field" :value="selectedField.name" :disabled="isDisabled" @change="updateFieldName($event)"/>
 															<label>Ylhäältä:</label> <input type="text" v-model="selectedField.dimensions.top"  class="form-control" name="field" :value="selectedField.dimensions.top" @change="updateDimension($event)"/>
 															<label>Vasemmalta:</label> <input type="text" v-model="selectedField.dimensions.left"  class="form-control" name="field" :value="selectedField.dimensions.left" @change="updateDimension($event)"/>
 															<label>Oikealta:</label> <input type="text" v-model="selectedField.dimensions.right"  class="form-control" name="field" :value="selectedField.dimensions.right" @change="updateDimension($event)"/>
@@ -223,7 +223,7 @@
 															</span>
 														</div>
 														<div v-if="selectedField" class="form-group pb-2 border-bottom">
-															<label>Nimi:</label> <input type="text"  class="form-control" name="field" :value="selectedField.name" disabled/>
+															<label>Nimi:</label> <input type="text"  class="form-control" name="field" :value="selectedField.name" :disabled="isDisabled" @change="updateFieldName($event)"/>
 															<label>Ylhäältä:</label> <input type="text" v-model="selectedField.dimensions.top"  class="form-control" name="field" :value="selectedField.dimensions.top" @change="updateDimension($event)"/>
 															<label>Vasemmalta:</label> <input type="text" v-model="selectedField.dimensions.left"  class="form-control" name="field" :value="selectedField.dimensions.left" @change="updateDimension($event)"/>
 															<label>Oikealta:</label> <input type="text" v-model="selectedField.dimensions.right"  class="form-control" name="field" :value="selectedField.dimensions.right" @change="updateDimension($event)"/>

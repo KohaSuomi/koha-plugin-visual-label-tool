@@ -34,6 +34,7 @@ new Vue({
     showField: false,
     showTest: false,
     prints: [],
+    isDisabled: true,
   },
   created() {
     this.fetchLabels();
@@ -61,6 +62,9 @@ new Vue({
           element = this.selectedField;
         }
       });
+    },
+    updateFieldName(e) {
+      this.selectedField.name = e.target.value;
     },
     removeFromLabels() {
       if (this.showTab == 'labelFields') {
@@ -106,6 +110,9 @@ new Vue({
       this.selectedField = undefined;
       const object = Object.create({});
       object.name = this.fieldName;
+      if (this.fieldName == 'custom') {
+        this.isDisabled = false;
+      }
       object.dimensions = {
         top: '0mm',
         left: '0mm',
@@ -152,6 +159,20 @@ new Vue({
       this.selectedField = undefined;
       this.fieldName = '';
       this.showTab = val;
+    },
+    showFieldData(e) {
+      this.showField = true;
+      const prefix = this.selectedField.name.split('.');
+      if (
+        prefix[0] != 'marc' &&
+        prefix[0] != 'items' &&
+        prefix[0] != 'biblio' &&
+        prefix[0] != 'biblioitems'
+      ) {
+        this.isDisabled = false;
+      } else {
+        this.isDisabled = true;
+      }
     },
     fetchLabels() {
       axios
