@@ -67,11 +67,12 @@ sub printLabel {
     foreach my $item (@{$items}) {
         my $label = $self->labels->getLabel($label_id);
         my $itemData = Koha::Items->find($item->{itemnumber});
-        my ($biblio, $biblioitem) = $self->getBiblioData($itemData);
+        my ($biblio, $biblioitem, $marc) = $self->getBiblioData($itemData);
         my $data = {
             items => $itemData->unblessed,
             biblio => $biblio,
-            biblioitems => $biblioitem
+            biblioitems => $biblioitem,
+            marc => $marc
         };
 
         my $valueLabel = $self->processFields($label, $data);
