@@ -8,7 +8,6 @@ new Vue({
   el: '#configApp',
   components: {
     Multiselect,
-    barcode,
     printView,
   },
   data: {
