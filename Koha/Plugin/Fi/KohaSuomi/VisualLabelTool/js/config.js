@@ -1,4 +1,4 @@
-import barcode from './barcode.js';
+import printView from './printView.js';
 const Multiselect = Vue.component(
   'vue-multiselect',
   window.VueMultiselect.default
@@ -9,6 +9,7 @@ new Vue({
   components: {
     Multiselect,
     barcode,
+    printView,
   },
   data: {
     fieldName: '',
@@ -128,7 +129,12 @@ new Vue({
           this.label.signum.fields.push(this.selectedField);
         }
       } else {
-        this.label.fields.push(this.selectedField);
+        if (this.label.fields) {
+          this.label.fields.push(this.selectedField);
+        } else {
+          this.label.fields = [];
+          this.label.fields.push(this.selectedField);
+        }
       }
       this.fieldName = '';
       this.showField = true;
@@ -282,7 +288,7 @@ new Vue({
     },
     printTest() {
       printJS({
-        printable: 'printTest',
+        printable: 'printLabel',
         type: 'html',
         css: '/plugin/Koha/Plugin/Fi/KohaSuomi/VisualLabelTool/css/print.css',
       });

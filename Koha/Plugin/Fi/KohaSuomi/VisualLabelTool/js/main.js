@@ -1,4 +1,4 @@
-import barcode from './barcode.js';
+import printView from './printView.js';
 const Multiselect = Vue.component(
   'vue-multiselect',
   window.VueMultiselect.default
@@ -8,7 +8,7 @@ new Vue({
   el: '#viewApp',
   components: {
     Multiselect,
-    barcode,
+    printView,
   },
   created() {
     this.fetchLabels();

@@ -63,44 +63,7 @@
 						</ul>
 					</div>
 					<div v-if="showPrinting">
-						<div class="flex-row">
-							<!--<div :class="{'d-none': !showLoader }">
-								<div class="row w-100 p-3">
-									<div class="col text-center">
-										<i class="fas fa-circle-notch fa-spin fa-3x"></i>
-									</div>
-								</div>
-							</div>-->
-							<div class="d-flex justify-content-center pb-2">
-								<div id="printLabel">
-									<div class="a4-width print-row">
-										<div class="print-row" :style="label.signum ? 'width:90%;' : 'width:100%;'">
-											<div v-for="label in labels">
-												<div :style="label.dimensions">
-													<div style="height: 100%; position:relative; border: 1px solid;">
-														<span v-for="(field, index) in label.fields" :style="field.dimensions" style="position:absolute;">
-															<span v-if="field.name == 'items.barcode'"><barcode :value="field.value" :fontsize="field.dimensions.fontSize"></barcode></span>
-															<span v-else>{{field.value}}</span>
-														</span>
-													</div>
-												</div>
-											</div>
-										</div>
-										<div v-if="label.signum">
-											<div v-for="label in labels">
-												<div :style="label.signum.dimensions">
-													<div style="height: 100%; position:relative; border: 1px solid; margin-left:2mm">
-														<span v-for="(field, index) in label.signum.fields" :style="field.dimensions" style="position:absolute;">
-															{{field.value}}
-														</span>
-													</div>
-												</div>
-											</div>
-										</div>
-									</div>
-								</div>
-							</div>
-						</div>
+						<print-view :label="label" :prints="labels"></print-view>
 					</div>
 					<div v-else class="container">
 						<div class="row">
