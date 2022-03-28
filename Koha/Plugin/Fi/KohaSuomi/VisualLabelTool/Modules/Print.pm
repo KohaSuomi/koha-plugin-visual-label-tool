@@ -29,6 +29,7 @@ use Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Database;
 use C4::Context;
 use Koha::Items;
 use Koha::Libraries;
+use Koha::AuthorisedValues;
 
 =head new
 
@@ -146,6 +147,7 @@ sub getDescriptionName {
     return $self->fields->signumLoc($data->{$key}->{'itemcallnumber'}) if $value eq "signumLoc";
     return $self->fields->marcField($data->{$key},$value) if $key eq "marc";
     return $self->fields->customField($data, $key) if !$value;
+    return Koha::AuthorisedValues->search({ category => 'MTYPE', authorised_value => $response })->next->lib if $value eq 'itemtype';
     return $response;
 }
 
