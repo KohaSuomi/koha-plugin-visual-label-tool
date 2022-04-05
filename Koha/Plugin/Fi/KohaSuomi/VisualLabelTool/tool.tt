@@ -63,7 +63,7 @@
 						</ul>
 					</div>
 					<div v-if="showPrinting">
-						<print-view :label="label" :prints="labels"></print-view>
+						<print-view :label="label" :prints="labels" :test="false"></print-view>
 					</div>
 					<div v-else class="container">
 						<div class="row">

@@ -241,7 +241,7 @@
 							</div>
 						</div>
 						<div v-if="showTest">
-							<print-view :label="label" :prints="prints"></print-view>
+							<print-view :label="label" :prints="prints" :test="true"></print-view>
 						</div>
 					</div>
 				</main>
