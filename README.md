@@ -83,3 +83,14 @@ Add items to printing queue with intranetuserjs
    For the test sheet the plugin fetches the first item from the database and fills fields.
 
 ![Screenshot6](assets/img/Screenshot2022-04-05at12-07-45.png)
+
+# How to use
+
+1. Run the tool.
+2. Choose from created labels.
+3. Choose items from the lists available and click them to be printed.
+   ![Screenshot7](assets/img/Screenshot2022-04-05at12-42-19.png)
+   If intranetusejs setting is in place (see above), you can add items to your own list from item's action list.
+   ![Screenshot8](assets/img/Screenshot2022-04-05at12-07-45.png)
+4. Today acquired items are fetched with dateaccessioned value.
+5. The plugin keeps a list of printed labels so you can return to them and choose to be printed again.
