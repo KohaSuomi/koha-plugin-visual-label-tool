@@ -52,3 +52,31 @@ Add items to printing queue with intranetuserjs
         }
     });
     }
+
+# How create and modify labels
+
+1. Create and modify labels in configuration.
+
+![Screenshot1](assets/img/Screenshot2022-04-05at12-05-49.png)
+
+![Screenshot2](assets/img/Screenshot2022-04-05at12-24-44.png)
+
+2. Define labels name and dimensions
+
+![Screenshot3](assets/img/Screenshot2022-04-05at12-06-45.png)
+
+3. Define label's fields on fields tab.
+
+![Screenshot4](assets/img/Screenshot2022-04-05at12-07-20.png)
+
+4. Define signum and fields
+
+![Screenshot5](assets/img/Screenshot2022-04-05at12-07-03.png)
+
+5. The fields will appear to label preview and when the postion is changed the field will move on the preview.
+
+![Screenshot6](assets/img/Screenshot2022-04-05at12-06-32.png)
+
+6. Print a test label sheet. The configurations have to be saved to get the newest changes.
+
+![Screenshot6](assets/img/Screenshot2022-04-05at12-07-45.png)
