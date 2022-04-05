@@ -29,6 +29,7 @@ use C4::Context;
 use Koha::Items;
 use Koha::Database;
 use Text::ParseWords;
+use Koha::AuthorisedValues;
 =head new
 
     my $fields = Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Fields->new($params);
@@ -76,7 +77,7 @@ sub getItem {
         'items.barcode', 
         'items.homebranch', 
         'items.itemcallnumber', 
-        'items.permanent_location', 
+        'items.location',
         'items.ccode', 
         'items.cn_source', 
         'items.cn_sort', 
@@ -160,6 +161,20 @@ sub signumLoc {
     my $locationCode = $permanent_location if $permanent_location;
     $locationCode = $location if !$permanent_location;
     return $locationCode;
+}
+
+sub location {
+    my ($self, $permanent_location, $location) = @_;
+
+    my $locCode = $permanent_location || $location;
+    return '' if(not($locCode));
+
+    my $av = Koha::AuthorisedValues->search({
+        category => 'LOC',
+        authorised_value => $locCode
+    });
+    $av = $av->count ? $av->next->lib : '';
+    return $av;
 }
 
 sub signumYKL {
