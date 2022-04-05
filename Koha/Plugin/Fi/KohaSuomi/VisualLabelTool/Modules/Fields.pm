@@ -78,6 +78,7 @@ sub getItem {
         'items.homebranch', 
         'items.itemcallnumber', 
         'items.location',
+        'items.permanent_location',
         'items.ccode', 
         'items.cn_source', 
         'items.cn_sort', 
@@ -156,11 +157,11 @@ sub signumHeading {
 }
 
 sub signumLoc {
-    my ($self, $permanent_location, $location) = @_;
+    my ($self, $itemcallnumber) = @_;
 
-    my $locationCode = $permanent_location if $permanent_location;
-    $locationCode = $location if !$permanent_location;
-    return $locationCode;
+    return $self->yklFirst($itemcallnumber) unless ($self->yklFirst($itemcallnumber) =~/-*\d+\.\d+/);
+    my @parts = split(/\s+/, $itemcallnumber);
+    return ($parts[2]) ? $parts[2] : undef;
 }
 
 sub location {
