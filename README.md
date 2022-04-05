@@ -66,6 +66,8 @@ Add items to printing queue with intranetuserjs
 ![Screenshot3](assets/img/Screenshot2022-04-05at12-06-45.png)
 
 3. Define label's fields on fields tab.
+   You can choose from tables or create a custom field where you can add fields with subfields.
+   The custom fields can be combined with AND/OR (&&/||)
 
 ![Screenshot4](assets/img/Screenshot2022-04-05at12-07-20.png)
 
@@ -78,5 +80,6 @@ Add items to printing queue with intranetuserjs
 ![Screenshot6](assets/img/Screenshot2022-04-05at12-06-32.png)
 
 6. Print a test label sheet. The configurations have to be saved to get the newest changes.
+   For the test sheet the plugin fetches the first item from the database and fills fields.
 
 ![Screenshot6](assets/img/Screenshot2022-04-05at12-07-45.png)
