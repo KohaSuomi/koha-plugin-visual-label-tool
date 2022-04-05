@@ -27,7 +27,7 @@ use C4::Context;
 
 =head new
 
-    my $labels = Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Labels->new($params);
+    my $labels = Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Database->new($params);
 
 =cut
 

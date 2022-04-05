@@ -82,7 +82,8 @@ sub getItem {
         'items.cn_sort', 
         'items.enumchron',
         'items.signumYKL',
-        'items.signumLoc'
+        'items.signumLoc',
+        'items.signumHeading'
     );
 }
 
@@ -145,12 +146,20 @@ sub getMarcFields {
     );
 }
 
-sub signumLoc {
+sub signumHeading {
     my ($self, $itemcallnumber) = @_;
 
-    return $self->yklFirst($itemcallnumber) unless ($self->yklFirst($itemcallnumber) =~/-*\d+\.\d+/);
+    return $self->yklSecond($itemcallnumber) unless ($self->yklSecond($itemcallnumber) =~/-*\d+\.\d+/);
     my @parts = split(/\s+/, $itemcallnumber);
     return ($parts[2]) ? $parts[2] : undef;
+}
+
+sub signumLoc {
+    my ($self, $permanent_location, $location) = @_;
+
+    my $locationCode = $permanent_location if $permanent_location;
+    $locationCode = $location if !$permanent_location;
+    return $locationCode;
 }
 
 sub signumYKL {
