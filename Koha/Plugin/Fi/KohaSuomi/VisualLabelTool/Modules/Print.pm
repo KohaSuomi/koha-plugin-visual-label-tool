@@ -144,7 +144,8 @@ sub getDescriptionName {
     my $response = $data->{$key}->{$value};
     return Koha::Libraries->find($response)->branchname if $value eq "homebranch";
     return $self->fields->signumYKL($data->{$key}->{'itemcallnumber'}) if $value eq "signumYKL";
-    return $self->fields->signumLoc($data->{$key}->{'itemcallnumber'}) if $value eq "signumLoc";
+    return $self->fields->signumLoc($data->{$key}->{'permanent_location'}, $data->{$key}->{'location'}) if $value eq "signumLoc";
+    return $self->fields->signumHeading($data->{$key}->{'itemcallnumber'}) if $value eq "signumHeading";
     return $self->fields->marcField($data->{$key},$value) if $key eq "marc";
     return $self->fields->customField($data, $key) if !$value;
     return Koha::AuthorisedValues->search({ category => 'MTYPE', authorised_value => $response })->next->lib if $value eq 'itemtype';
