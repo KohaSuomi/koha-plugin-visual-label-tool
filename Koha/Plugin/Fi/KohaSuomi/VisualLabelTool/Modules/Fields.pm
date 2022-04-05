@@ -74,7 +74,8 @@ sub getItem {
     my ($self) = @_;
 
     return (
-        'items.barcode', 
+        'items.barcode',
+        'items.barcodevalue', 
         'items.homebranch', 
         'items.itemcallnumber', 
         'items.location',

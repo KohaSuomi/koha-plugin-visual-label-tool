@@ -142,6 +142,7 @@ sub getDescriptionName {
     my ($self, $data, $key, $value) = @_;
     
     my $response = $data->{$key}->{$value};
+    return $data->{$key}->{'barcode'} if $value eq "barcodevalue";
     return Koha::Libraries->find($response)->branchname if $value eq "homebranch";
     return $self->fields->signumYKL($data->{$key}->{'itemcallnumber'}) if $value eq "signumYKL";
     return $self->fields->location($data->{$key}->{'permanent_location'}, $data->{$key}->{'location'}) if $value eq "location";
