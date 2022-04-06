@@ -12,7 +12,7 @@ use utf8;
 use JSON;
 
 ## Here we set our plugin version
-our $VERSION = "1.0.1";
+our $VERSION = "1.0.2";
 
 ## Here is our metadata, some keys are required, some are optional
 our $metadata = {
@@ -188,6 +188,7 @@ sub upgradeTables {
 
     $dbh->do("ALTER TABLE `$fieldsTable` ADD COLUMN IF NOT EXISTS `fontfamily` varchar(50) DEFAULT NULL;");
     $dbh->do("ALTER TABLE `$fieldsTable` ADD COLUMN IF NOT EXISTS `fontweight` ENUM('normal','bold') DEFAULT 'normal';");
+    $dbh->do("ALTER TABLE `$fieldsTable` MODIFY `name` varchar(150) NOT NULL;");
 }
 
 
