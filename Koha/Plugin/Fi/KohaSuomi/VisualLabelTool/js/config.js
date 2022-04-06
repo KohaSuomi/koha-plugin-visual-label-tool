@@ -35,6 +35,15 @@ new Vue({
     showTest: false,
     prints: [],
     isDisabled: true,
+    fontFamilies: [
+      'Arial',
+      'Verdana',
+      'Courier',
+      'Tahoma',
+      'Trebuchet MS',
+      'Helvetica',
+    ],
+    fontWeights: ['normal', 'bold'],
   },
   created() {
     this.fetchLabels();

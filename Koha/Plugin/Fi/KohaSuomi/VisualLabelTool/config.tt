@@ -174,7 +174,9 @@
 															<label>Ylhäältä:</label> <input type="text" v-model="selectedField.dimensions.top"  class="form-control" name="field" :value="selectedField.dimensions.top" @change="updateDimension($event)"/>
 															<label>Vasemmalta:</label> <input type="text" v-model="selectedField.dimensions.left"  class="form-control" name="field" :value="selectedField.dimensions.left" @change="updateDimension($event)"/>
 															<label>Oikealta:</label> <input type="text" v-model="selectedField.dimensions.right"  class="form-control" name="field" :value="selectedField.dimensions.right" @change="updateDimension($event)"/>
-															<label>Kirjasinkoko:</label> <input type="text" v-model="selectedField.dimensions.fontSize"  class="form-control" name="field" :value="selectedField.dimensions.fontSize" @change="updateDimension($event)"/>
+															<label>Kirjasin:</label> <multiselect v-model="selectedField.dimensions.fontFamily" value="value" :options="fontFamilies" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Valitse kirjasin" @input="updateDimension($event)"></multiselect>
+															<label>Kirjasin paksuus:</label> <multiselect v-model="selectedField.dimensions.fontWeight" value="value" :options="fontWeights" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Valitse paksuus" @input="updateDimension($event)"></multiselect>
+															<label>Kirjasin koko:</label> <input type="text" v-model="selectedField.dimensions.fontSize"  class="form-control" name="field" :value="selectedField.dimensions.fontSize" @change="updateDimension($event)"/>
 															<div class="form-group">
 																<button class="btn btn-danger" @click="deleteField($event)">Poista</button>
 															</div>
@@ -227,6 +229,8 @@
 															<label>Ylhäältä:</label> <input type="text" v-model="selectedField.dimensions.top"  class="form-control" name="field" :value="selectedField.dimensions.top" @change="updateDimension($event)"/>
 															<label>Vasemmalta:</label> <input type="text" v-model="selectedField.dimensions.left"  class="form-control" name="field" :value="selectedField.dimensions.left" @change="updateDimension($event)"/>
 															<label>Oikealta:</label> <input type="text" v-model="selectedField.dimensions.right"  class="form-control" name="field" :value="selectedField.dimensions.right" @change="updateDimension($event)"/>
+															<label>Kirjasin:</label> <multiselect v-model="selectedField.dimensions.fontFamily" value="value" :options="fontFamilies" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Valitse kirjasin" @input="updateDimension($event)"></multiselect>
+															<label>Kirjasin paksuus:</label> <multiselect v-model="selectedField.dimensions.fontWeight" value="value" :options="fontWeights" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Valitse paksuus" @input="updateDimension($event)"></multiselect>
 															<label>Kirjasinkoko:</label> <input type="text" v-model="selectedField.dimensions.fontSize"  class="form-control" name="field" :value="selectedField.dimensions.fontSize" @change="updateDimension($event)"/>
 															<div class="form-group">
 																<button class="btn btn-danger" @click="deleteField($event)">Poista</button>

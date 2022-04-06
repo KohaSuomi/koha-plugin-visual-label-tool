@@ -12,14 +12,14 @@ use utf8;
 use JSON;
 
 ## Here we set our plugin version
-our $VERSION = "1.0.0";
+our $VERSION = "1.0.1";
 
 ## Here is our metadata, some keys are required, some are optional
 our $metadata = {
     name            => 'Tarratulostustyökalu',
     author          => 'Johanna Räisä',
     date_authored   => '2021-02-25',
-    date_updated    => "2021-02-25",
+    date_updated    => "2022-04-06",
     minimum_version => '21.11.00.000',
     maximum_version => undef,
     version         => $VERSION,
@@ -83,7 +83,7 @@ sub install() {
 sub upgrade {
     my ( $self, $args ) = @_;
 
-    return 1;
+    $self->upgradeTables();
 }
 
 ## This method will be run just before the plugin files are deleted
@@ -150,11 +150,13 @@ sub createTables {
         `id` int(11) NOT NULL AUTO_INCREMENT,
         `label_id` int(11) NOT NULL,
         `type` ENUM('label','signum') NOT NULL,
-        `name` varchar(100) NOT NULL,
+        `name` varchar(150) NOT NULL,
         `top` varchar(10) DEFAULT NULL,
         `left` varchar(10) DEFAULT NULL,
         `right` varchar(10) DEFAULT NULL,
         `fontsize` varchar(10) DEFAULT NULL,
+        `fontfamily` varchar(50) DEFAULT NULL,
+        `fontweight` ENUM('normal','bold') DEFAULT 'normal',
         PRIMARY KEY `id` (`id`),
         KEY (`label_id`),
         CONSTRAINT `label_ibfk_1` FOREIGN KEY (`label_id`) REFERENCES `$labelsTable` (`id`) ON DELETE CASCADE
@@ -173,5 +175,20 @@ sub createTables {
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     ");
 }
+
+sub upgradeTables {
+    my ( $self ) = @_;
+
+    my $dbh = C4::Context->dbh;
+
+    my $labelsTable = $self->get_qualified_table_name('labels');
+    my $fieldsTable = $self->get_qualified_table_name('fields');
+    my $printedTable = $self->get_qualified_table_name('printed');
+    my $printQueueTable = $self->get_qualified_table_name('print_queue');
+
+    $dbh->do("ALTER TABLE `$fieldsTable` ADD COLUMN IF NOT EXISTS `fontfamily` varchar(50) DEFAULT NULL;");
+    $dbh->do("ALTER TABLE `$fieldsTable` ADD COLUMN IF NOT EXISTS `fontweight` ENUM('normal','bold') DEFAULT 'normal';");
+}
+
 
 1;
