@@ -120,6 +120,11 @@
 										<a href="#" class="ml-1" @click="removeFromPrint(index)"><i class="fas fa-minus text-danger"></i></a>
 										</div>
 									</div>
+									<div class="card-footer">
+										<div class="form-group">
+											<input v-model="barcode" type="text" class="form-control" placeholder="Lue viivakoodi" @change="setBarcode($event)"></input>
+										</div>
+									</div>
 								</div>
 							</div>
 						</div>

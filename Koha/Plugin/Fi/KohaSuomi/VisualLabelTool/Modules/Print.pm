@@ -67,17 +67,19 @@ sub printLabel {
     my @printLabels;
     foreach my $item (@{$items}) {
         my $label = $self->labels->getLabel($label_id);
-        my $itemData = Koha::Items->find($item->{itemnumber});
-        my ($biblio, $biblioitem, $marc) = $self->getBiblioData($itemData);
-        my $data = {
-            items => $itemData->unblessed,
-            biblio => $biblio,
-            biblioitems => $biblioitem,
-            marc => $marc
-        };
+        my $itemData = $item->{itemnumber} ? Koha::Items->find($item->{itemnumber}) : Koha::Items->search({barcode => $item->{barcode}})->next;
+        if ($itemData) {
+            my ($biblio, $biblioitem, $marc) = $self->getBiblioData($itemData);
+            my $data = {
+                items => $itemData->unblessed,
+                biblio => $biblio,
+                biblioitems => $biblioitem,
+                marc => $marc
+            };
 
-        my $valueLabel = $self->processFields($label, $data);
-        push @printLabels, $valueLabel;
+            my $valueLabel = $self->processFields($label, $data);
+            push @printLabels, $valueLabel;
+        }
     }
 
     return \@printLabels;

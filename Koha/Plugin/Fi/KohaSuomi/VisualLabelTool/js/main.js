@@ -27,6 +27,7 @@ new Vue({
       { name: 'Itse tulostetut', value: 'printed' },
     ],
     type: null,
+    barcode: '',
   },
   methods: {
     fetchLabels() {
@@ -118,6 +119,11 @@ new Vue({
     },
     clearPrints() {
       this.prints = [];
+    },
+    setBarcode() {
+      let element = { barcode: this.barcode };
+      this.prints.push(element);
+      this.barcode = '';
     },
     async updatePrintQueue() {
       const promises = [];
