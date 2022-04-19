@@ -45,6 +45,10 @@ const printView = Vue.component('print-view', {
       if (this.label.type != 'roll') {
         newwidth = newwidth * 2;
       }
+      if ((this.label.type = 'signum')) {
+        newwidth = '100';
+        unit = '%';
+      }
       newwidth = newwidth + unit;
       return { width: newwidth };
     },
