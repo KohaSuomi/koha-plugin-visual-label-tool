@@ -77,8 +77,8 @@ foreach my $sheet (@$sheets) {
         '1mm',
         '0mm',
         '14px',
-        undef,
-        undef
+        'Arial',
+        'normal'
     );
     $db->setFieldData(@signum1);
     my @signum2 = (
@@ -89,8 +89,8 @@ foreach my $sheet (@$sheets) {
         '1mm',
         '0mm',
         '14px',
-        undef,
-        undef,
+        'Arial',
+        'normal'
     );
     $db->setFieldData(@signum2);
     my @signum3 = (
@@ -101,8 +101,8 @@ foreach my $sheet (@$sheets) {
         '1mm',
         '0mm',
         '14px',
-        undef,
-        undef
+        'Arial',
+        'normal'
     );
     $db->setFieldData(@signum3);   
 }
