@@ -66,6 +66,8 @@ foreach my $sheet (@$sheets) {
             $left * 0.245.'mm',
             '0mm',
             $element->{fontSize}.'px',
+            'Arial',
+            'normal'
         );
         $db->setFieldData(@params);
     }
