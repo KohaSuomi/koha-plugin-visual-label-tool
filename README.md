@@ -70,19 +70,20 @@ Add items to printing queue with intranetuserjs
    The custom fields can be combined with AND/OR (&&/||)
 
    Predefined fields that are not in the tables:
-   items.barcode => Readable barcode
-   items.barcodevalue => Only numbers
-   items.branchname => Homebranch's description in branches table
-   items.location => LOC description from authorised values
-   items.signumYKL => YKL code from itemcallnumber
-   items.signumLoc => Location from itemcallnumber
-   items.signumHeading => Main heading from itemcallnumber
-   marc.title => 245$a && 245$b && 245$p && 245$n || 111$a || 130$a
-   marc.author => (942$i || 100$a) && (100$c || 110$a || 111$a)
-   marc.unititle => 130$a && 130$l
-   marc.description => 300$a && 300$e && 347$b
-   marc.publication => 260$c || 264$c
-   marc.volume => 262$a || 049$a
+
+   1. items.barcode => Readable barcode
+   2. items.barcodevalue => Only numbers
+   3. items.branchname => Homebranch's description in branches table
+   4. items.location => LOC description from authorised values
+   5. items.signumYKL => YKL code from itemcallnumber
+   6. items.signumLoc => Location from itemcallnumber
+   7. items.signumHeading => Main heading from itemcallnumber
+   8. marc.title => 245$a && 245$b && 245$p && 245$n || 111$a || 130$a
+   9. marc.author => (942$i || 100$a) && (100$c || 110$a || 111$a)
+   10. marc.unititle => 130$a && 130$l
+   11. marc.description => 300$a && 300$e && 347$b
+   12. marc.publication => 260$c || 264$c
+   13. marc.volume => 262$a || 049$a
 
 ![Screenshot4](assets/img/Screenshot2022-04-05at12-07-20.png)
 
