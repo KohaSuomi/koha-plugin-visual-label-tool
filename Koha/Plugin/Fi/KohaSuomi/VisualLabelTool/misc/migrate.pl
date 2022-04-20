@@ -55,7 +55,7 @@ foreach my $sheet (@$sheets) {
         $source = $key.'.'.$value if $key && $value;
         $source = 'biblioitems.itemtype' if $source eq 'itemtype()';
         $source = 'items.signumLoc' if $source eq 'oplibLabel()';
-        $source = 'items.homebranch' if $source eq 'homebranch.branchname';
+        $source = 'items.branchname' if $source eq 'homebranch.branchname';
         $source = 'items.signumYKL' if $source eq 'yklVaara()' || $source eq 'yklKyyti()';
         $source = 'items.location' if $source eq 'location()';
         $source = 'items.signumHeading' if $source eq 'signumVaara()';

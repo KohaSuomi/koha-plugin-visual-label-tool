@@ -76,7 +76,8 @@ sub getItem {
     return (
         'items.barcode',
         'items.barcodevalue', 
-        'items.homebranch', 
+        'items.homebranch',
+        'items.branchname', 
         'items.itemcallnumber', 
         'items.location',
         'items.permanent_location',
