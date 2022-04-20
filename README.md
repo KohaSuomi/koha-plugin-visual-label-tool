@@ -98,7 +98,7 @@ Add items to printing queue with intranetuserjs
 6. Print a test label sheet. The configurations have to be saved to get the newest changes.
    For the test sheet the plugin fetches the first item from the database and fills fields.
 
-![Screenshot6](assets/img/Screenshot2022-04-05at12-07-45.png)
+![Screenshot6](assets/img/Screenshot2022-04-20at11-25-33.png)
 
 # How to use
 
