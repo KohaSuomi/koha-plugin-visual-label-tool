@@ -58,6 +58,7 @@ foreach my $sheet (@$sheets) {
         $source = 'items.homebranch' if $source eq 'homebranch.branchname';
         $source = 'items.signumYKL' if $source eq 'yklVaara()' || $source eq 'yklKyyti()';
         $source = 'items.location' if $source eq 'location()';
+        $source = 'items.signumHeading' if $source eq 'signumVaara()';
         my @params = (
             $label_id,
             $source,
