@@ -37,20 +37,20 @@ Add items to printing queue with intranetuserjs
     });
 
     function setPrintQueue(element) {
-    let searchParams = new URLSearchParams(element.parent().parent().find(".print_label a").attr("href"));
-    $.ajax({
-    url: "/api/v1/contrib/kohasuomi/labels/print/queue",
-    type: "POST",
-    dataType: "json",
-    contentType: "application/json; charset=utf-8",
-    data: JSON.stringify({ itemnumber: searchParams.get('number_list'), printed: 0 }),
-    success: function (result) {
-        alert("Nide lisätty jonoon!");
-        },
-        error: function (err) {
-            alert("Lisäys epäonnistui!");
-        }
-    });
+        let searchParams = new URLSearchParams(element.parent().parent().find(".print_label a").attr("href"));
+        $.ajax({
+        url: "/api/v1/contrib/kohasuomi/labels/print/queue",
+        type: "POST",
+        dataType: "json",
+        contentType: "application/json; charset=utf-8",
+        data: JSON.stringify({ itemnumber: searchParams.get('number_list'), printed: 0 }),
+        success: function (result) {
+            alert("Nide lisätty jonoon!");
+            },
+            error: function (err) {
+                alert("Lisäys epäonnistui!");
+            }
+        });
     }
 
 # How create and modify labels
