@@ -66,8 +66,23 @@ Add items to printing queue with intranetuserjs
 ![Screenshot3](assets/img/Screenshot2022-04-05at12-06-45.png)
 
 3. Define label's fields on fields tab.
-   You can choose from tables or create a custom field where you can add fields with subfields.
+   You can choose from the list or create a custom field where you can add fields with subfields.
    The custom fields can be combined with AND/OR (&&/||)
+
+   Predefined fields that are not in the tables:
+   items.barcode => Readable barcode
+   items.barcodevalue => Only numbers
+   items.branchname => Homebranch's description in branches table
+   items.location => LOC description from authorised values
+   items.signumYKL => YKL code from itemcallnumber
+   items.signumLoc => Location from itemcallnumber
+   items.signumHeading => Main heading from itemcallnumber
+   marc.title => 245$a && 245$b && 245$p && 245$n || 111$a || 130$a
+   marc.author => (942$i || 100$a) && (100$c || 110$a || 111$a)
+   marc.unititle => 130$a && 130$l
+   marc.description => 300$a && 300$e && 347$b
+   marc.publication => 260$c || 264$c
+   marc.volume => 262$a || 049$a
 
 ![Screenshot4](assets/img/Screenshot2022-04-05at12-07-20.png)
 
