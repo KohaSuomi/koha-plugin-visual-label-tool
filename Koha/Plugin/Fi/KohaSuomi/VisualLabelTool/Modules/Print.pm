@@ -145,7 +145,7 @@ sub getDescriptionName {
     
     my $response = $data->{$key}->{$value};
     return $data->{$key}->{'barcode'} if $value eq "barcodevalue";
-    return Koha::Libraries->find($response)->branchname if $value eq "branchname";
+    return Koha::Libraries->find($data->{$key}->{'homebranch'})->branchname if $value eq "branchname";
     return $self->fields->signumYKL($data->{$key}->{'itemcallnumber'}) if $value eq "signumYKL";
     return $self->fields->location($data->{$key}->{'permanent_location'}, $data->{$key}->{'location'}) if $value eq "location";
     return $self->fields->signumLoc($data->{$key}->{'itemcallnumber'}) if $value eq "signumLoc";
