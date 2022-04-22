@@ -1,5 +1,6 @@
 import printView from './printView.js';
 import margins from './margins.js';
+import errorComp from './errors.js';
 const Multiselect = Vue.component(
   'vue-multiselect',
   window.VueMultiselect.default
@@ -11,6 +12,7 @@ new Vue({
     Multiselect,
     printView,
     margins,
+    errorComp,
   },
   data: {
     fieldName: '',
@@ -204,27 +206,30 @@ new Vue({
       }
     },
     fetchLabels() {
+      this.errors = [];
       axios
         .get('/api/v1/contrib/kohasuomi/labels')
         .then((response) => {
           this.savedLabels = response.data;
         })
         .catch((error) => {
-          this.errors.push(error.response.data.message);
+          this.errors.push(error);
         });
     },
     fetchFields() {
+      this.errors = [];
       axios
         .get('/api/v1/contrib/kohasuomi/labels/fields')
         .then((response) => {
           this.fields = response.data;
         })
         .catch((error) => {
-          this.errors.push(error.response.data.message);
+          this.errors.push(error);
         });
     },
     saveLabel(e) {
       e.preventDefault();
+      this.errors = [];
       this.saved = false;
       axios
         .post('/api/v1/contrib/kohasuomi/labels', this.label)
@@ -235,11 +240,12 @@ new Vue({
           this.fetchLabels();
         })
         .catch((error) => {
-          this.errors.push(error.response.data.message);
+          this.errors.push(error);
         });
     },
     updateLabel(e) {
       e.preventDefault();
+      this.errors = [];
       this.saved = false;
       axios
         .put('/api/v1/contrib/kohasuomi/labels/' + this.label.id, this.label)
@@ -248,11 +254,12 @@ new Vue({
           this.saved = true;
         })
         .catch((error) => {
-          this.errors.push(error.response.data.message);
+          this.errors.push(error);
         });
     },
     deleteLabel(e) {
       e.preventDefault();
+      this.errors = [];
       if (confirm('Haluatko varmasti poistaa tarran ' + this.label.name)) {
         axios
           .delete('/api/v1/contrib/kohasuomi/labels/' + this.label.id)
@@ -262,12 +269,13 @@ new Vue({
             this.fetchLabels();
           })
           .catch((error) => {
-            this.errors.push(error.response.data.message);
+            this.errors.push(error);
           });
       }
     },
     deleteField(e) {
       e.preventDefault();
+      this.errors = [];
       if (
         this.selectedField.id &&
         confirm('Haluatko varmasti poistaa kentän ' + this.selectedField.name)
@@ -282,7 +290,7 @@ new Vue({
             this.showField = false;
           })
           .catch((error) => {
-            this.errors.push(error.response.data.message);
+            this.errors.push(error);
           });
       } else {
         this.removeFromLabels();
@@ -292,6 +300,7 @@ new Vue({
     },
     testPrint(e) {
       e.preventDefault();
+      this.errors = [];
       var searchParams = new URLSearchParams();
       searchParams.append('test', true);
       axios
@@ -303,7 +312,7 @@ new Vue({
           this.showTest = true;
         })
         .catch((error) => {
-          this.errors.push(error.response.data.message);
+          this.errors.push(error);
         });
     },
     back() {

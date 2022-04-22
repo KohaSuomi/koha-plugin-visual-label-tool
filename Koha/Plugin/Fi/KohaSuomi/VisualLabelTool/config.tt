@@ -37,12 +37,7 @@
 			<div class="container-fluid">
 				<main role="main" class="ml-sm-auto pt-3 px-4">
 					<div id="configApp">
-						<div class="alert alert-danger" role="alert" v-if="errors.length">
-							<b>Tapahtui virhe:</b>
-							<ul class="text-danger">
-								<li v-for="error in errors">{{ error }}</li>
-							</ul>
-						</div>
+						<error-component :errors="errors"></error-component>
 						<div class="alert alert-success" role="alert" v-if="saved">
 							<b>Tallennus onnistui!</b>
 						</div>

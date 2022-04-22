@@ -373,7 +373,7 @@ sub _evalSegment {
         }
         else {
             my @cc = caller(0);
-            die $cc[3]."($op):> Couldn't parse this source definition '$op'";
+            die "($op):> Couldn't parse this source definition '$op'";
         }
     }
     return \@payload;
@@ -417,11 +417,11 @@ sub _getDBSelectorValue {
     my $table = $dbData->{$selector->{table}};
     unless ($table) {
         my @cc = caller(0);
-        die $cc[3]."():> data source requests table '".$selector->{table}."', but that table is not available.";
+        die "'".$selector->{table}."' table doesn't exist!";
     }
     unless (exists($table->{ $selector->{column} })) {
         my @cc = caller(0);
-        die $cc[3]."():> data source requests table '".$selector->{table}."' and column '".$selector->{column}."', but that column is not available.";
+        die "'".$selector->{column}."' column doesn't exist!";
     }
     return $table->{ $selector->{column} };
 }

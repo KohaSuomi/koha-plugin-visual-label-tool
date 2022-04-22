@@ -1,5 +1,6 @@
 import printView from './printView.js';
 import margins from './margins.js';
+import errorComp from './errors.js';
 const Multiselect = Vue.component(
   'vue-multiselect',
   window.VueMultiselect.default
@@ -11,6 +12,7 @@ new Vue({
     Multiselect,
     printView,
     margins,
+    errorComp,
   },
   created() {
     this.fetchLabels();
@@ -46,16 +48,18 @@ new Vue({
   },
   methods: {
     fetchLabels() {
+      this.errors = [];
       axios
         .get('/api/v1/contrib/kohasuomi/labels')
         .then((response) => {
           this.savedLabels = response.data;
         })
         .catch((error) => {
-          this.errors.push(error.response.data.message);
+          this.errors.push(error);
         });
     },
     fetchItems() {
+      this.errors = [];
       this.items = [];
       var searchParams = new URLSearchParams();
       searchParams.append('type', this.type.value);
@@ -67,7 +71,7 @@ new Vue({
           this.items = response.data;
         })
         .catch((error) => {
-          this.errors.push(error.response.data.message);
+          this.errors.push(error);
         });
     },
     back() {
@@ -75,6 +79,7 @@ new Vue({
     },
     printLabels(e) {
       e.preventDefault();
+      this.errors = [];
       var searchParams = new URLSearchParams();
       searchParams.append('test', false);
       axios
@@ -90,7 +95,7 @@ new Vue({
           this.showPrinting = true;
         })
         .catch((error) => {
-          this.errors.push(error.response.data.message);
+          this.errors.push(error);
         });
     },
     print() {
@@ -114,6 +119,7 @@ new Vue({
       this.prints.splice(index, 1);
     },
     removeFromItems(index) {
+      this.errors = [];
       if (
         confirm('Haluatko varmasti poistaa niteen ' + this.items[index].barcode)
       ) {
@@ -126,7 +132,7 @@ new Vue({
             this.items.splice(index, 1);
           })
           .catch((error) => {
-            this.errors.push(error.response.data.message);
+            this.errors.push(error);
           });
       }
     },
@@ -148,6 +154,7 @@ new Vue({
       this.barcode = '';
     },
     async updatePrintQueue() {
+      this.errors = [];
       const promises = [];
       this.prints.forEach((element) => {
         promises.push(
@@ -159,7 +166,7 @@ new Vue({
             })
             .then(() => {})
             .catch((error) => {
-              this.errors.push(error.response.data.message);
+              this.errors.push(error);
             })
         );
       });
