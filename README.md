@@ -95,10 +95,10 @@ Add items to printing queue with intranetuserjs
 
 ![Screenshot6](assets/img/Screenshot2022-04-05at12-06-32.png)
 
-6. Print a test label sheet. The configurations have to be saved to get the newest changes.
+6. Print a test label sheet. The configurations have to be saved to get the newest changes. You can modify top and left margins of the print from topbar, those apply only in the printing view.
    For the test sheet the plugin fetches the first item from the database and fills fields.
 
-![Screenshot6](assets/img/Screenshot2022-04-20at11-25-33.png)
+![Screenshot6](assets/img/Screenshot2022-04-22at11-49-56.png)
 
 # How to use
 
