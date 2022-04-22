@@ -33,10 +33,11 @@ From the release page you can download the latest \*.kpz file
 Add items to printing queue with intranetuserjs
 
     $(document).ready(function() {
-        $(".print_label").after('<li><a href="#" onclick="setPrintQueue($(this))">Tulostusjonoon</a></li>');
+        $(".print_label").after('<li><a href="#" onclick="setPrintQueue(event, $(this))">Tulostusjonoon</a></li>');
     });
 
-    function setPrintQueue(element) {
+    function setPrintQueue(e, element) {
+        e.preventDefault();
         let searchParams = new URLSearchParams(element.parent().parent().find(".print_label a").attr("href"));
         $.ajax({
         url: "/api/v1/contrib/kohasuomi/labels/print/queue",
