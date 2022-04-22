@@ -8,8 +8,9 @@ const barcode = Vue.component('barcode', {
     init() {
       JsBarcode(this.$refs.barcode, this.value, {
         fontSize: parseInt(this.fontsize),
+        format: 'CODE39',
         height: 35,
-        width: 2,
+        width: 1,
         margin: 0,
       });
     },
