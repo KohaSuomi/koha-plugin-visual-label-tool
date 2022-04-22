@@ -6,16 +6,6 @@ const printView = Vue.component('print-view', {
   template:
     '<div class="flex-row">\
             <div class="d-flex justify-content-center pb-2">\
-              <div class="form-row">\
-                <div class="col">\
-                  <input type="text" class="form-control" name="topMargin" v-model="topMargin" @change="setTopMargin($event)" placeholder="Tulosteen ylämarginaali"/>\
-                </div>\
-                <div class="col">\
-                  <input type="text" class="form-control" name="leftMargin" v-model="leftMargin" @change="setLeftMargin($event)" placeholder="Tulosteen vasenmarginaali"/>\
-                </div>\
-              </div>\
-            </div>\
-            <div class="d-flex justify-content-center pb-2">\
                 <div id="printLabel">\
                     <div class="print-row" :class="[label.type == \'roll\' ? \'roll-width\' : \'a4-width\']">\
                         <div class="print-row" :style="labelWidth">\
@@ -46,20 +36,6 @@ const printView = Vue.component('print-view', {
             </div>\
         </div>',
   props: ['label', 'prints', 'test'],
-  data() {
-    return {
-      topMargin: localStorage.getItem('LabelToolTopMargin'),
-      leftMargin: localStorage.getItem('LabelToolLeftMargin'),
-    };
-  },
-  methods: {
-    setTopMargin(e) {
-      localStorage.setItem('LabelToolTopMargin', e.target.value);
-    },
-    setLeftMargin(e) {
-      localStorage.setItem('LabelToolLeftMargin', e.target.value);
-    },
-  },
   computed: {
     labelWidth: function () {
       let newwidth = parseInt(this.label.dimensions.width);

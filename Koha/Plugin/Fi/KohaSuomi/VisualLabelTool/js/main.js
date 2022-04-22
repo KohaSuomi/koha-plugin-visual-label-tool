@@ -1,4 +1,5 @@
 import printView from './printView.js';
+import margins from './margins.js';
 const Multiselect = Vue.component(
   'vue-multiselect',
   window.VueMultiselect.default
@@ -9,6 +10,7 @@ new Vue({
   components: {
     Multiselect,
     printView,
+    margins,
   },
   created() {
     this.fetchLabels();
