@@ -161,6 +161,7 @@ new Vue({
           axios
             .put('/api/v1/contrib/kohasuomi/labels/print/queue', {
               itemnumber: element.itemnumber,
+              barcode: element.barcode,
               printed: 1,
               queue_id: element.queue_id,
             })

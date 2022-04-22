@@ -172,7 +172,12 @@ sub getPrintQueue {
 
 sub setPrintQueue {
     my ($self, $body) = @_;
-
+    
+    if (!$body->{itemnumber}) {
+        my $item = Koha::Items->search({barcode => $body->{barcode}})->next;
+        $body->{itemnumber} = $item->itemnumber;
+    }
+    
     my @params = ($body->{borrowernumber}, $body->{itemnumber}, $body->{printed});
     $self->db->setPrintQueue(@params);
 }
