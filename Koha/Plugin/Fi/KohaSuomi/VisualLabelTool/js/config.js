@@ -44,10 +44,23 @@ new Vue({
       'Helvetica',
     ],
     fontWeights: ['normal', 'bold'],
+    topMargin: 0,
+    leftMargin: 0,
   },
   created() {
     this.fetchLabels();
     this.fetchFields();
+  },
+  computed: {
+    pageMargins: function () {
+      return (
+        '@page {margin-top: ' +
+        this.topMargin +
+        '; margin-left: ' +
+        this.leftMargin +
+        ';}'
+      );
+    },
   },
   methods: {
     onLabelChange() {
@@ -295,10 +308,17 @@ new Vue({
       this.showTest = false;
     },
     printTest() {
+      this.topMargin = localStorage.getItem('LabelToolTopMargin')
+        ? localStorage.getItem('LabelToolTopMargin')
+        : 0;
+      this.leftMargin = localStorage.getItem('LabelToolLeftMargin')
+        ? localStorage.getItem('LabelToolLeftMargin')
+        : 0;
       printJS({
         printable: 'printLabel',
         type: 'html',
         css: '/plugin/Koha/Plugin/Fi/KohaSuomi/VisualLabelTool/css/print.css',
+        style: [this.pageMargins],
       });
     },
   },

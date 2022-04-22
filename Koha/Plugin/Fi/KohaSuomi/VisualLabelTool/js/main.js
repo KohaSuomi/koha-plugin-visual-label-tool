@@ -28,6 +28,19 @@ new Vue({
     ],
     type: null,
     barcode: '',
+    topMargin: 0,
+    leftMargin: 0,
+  },
+  computed: {
+    pageMargins: function () {
+      return (
+        '@page {margin-top: ' +
+        this.topMargin +
+        '; margin-left: ' +
+        this.leftMargin +
+        ';}'
+      );
+    },
   },
   methods: {
     fetchLabels() {
@@ -79,6 +92,12 @@ new Vue({
         });
     },
     print() {
+      this.topMargin = localStorage.getItem('LabelToolTopMargin')
+        ? localStorage.getItem('LabelToolTopMargin')
+        : 0;
+      this.leftMargin = localStorage.getItem('LabelToolLeftMargin')
+        ? localStorage.getItem('LabelToolLeftMargin')
+        : 0;
       printJS({
         printable: 'printLabel',
         onPrintDialogClose: () => {
@@ -86,6 +105,7 @@ new Vue({
         },
         type: 'html',
         css: '/plugin/Koha/Plugin/Fi/KohaSuomi/VisualLabelTool/css/print.css',
+        style: [this.pageMargins],
       });
     },
     removeFromPrint(index) {
