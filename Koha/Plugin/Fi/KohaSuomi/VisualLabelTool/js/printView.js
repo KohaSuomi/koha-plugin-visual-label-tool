@@ -46,8 +46,8 @@ const printView = Vue.component('print-view', {
         newwidth = newwidth * 2;
       }
       if (this.label.type == 'signum') {
-        newwidth = '100';
-        unit = '%';
+        newwidth = '';
+        unit = '';
       }
       newwidth = newwidth + unit;
       return { width: newwidth };
