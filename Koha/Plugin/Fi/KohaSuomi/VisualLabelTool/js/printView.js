@@ -11,9 +11,9 @@ const printView = Vue.component('print-view', {
                         <div class="print-row" :style="labelWidth">\
                             <div v-for="(label, index) in prints">\
                                 <div :class="[pageBreak(index) ? \'html2pdf__page-break\' : \'\']" :style="label.dimensions">\
-                                    <div style="height: 100%; position:relative; overflow: hidden" :style="test ? \'border: 1px solid;\' : \'\'">\
+                                    <div style="height: 100%; position:relative; white-space: nowrap; overflow: hidden" :style="test ? \'border: 1px solid;\' : \'\'">\
                                         <span v-for="(field, index) in label.fields" :style="field.dimensions" style="position:absolute;">\
-                                            <span style="white-space: nowrap;" v-if="field.name == \'items.barcode\'"><barcode :value="field.value" :fontsize="field.dimensions.fontSize"></barcode></span>\
+                                            <span v-if="field.name == \'items.barcode\'"><barcode :value="field.value" :fontsize="field.dimensions.fontSize"></barcode></span>\
                                             <span v-else>{{field.value}}</span>\
                                         </span>\
                                     </div>\
