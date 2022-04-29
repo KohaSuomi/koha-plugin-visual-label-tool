@@ -34,6 +34,7 @@ new Vue({
     barcode: '',
     topMargin: 0,
     leftMargin: 0,
+    loader: false
   },
   computed: {
     pageMargins: function () {
@@ -100,19 +101,27 @@ new Vue({
     },
     print() {
       this.topMargin = localStorage.getItem('LabelToolTopMargin')
-        ? localStorage.getItem('LabelToolTopMargin')
+        ? parseInt(localStorage.getItem('LabelToolTopMargin'))
         : 0;
       this.leftMargin = localStorage.getItem('LabelToolLeftMargin')
-        ? localStorage.getItem('LabelToolLeftMargin')
+        ? parseInt(localStorage.getItem('LabelToolLeftMargin'))
         : 0;
-      printJS({
-        printable: 'printLabel',
-        onPrintDialogClose: () => {
-          this.updatePrintQueue();
-        },
-        type: 'html',
-        css: '/plugin/Koha/Plugin/Fi/KohaSuomi/VisualLabelTool/css/print.css',
-        style: [this.pageMargins],
+      this.loader = true;
+      let element = document.getElementById('printLabel');
+      let rollWidth = parseInt(this.label.dimensions.width)+parseInt(this.label.signum.dimensions.width);
+      let rollHeight = parseInt(this.label.dimensions.height)+parseInt(this.label.dimensions.paddingTop)+parseInt(this.label.dimensions.paddingBottom)+this.topMargin;
+      let pdfFormat = this.label.type == 'roll' ? [rollHeight, rollWidth] : 'a4';
+      let pdfOrientation = this.label.type == 'roll' ? 'l' : 'p';
+      var opt = {
+        margin: [this.topMargin, this.leftMargin, 0, 0],
+        filename:     'printLabel.pdf',
+        image:        { type: 'png', quality: 0.40 },
+        html2canvas:  { scale: 2},
+        jsPDF:        { orientation: pdfOrientation, unit: 'mm', format: pdfFormat},
+      };
+      html2pdf().set(opt).from(element).save().then(() =>{
+        this.updatePrintQueue();
+        this.loader = false;
       });
     },
     removeFromPrint(index) {
@@ -149,8 +158,15 @@ new Vue({
       this.prints = [];
     },
     setBarcode() {
-      let element = { barcode: this.barcode };
-      this.prints.push(element);
+      const barcodeArray = this.barcode.split(" ");
+      if (barcodeArray.length) {
+        barcodeArray.forEach((element) => {
+          this.prints.push({ barcode: element });
+        });
+      } else {
+        let element = { barcode: this.barcode };
+        this.prints.push(element);
+      }
       this.barcode = '';
     },
     async updatePrintQueue() {

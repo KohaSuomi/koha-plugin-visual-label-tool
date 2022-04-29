@@ -50,6 +50,7 @@ new Vue({
     fontWeights: ['normal', 'bold'],
     topMargin: 0,
     leftMargin: 0,
+    loader: false,
   },
   created() {
     this.fetchLabels();
@@ -320,16 +321,26 @@ new Vue({
     },
     printTest() {
       this.topMargin = localStorage.getItem('LabelToolTopMargin')
-        ? localStorage.getItem('LabelToolTopMargin')
+        ? parseInt(localStorage.getItem('LabelToolTopMargin'))
         : 0;
       this.leftMargin = localStorage.getItem('LabelToolLeftMargin')
-        ? localStorage.getItem('LabelToolLeftMargin')
+        ? parseInt(localStorage.getItem('LabelToolLeftMargin'))
         : 0;
-      printJS({
-        printable: 'printLabel',
-        type: 'html',
-        css: '/plugin/Koha/Plugin/Fi/KohaSuomi/VisualLabelTool/css/print.css',
-        style: [this.pageMargins],
+      this.loader = true;
+      let element = document.getElementById('printLabel');
+      let rollWidth = parseInt(this.label.dimensions.width)+parseInt(this.label.signum.dimensions.width);
+      let rollHeight = parseInt(this.label.dimensions.height)+parseInt(this.label.dimensions.paddingTop)+parseInt(this.label.dimensions.paddingBottom)+this.topMargin;
+      let pdfFormat = this.label.type == 'roll' ? [rollHeight, rollWidth] : 'a4';
+      let pdfOrientation = this.label.type == 'roll' ? 'l' : 'p';
+      var opt = {
+        margin: [this.topMargin, this.leftMargin, 0, 0],
+        filename:     'printLabel.pdf',
+        image:        { type: 'png', quality: 0.40 },
+        html2canvas:  { scale: 2},
+        jsPDF:        { orientation: pdfOrientation, unit: 'mm', format: pdfFormat},
+      };
+      html2pdf().set(opt).from(element).save().then(() =>{
+        this.loader = false;
       });
     },
   },

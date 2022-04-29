@@ -19,7 +19,7 @@
 		<script src="https://unpkg.com/vuejs-datepicker/dist/locale/translations/fi.js"></script>
 		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
-		<script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 		<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/barcodes/JsBarcode.code39.min.js"></script>
 	</head>
 	<body>
@@ -48,7 +48,7 @@
 								</li>
 								<li><margins-component></margins-component></li>
 								<li class="nav-item pr-2">
-									<button class="btn btn-success" @click="printTest()">Tulosta</button>
+									<button class="btn btn-success" @click="printTest()" :disabled="loader"><i v-if="loader" class="fas fa-circle-notch fa-spin"></i><span v-else>Tulosta</span></button>
 								</li>
 							</ul>
 							<ul v-else class="nav">

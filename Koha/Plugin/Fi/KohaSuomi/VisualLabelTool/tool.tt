@@ -19,8 +19,7 @@
 		<script src="https://unpkg.com/vuejs-datepicker/dist/locale/translations/fi.js"></script>
 		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
-		<script src="https://printjs-4de6.kxcdn.com/print.min.js"></script>
-		<link rel="stylesheet" type="text/css" href="https://printjs-4de6.kxcdn.com/print.min.css">
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
 		<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/barcodes/JsBarcode.code39.min.js"></script>
 	</head>
 	<body>
@@ -46,7 +45,7 @@
 							</li>
 							<li><margins-component></margins-component></li>
 							<li class="nav-item pr-2">
-								<button class="btn btn-success" @click="print()">Tulosta</button>
+								<button class="btn btn-success" @click="print()":disabled="loader"><i v-if="loader" class="fas fa-circle-notch fa-spin"></i><span v-else>Tulosta</button>
 							</li>
 						</ul>
 						<ul v-else class="nav">
@@ -54,7 +53,7 @@
 								<multiselect v-model="label" value="value" :options="savedLabels" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="Valitse pohja"></multiselect>
 							</li>
 							<li v-if="label" class="nav-item pl-2">
-								<button class="btn btn-info" @click="printLabels($event)">Tulostus</button>
+								<button class="btn btn-info" @click="printLabels($event)">Tulosta</span></button>
 							</li>
 						</ul>
 					</div>
@@ -118,7 +117,7 @@
 									</div>
 									<div class="card-footer">
 										<div class="form-group">
-											<input v-model="barcode" type="text" class="form-control" placeholder="Lue viivakoodi" @change="setBarcode($event)"></input>
+											<input v-model="barcode" type="text" class="form-control" placeholder="Lue viivakoodi(t)" @change="setBarcode($event)"></input>
 										</div>
 									</div>
 								</div>

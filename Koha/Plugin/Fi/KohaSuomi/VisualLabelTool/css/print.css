@@ -1,16 +1,5 @@
-/*@media print {
-  body {
-    width: 100mm;
-    height: 50mm;
-  }
-}*/
-
-@page {
-  margin: 0;
-}
-
 .a4-width {
-  width: 229mm;
+  width: 210mm;
 }
 
 .roll-width {
