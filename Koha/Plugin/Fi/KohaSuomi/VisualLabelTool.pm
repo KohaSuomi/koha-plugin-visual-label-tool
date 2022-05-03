@@ -12,14 +12,14 @@ use utf8;
 use JSON;
 
 ## Here we set our plugin version
-our $VERSION = "1.0.3";
+our $VERSION = "1.0.4";
 
 ## Here is our metadata, some keys are required, some are optional
 our $metadata = {
     name            => 'Tarratulostustyökalu',
     author          => 'Johanna Räisä',
     date_authored   => '2021-02-25',
-    date_updated    => "2022-04-12",
+    date_updated    => "2022-05-03",
     minimum_version => '21.11.00.000',
     maximum_version => undef,
     version         => $VERSION,
@@ -154,9 +154,11 @@ sub createTables {
         `top` varchar(10) DEFAULT NULL,
         `left` varchar(10) DEFAULT NULL,
         `right` varchar(10) DEFAULT NULL,
+        `bottom` varchar(10) DEFAULT NULL,
         `fontsize` varchar(10) DEFAULT NULL,
         `fontfamily` varchar(50) DEFAULT NULL,
         `fontweight` ENUM('normal','bold') DEFAULT 'normal',
+        `whitespace` ENUM('normal','nowrap') DEFAULT 'nowrap',
         PRIMARY KEY `id` (`id`),
         KEY (`label_id`),
         CONSTRAINT `label_ibfk_1` FOREIGN KEY (`label_id`) REFERENCES `$labelsTable` (`id`) ON DELETE CASCADE
@@ -189,6 +191,8 @@ sub upgradeTables {
     $dbh->do("ALTER TABLE `$fieldsTable` ADD COLUMN IF NOT EXISTS `fontfamily` varchar(50) DEFAULT NULL;");
     $dbh->do("ALTER TABLE `$fieldsTable` ADD COLUMN IF NOT EXISTS `fontweight` ENUM('normal','bold') DEFAULT 'normal';");
     $dbh->do("ALTER TABLE `$fieldsTable` MODIFY `name` varchar(150) NOT NULL;");
+    $dbh->do("ALTER TABLE `$fieldsTable` ADD COLUMN IF NOT EXISTS `bottom` varchar(10) DEFAULT NULL;");
+    $dbh->do("ALTER TABLE `$fieldsTable` ADD COLUMN IF NOT EXISTS `whitespace` ENUM('normal','nowrap') DEFAULT 'nowrap';");
 }
 
 

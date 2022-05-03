@@ -48,6 +48,7 @@ new Vue({
       'Helvetica',
     ],
     fontWeights: ['normal', 'bold'],
+    whiteSpaces: ['normal', 'nowrap'],
     topMargin: 0,
     leftMargin: 0,
     loader: false,
