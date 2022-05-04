@@ -115,8 +115,8 @@ new Vue({
       var opt = {
         margin: [this.topMargin, this.leftMargin, 0, 0],
         filename:     'printLabel.pdf',
-        image:        { type: 'png', quality: 0.40 },
-        html2canvas:  { scale: 2},
+        image:        { type: 'jpeg', quality: 1 },
+        html2canvas:  { scale: 3, logging: true},
         jsPDF:        { orientation: pdfOrientation, unit: 'mm', format: pdfFormat},
       };
       html2pdf().set(opt).from(element).save().then(() =>{
