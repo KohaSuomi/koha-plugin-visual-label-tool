@@ -106,17 +106,20 @@ new Vue({
       this.leftMargin = localStorage.getItem('LabelToolLeftMargin')
         ? parseInt(localStorage.getItem('LabelToolLeftMargin'))
         : 0;
+      let paddingTop = parseInt(this.label.dimensions.paddingTop) ? parseInt(this.label.dimensions.paddingTop) : 0;
+      let paddingBottom = parseInt(this.label.dimensions.paddingBottom) ? parseInt(this.label.dimensions.paddingBottom) : 0;
+      let signumWidth = parseInt(this.label.signum.dimensions.width) ? parseInt(this.label.signum.dimensions.width) : 0
       this.loader = true;
       let element = document.getElementById('printLabel');
-      let rollWidth = parseInt(this.label.dimensions.width)+parseInt(this.label.signum.dimensions.width);
-      let rollHeight = parseInt(this.label.dimensions.height)+parseInt(this.label.dimensions.paddingTop)+parseInt(this.label.dimensions.paddingBottom)+this.topMargin;
+      let rollWidth = parseInt(this.label.dimensions.width) + signumWidth;
+      let rollHeight = parseInt(this.label.dimensions.height)+ paddingTop + paddingBottom + this.topMargin;
       let pdfFormat = this.label.type == 'roll' ? [rollHeight, rollWidth] : 'a4';
       let pdfOrientation = this.label.type == 'roll' ? 'l' : 'p';
       var opt = {
         margin: [this.topMargin, this.leftMargin, 0, 0],
         filename:     'printLabel.pdf',
         image:        { type: 'jpeg', quality: 1 },
-        html2canvas:  { scale: 3, logging: true},
+        html2canvas:  { scale: 4, logging: true},
         jsPDF:        { orientation: pdfOrientation, unit: 'mm', format: pdfFormat},
       };
       html2pdf().set(opt).from(element).save().then(() =>{
