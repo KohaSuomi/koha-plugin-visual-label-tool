@@ -153,7 +153,7 @@ sub getMarcFields {
 sub signumHeading {
     my ($self, $itemcallnumber) = @_;
 
-    return $self->yklSecond($itemcallnumber) unless ($self->yklSecond($itemcallnumber) =~/-*\d+\.\d+/);
+    return $self->yklSecond($itemcallnumber) unless ($self->yklSecond($itemcallnumber) =~/-*\d+\d+/);
     my @parts = split(/\s+/, $itemcallnumber);
     return ($parts[2]) ? $parts[2] : undef;
 }
@@ -161,7 +161,7 @@ sub signumHeading {
 sub signumLoc {
     my ($self, $itemcallnumber) = @_;
 
-    return $self->yklFirst($itemcallnumber) unless ($self->yklFirst($itemcallnumber) =~/-*\d+\.\d+/);
+    return $self->yklFirst($itemcallnumber) unless ($self->yklFirst($itemcallnumber) =~/-*\d+\d+/);
     my @parts = split(/\s+/, $itemcallnumber);
     return ($parts[2]) ? $parts[2] : undef;
 }
@@ -183,7 +183,7 @@ sub location {
 sub signumYKL {
     my ($self, $itemcallnumber) = @_;
     
-    return $self->yklFirst($itemcallnumber) if ($self->yklFirst($itemcallnumber) =~/-*\d+\.\d+/);
+    return $self->yklFirst($itemcallnumber) if ($self->yklFirst($itemcallnumber) =~/-*\d+\d+/);
     return $self->yklSecond($itemcallnumber);
 }
 
