@@ -212,7 +212,7 @@ sub customField {
     $data->{items}->{signumHeading} = $self->signumHeading($data->{items}->{itemcallnumber});
     $data->{items}->{location} = $self->location($data->{items}->{permanent_location}, $data->{items}->{location});
     $data->{items}->{branchname} = Koha::Libraries->find($data->{items}->{homebranch})->branchname;
-    $data->{biblioitems}->{itemtype} = Koha::AuthorisedValues->search({ category => 'MTYPE', authorised_value => $data->{biblioitems}->{itemtype} })->next->lib || $data->{biblioitems}->{itemtype};
+    $data->{biblioitems}->{itemtype} = Koha::AuthorisedValues->search({ category => 'MTYPE', authorised_value => $data->{biblioitems}->{itemtype} })->next ? Koha::AuthorisedValues->search({ category => 'MTYPE', authorised_value => $data->{biblioitems}->{itemtype} })->next->lib : $data->{biblioitems}->{itemtype};
     $data->{marc}->{title} = $self->marcField($data->{marc}, 'title');
     $data->{marc}->{author} = $self->marcField($data->{marc}, 'author');
     $data->{marc}->{unititle} = $self->marcField($data->{marc}, 'unititle');
