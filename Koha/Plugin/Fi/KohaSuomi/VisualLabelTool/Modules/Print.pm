@@ -111,27 +111,11 @@ sub processFields {
     my ($self, $label, $data) = @_;
  
     foreach my $field (@{$label->{fields}}) {
-        my ($key, $value) = split /\./, $field->{name};
-        if ($field->{name} =~ m/and|&&|or|\|\|/) {
-            $field->{value} = $self->getDescriptionName($data, $field->{name}, undef);
-        } elsif ($key eq 'items' || $key eq 'marc' || $key eq 'biblioitems' || $key eq 'biblio') {
-            $field->{value} = $self->getDescriptionName($data, $key, $value);
-        } else {
-            $field->{value} = $self->getDescriptionName($data, $field->{name}, undef);
-        }
-        
+        $field->{value} = $self->getDescriptionName($data, $field->{name});    
     }
 
     foreach my $field (@{$label->{signum}->{fields}}) {
-        my ($key, $value) = split /\./, $field->{name};
-        if ($field->{name} =~ m/and|&&|or|\|\|/) {
-            $field->{value} = $self->getDescriptionName($data, $field->{name}, undef);
-        } elsif ($key eq 'items' || $key eq 'marc' || $key eq 'biblioitems' || $key eq 'biblio') {
-            $field->{value} = $self->getDescriptionName($data, $key, $value);
-        } else {
-            $field->{value} = $self->getDescriptionName($data, $field->{name}, undef);
-        }
-        
+        $field->{value} = $self->getDescriptionName($data, $field->{name});
     }
 
     return $label;
@@ -145,19 +129,8 @@ sub getBiblioData {
 }
 
 sub getDescriptionName {
-    my ($self, $data, $key, $value) = @_;
-    
-    my $response = $data->{$key}->{$value};
-    return $data->{$key}->{'barcode'} if $value eq "barcodevalue";
-    return Koha::Libraries->find($data->{$key}->{'homebranch'})->branchname if $value eq "branchname";
-    return $self->fields->signumYKL($data->{$key}->{'itemcallnumber'}) if $value eq "signumYKL";
-    return $self->fields->location($data->{$key}->{'permanent_location'}, $data->{$key}->{'location'}) if $value eq "location";
-    return $self->fields->signumLoc($data->{$key}->{'itemcallnumber'}) if $value eq "signumLoc";
-    return $self->fields->signumHeading($data->{$key}->{'itemcallnumber'}) if $value eq "signumHeading";
-    return $self->fields->marcField($data->{$key},$value) if $key eq "marc";
-    return $self->fields->customField($data, $key) if !$value;
-    return Koha::AuthorisedValues->search({ category => 'MTYPE', authorised_value => $response })->next->lib if $value eq 'itemtype';
-    return $response;
+    my ($self, $data, $key) = @_;
+    return $self->fields->customField($data, $key);
 }
 
 sub getPrintQueue {
