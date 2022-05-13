@@ -30,6 +30,7 @@ use Koha::Items;
 use Koha::Database;
 use Text::ParseWords;
 use Koha::AuthorisedValues;
+use Koha::Libraries;
 =head new
 
     my $fields = Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Fields->new($params);
@@ -204,6 +205,20 @@ sub yklFirst {
 
 sub customField {
     my ($self, $data, $field) = @_;
+
+    $data->{items}->{barcodevalue} = $data->{items}->{barcode};
+    $data->{items}->{signumYKL} = $self->signumYKL($data->{items}->{itemcallnumber});
+    $data->{items}->{signumLoc} = $self->signumLoc($data->{items}->{itemcallnumber});
+    $data->{items}->{signumHeading} = $self->signumHeading($data->{items}->{itemcallnumber});
+    $data->{items}->{location} = $self->location($data->{items}->{permanent_location}, $data->{items}->{location});
+    $data->{items}->{branchname} = Koha::Libraries->find($data->{items}->{homebranch})->branchname;
+    $data->{biblioitems}->{itemtype} = Koha::AuthorisedValues->search({ category => 'MTYPE', authorised_value => $data->{biblioitems}->{itemtype} })->next->lib;
+    $data->{marc}->{title} = $self->marcField($data->{marc}, 'title');
+    $data->{marc}->{author} = $self->marcField($data->{marc}, 'author');
+    $data->{marc}->{unititle} = $self->marcField($data->{marc}, 'unititle');
+    $data->{marc}->{description} = $self->marcField($data->{marc}, 'description');
+    $data->{marc}->{publication} = $self->marcField($data->{marc}, 'publication');
+    $data->{marc}->{volume} = $self->marcField($data->{marc}, 'volume');
 
     my $ors = $self->_splitToLogicSegments($field);
 

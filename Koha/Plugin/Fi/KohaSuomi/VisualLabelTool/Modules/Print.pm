@@ -112,7 +112,9 @@ sub processFields {
  
     foreach my $field (@{$label->{fields}}) {
         my ($key, $value) = split /\./, $field->{name};
-        if ($key eq 'items' || $key eq 'marc' || $key eq 'biblioitems' || $key eq 'biblio') {
+        if ($field->{name} =~ m/and|&&|or|\|\|/) {
+            $field->{value} = $self->getDescriptionName($data, $field->{name}, undef);
+        } elsif ($key eq 'items' || $key eq 'marc' || $key eq 'biblioitems' || $key eq 'biblio') {
             $field->{value} = $self->getDescriptionName($data, $key, $value);
         } else {
             $field->{value} = $self->getDescriptionName($data, $field->{name}, undef);
@@ -122,7 +124,9 @@ sub processFields {
 
     foreach my $field (@{$label->{signum}->{fields}}) {
         my ($key, $value) = split /\./, $field->{name};
-        if ($key eq 'items' || $key eq 'marc' || $key eq 'biblioitems' || $key eq 'biblio') {
+        if ($field->{name} =~ m/and|&&|or|\|\|/) {
+            $field->{value} = $self->getDescriptionName($data, $field->{name}, undef);
+        } elsif ($key eq 'items' || $key eq 'marc' || $key eq 'biblioitems' || $key eq 'biblio') {
             $field->{value} = $self->getDescriptionName($data, $key, $value);
         } else {
             $field->{value} = $self->getDescriptionName($data, $field->{name}, undef);

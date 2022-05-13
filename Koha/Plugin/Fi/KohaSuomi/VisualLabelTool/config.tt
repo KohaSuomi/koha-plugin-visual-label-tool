@@ -167,7 +167,7 @@
 														</div>
 														<div v-if="selectedField && showField" class="form-group pb-2 border-bottom">
 															<div class="form-group">
-																<label>Nimi:</label> <input type="text"  class="form-control" name="field" :value="selectedField.name" :disabled="isDisabled" @change="updateFieldName($event)"/>
+																<label>Nimi:</label> <input type="text"  class="form-control" name="field" :value="selectedField.name" @change="updateFieldName($event)"/>
 															</div>
 															<div class="form-group">
 																<label>Ylhäältä:</label> <input type="text" v-model="selectedField.dimensions.top"  class="form-control" name="field" :value="selectedField.dimensions.top" @change="updateDimension($event)"/>
@@ -242,7 +242,7 @@
 														</div>
 														<div v-if="selectedField" class="form-group pb-2 border-bottom">
 															<div class="form-group">
-																<label>Nimi:</label> <input type="text"  class="form-control" name="field" :value="selectedField.name" :disabled="isDisabled" @change="updateFieldName($event)"/>
+																<label>Nimi:</label> <input type="text"  class="form-control" name="field" :value="selectedField.name" @change="updateFieldName($event)"/>
 															</div>
 															<div class="form-group">
 																<label>Ylhäältä:</label> <input type="text" v-model="selectedField.dimensions.top"  class="form-control" name="field" :value="selectedField.dimensions.top" @change="updateDimension($event)"/>
