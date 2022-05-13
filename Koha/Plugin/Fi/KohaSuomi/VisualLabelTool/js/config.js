@@ -329,7 +329,7 @@ new Vue({
         : 0;
       let paddingTop = parseInt(this.label.dimensions.paddingTop) ? parseInt(this.label.dimensions.paddingTop) : 0;
       let paddingBottom = parseInt(this.label.dimensions.paddingBottom) ? parseInt(this.label.dimensions.paddingBottom) : 0;
-      let signumWidth = parseInt(this.label.signum.dimensions.width) ? parseInt(this.label.signum.dimensions.width) : 0
+      let signumWidth = this.label.signum && parseInt(this.label.signum.dimensions.width) ? parseInt(this.label.signum.dimensions.width) : 0
       this.loader = true;
       let element = document.getElementById('printLabel');
       let rollWidth = parseInt(this.label.dimensions.width) + signumWidth;
