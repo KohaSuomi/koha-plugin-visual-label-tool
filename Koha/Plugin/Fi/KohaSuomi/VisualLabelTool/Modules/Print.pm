@@ -67,14 +67,13 @@ sub printLabel {
     my @printLabels;
     my @items;
     my $itemsCount = 0;
-    my $label = $self->labels->getLabel($label_id);
     foreach my $item (@{$items}) {
         my $itemData = $item->{itemnumber} ? Koha::Items->find($item->{itemnumber}) : Koha::Items->search({barcode => $item->{barcode}})->next;
         if ($itemData) {
+            my $label = $self->labels->getLabel($label_id);
             if ($label->{labelcount} > 1) {
                 $itemsCount++;
             }
-
             my ($biblio, $biblioitem, $marc) = $self->getBiblioData($itemData);
             my $data = {
                 items => $itemData->unblessed,
