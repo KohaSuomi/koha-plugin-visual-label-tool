@@ -4,46 +4,36 @@ const printView = Vue.component('print-view', {
     barcode,
   },
   template:
-    '<div class="flex-row">\
-            <div class="d-flex justify-content-center pb-2">\
-                <div id="printLabel">\
-                    <div class="print-row" :class="[label.type == \'roll\' ? \'roll-width\' : \'a4-width\']">\
-                        <div class="print-row" :style="labelWidth">\
-                            <div v-for="(label, index) in prints">\
-                                <div :class="[pageBreak(index) ? \'html2pdf__page-break\' : \'\']" :style="label.dimensions">\
-                                    <div style="height: 100%; position:relative; overflow: hidden" :style="test ? \'border: 1px solid;\' : \'\'">\
-                                        <span v-for="(field, index) in label.fields" :style="field.dimensions" style="position:absolute;">\
-                                            <span v-if="field.name == \'items.barcode\'"><barcode :value="field.value" :fontsize="field.dimensions.fontSize"></barcode></span>\
-                                            <span v-else :style="smallText(field.dimensions.fontSize) ? \'letter-spacing: 0.5px;\' : \'\'">{{field.value}}</span>\
-                                        </span>\
-                                    </div>\
-                                </div>\
-                            </div>\
-                        </div>\
-                        <div v-if="label.signum" :class="[label.type == 10 ? \'print-row\' : \'\']">\
-                            <div v-for="(label, index) in prints">\
-                                <div :class="[pageBreak(index) ? \'html2pdf__page-break\' : \'\']" :style="label.signum.dimensions">\
-                                    <div style="height: 100%; position:relative;" :style="test ? \'border: 1px solid;\' : \'\'">\
-                                        <span v-for="(field, index) in label.signum.fields" :style="field.dimensions" style="position:absolute;">\
-                                            {{field.value}}\
-                                        </span>\
-                                    </div>\
-                                </div>\
-                            </div>\
-                        </div>\
-                    </div>\
-                </div>\
-            </div>\
-        </div>',
+      '<div class="print-row">\
+          <div class="print-row" :style="labelWidth">\
+              <div v-for="(label, index) in prints">\
+                  <div :style="label.dimensions">\
+                      <div style="height: 100%; position:relative; overflow: hidden" :style="test ? \'border: 1px solid;\' : \'\'">\
+                          <span v-for="(field, index) in label.fields" :style="field.dimensions" style="position:absolute;">\
+                              <span v-if="field.name == \'items.barcode\'"><barcode :value="field.value" :fontsize="field.dimensions.fontSize"></barcode></span>\
+                              <span v-else :style="smallText(field.dimensions.fontSize) ? \'letter-spacing: 0.5px;\' : \'\'">{{field.value}}</span>\
+                          </span>\
+                      </div>\
+                  </div>\
+              </div>\
+          </div>\
+          <div v-if="label.signum" :class="[label.type == 10 ? \'print-row\' : \'\']">\
+              <div v-for="(label, index) in prints">\
+                  <div :style="label.signum.dimensions">\
+                      <div style="height: 100%; position:relative;" :style="test ? \'border: 1px solid;\' : \'\'">\
+                          <span v-for="(field, index) in label.signum.fields" :style="field.dimensions" style="position:absolute;">\
+                              {{field.value}}\
+                          </span>\
+                      </div>\
+                  </div>\
+              </div>\
+          </div>\
+      </div>',
   props: ['label', 'prints', 'test'],
   data() {
     return {
       margins: {marginTop: localStorage.getItem('LabelToolTopMargin'), marginLeft: localStorage.getItem('LabelToolLeftMargin')},
-      indeces: []
     };
-  },
-  created() {
-    this.calIndeces();
   },
   computed: {
     labelWidth: function () {

@@ -65,10 +65,16 @@ sub printLabel {
     my ($self, $label_id, $test, $items) = @_;
     return $self->printTest($label_id) if $test;
     my @printLabels;
+    my @items;
+    my $itemsCount = 0;
+    my $label = $self->labels->getLabel($label_id);
     foreach my $item (@{$items}) {
-        my $label = $self->labels->getLabel($label_id);
         my $itemData = $item->{itemnumber} ? Koha::Items->find($item->{itemnumber}) : Koha::Items->search({barcode => $item->{barcode}})->next;
         if ($itemData) {
+            if ($label->{labelcount} > 1) {
+                $itemsCount++;
+            }
+
             my ($biblio, $biblioitem, $marc) = $self->getBiblioData($itemData);
             my $data = {
                 items => $itemData->unblessed,
@@ -78,10 +84,20 @@ sub printLabel {
             };
 
             my $valueLabel = $self->processFields($label, $data);
-            push @printLabels, $valueLabel;
+            if (($itemsCount > $label->{labelcount})) {
+                push @printLabels, [@items];
+                @items = ();
+                $itemsCount = 0;
+            } else {
+                push @items, $valueLabel;
+            }
+            if ($label->{labelcount} == 1) {
+                $itemsCount++;
+            }
         }
     }
-
+    
+    push @printLabels, [@items];
     return \@printLabels;
 }
 
@@ -98,12 +114,12 @@ sub printTest {
     };
 
     my @testLabels;
-
+    my @items;
     for (my $i = 0; $i < $label->{labelcount}; $i++) {
         my $valueLabel = $self->processFields($label, $data);
-        push @testLabels, $valueLabel;
+        push @items, $valueLabel;
     }
-
+    push @testLabels, [@items];
     return \@testLabels;
 }
 

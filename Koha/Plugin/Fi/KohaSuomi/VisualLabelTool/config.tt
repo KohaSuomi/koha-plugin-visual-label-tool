@@ -281,7 +281,13 @@
 							</div>
 						</div>
 						<div v-if="showTest">
-							<print-view :label="label" :prints="prints" :test="true"></print-view>
+							<div class="container" :class="[label.type == 'roll' ? 'roll-width' : 'a4-width']">
+								<div class="row justify-content-md-center">
+									<div v-for="(print, index) in prints" id="printLabel" >
+										<print-view :label="label" :prints="print" :test="true"></print-view>
+									</div>
+								</div>
+							</div>
 						</div>
 					</div>
 				</main>

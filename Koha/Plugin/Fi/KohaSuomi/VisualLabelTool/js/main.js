@@ -81,6 +81,7 @@ new Vue({
     printLabels(e) {
       e.preventDefault();
       this.errors = [];
+      this.loader = true;
       var searchParams = new URLSearchParams();
       searchParams.append('test', false);
       axios
@@ -94,6 +95,7 @@ new Vue({
         .then((response) => {
           this.labels = response.data;
           this.showPrinting = true;
+          this.loader = false;
         })
         .catch((error) => {
           this.errors.push(error);
@@ -110,7 +112,7 @@ new Vue({
       let paddingBottom = parseInt(this.label.dimensions.paddingBottom) ? parseInt(this.label.dimensions.paddingBottom) : 0;
       let signumWidth = this.label.signum && parseInt(this.label.signum.dimensions.width) ? parseInt(this.label.signum.dimensions.width) : 0
       this.loader = true;
-      let element = document.getElementById('printLabel');
+      let element = document.getElementById('printLabel_0');
       let rollWidth = parseInt(this.label.dimensions.width) + signumWidth;
       let rollHeight = parseInt(this.label.dimensions.height)+ paddingTop + paddingBottom + this.topMargin;
       let pdfFormat = this.label.type == 'roll' ? [rollHeight, rollWidth] : 'a4';
@@ -119,13 +121,20 @@ new Vue({
         margin: [this.topMargin, this.leftMargin, 0, 0],
         filename:     'printLabel.pdf',
         image:        { type: 'jpeg', quality: 1 },
-        html2canvas:  { scale: 4, logging: true},
+        html2canvas:  { scale: 4, logging: true,},
         jsPDF:        { orientation: pdfOrientation, unit: 'mm', format: pdfFormat},
       };
-      html2pdf().set(opt).from(element).save().then(() =>{
+      let doc = html2pdf().set(opt).from(element).toPdf();
+      for (let j = 1; j < this.labels.length; j++) {
+        let el = document.getElementById('printLabel_'+j);
+        doc = doc.get('pdf').then(
+          pdf => { pdf.addPage() }
+        ).from(el).toContainer().toCanvas().toPdf()
+      }
+      doc.save().then(() => {
         this.updatePrintQueue();
         this.loader = false;
-      });
+      });  
     },
     removeFromPrint(index) {
       this.prints.splice(index, 1);

@@ -45,7 +45,7 @@
 							</li>
 							<li><margins-component></margins-component></li>
 							<li class="nav-item pr-2">
-								<button class="btn btn-success" @click="print()":disabled="loader"><i v-if="loader" class="fas fa-circle-notch fa-spin"></i><span v-else>Tulosta</button>
+								<button class="btn btn-success" @click="print()" :disabled="loader"><i v-if="loader" class="fas fa-circle-notch fa-spin"></i><span v-else>Tulosta</button>
 							</li>
 						</ul>
 						<ul v-else class="nav">
@@ -53,12 +53,19 @@
 								<multiselect v-model="label" value="value" :options="savedLabels" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="Valitse pohja"></multiselect>
 							</li>
 							<li v-if="label" class="nav-item pl-2">
-								<button class="btn btn-info" @click="printLabels($event)">Tulosta</span></button>
+								<button class="btn btn-info" @click="printLabels($event)" :disabled="loader"><i v-if="loader" class="fas fa-circle-notch fa-spin"></i><span v-else>Tulosta</span></button>
 							</li>
 						</ul>
 					</div>
 					<div v-if="showPrinting">
-						<print-view :label="label" :prints="labels" :test="false"></print-view>
+						<div class="container" :class="[label.type == 'roll' ? 'roll-width' : 'a4-width']">
+							<div class="row justify-content-md-center">
+								<div v-for="(print, index) in labels" :id="'printLabel_'+index">
+									<print-view :label="label" :prints="print" :test="false"></print-view>
+									<div class="html2pdf__page-break"></div>
+								</div>
+							</div>
+						</div>
 					</div>
 					<div v-else class="container">
 						<div class="row">
