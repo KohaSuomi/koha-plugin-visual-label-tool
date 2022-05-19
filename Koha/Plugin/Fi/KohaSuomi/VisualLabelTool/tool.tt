@@ -19,7 +19,7 @@
 		<script src="https://unpkg.com/vuejs-datepicker/dist/locale/translations/fi.js"></script>
 		<script src="https://unpkg.com/axios/dist/axios.min.js"></script>
 		<script src="https://cdnjs.cloudflare.com/ajax/libs/moment.js/2.24.0/moment-with-locales.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.10.1/html2pdf.bundle.min.js" integrity="sha512-GsLlZN/3F2ErC5ifS5QtgpiJtWd43JWSuIgh7mbzZ8zBps+dvLusV+eNQATqgA/HdeKFVgA5v3S/cIrLF7QnIg==" crossorigin="anonymous" referrerpolicy="no-referrer"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/html2pdf.js/0.9.3/html2pdf.bundle.min.js"></script>
 		<script src="https://cdn.jsdelivr.net/npm/jsbarcode@3.11.5/dist/barcodes/JsBarcode.code39.min.js"></script>
 	</head>
 	<body>
@@ -118,7 +118,7 @@
 										v-for="(element, index) in prints"
 										:key="index"
 										>
-										{{ element.barcode }} (<a target="_blank" :href="'/cgi-bin/koha/catalogue/moredetail.pl?type=&itemnumber='+element.itemnumber+'&biblionumber='+element.biblionumber">{{element.itemnumber}}</a>)
+										{{index+1}}. {{ element.barcode }} (<a target="_blank" :href="'/cgi-bin/koha/catalogue/moredetail.pl?type=&itemnumber='+element.itemnumber+'&biblionumber='+element.biblionumber">{{element.itemnumber}}</a>)
 										<a href="#" class="ml-1" @click="removeFromPrint(index)"><i class="fas fa-minus text-danger"></i></a>
 										</div>
 									</div>
