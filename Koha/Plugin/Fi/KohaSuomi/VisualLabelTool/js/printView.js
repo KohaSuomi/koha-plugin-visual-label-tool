@@ -74,7 +74,7 @@ const printView = Vue.component('print-view', {
     },
     smallText: function(size) {
       let spacing = false;
-      if (parseInt(size) <= 10) {
+      if (parseInt(size) < 14) {
         spacing = true;
       }
       return spacing;
