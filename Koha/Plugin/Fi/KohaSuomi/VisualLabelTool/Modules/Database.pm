@@ -73,7 +73,7 @@ sub dbh {
 sub getLabelsData {
     my ($self) = @_;
 
-    my $sth = $self->dbh->prepare("SELECT * FROM ".$self->labels.";");
+    my $sth = $self->dbh->prepare("SELECT * FROM ".$self->labels." order by name asc;");
     $sth->execute();
     return $sth->fetchall_arrayref({});
 }
