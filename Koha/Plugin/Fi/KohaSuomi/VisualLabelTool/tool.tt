@@ -172,6 +172,17 @@
 				text-indent: 0;
 				color: #000;
 			}
+
+			.multiselect .multiselect__content-wrapper {
+				min-width: 100%;
+				width: fit-content;
+				border-top: 1px solid #e8e8e8;
+				overflow-x: hidden;
+			}
+
+			.multiselect--active .multiselect__tags {
+				border-bottom: none;
+			}
 		</style>
 	</body>
 </html>
