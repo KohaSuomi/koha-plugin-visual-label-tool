@@ -173,7 +173,7 @@ sub createTables {
         `timestamp` timestamp NOT NULL DEFAULT CURRENT_TIMESTAMP ON UPDATE CURRENT_TIMESTAMP,
         PRIMARY KEY `id` (`id`),
         KEY (`borrowernumber`),
-        KEY (`itemnumber`)
+        CONSTRAINT `koha_plugin_fi_kohasuomi_visuallabeltool_print_queue_ibfk_1` FOREIGN KEY (`itemnumber`) REFERENCES `items` (`itemnumber`) ON DELETE CASCADE
         ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4 COLLATE=utf8mb4_unicode_ci;
     ");
 }
