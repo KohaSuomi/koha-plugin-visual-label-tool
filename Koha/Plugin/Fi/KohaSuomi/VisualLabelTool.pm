@@ -159,6 +159,9 @@ sub createTables {
         `fontfamily` varchar(50) DEFAULT NULL,
         `fontweight` ENUM('normal','bold') DEFAULT 'normal',
         `whitespace` ENUM('normal','nowrap') DEFAULT 'nowrap',
+
+        `height` varchar(10) DEFAULT NULL,
+
         PRIMARY KEY `id` (`id`),
         KEY (`label_id`),
         CONSTRAINT `label_ibfk_1` FOREIGN KEY (`label_id`) REFERENCES `$labelsTable` (`id`) ON DELETE CASCADE
@@ -193,6 +196,7 @@ sub upgradeTables {
     $dbh->do("ALTER TABLE `$fieldsTable` MODIFY `name` varchar(150) NOT NULL;");
     $dbh->do("ALTER TABLE `$fieldsTable` ADD COLUMN IF NOT EXISTS `bottom` varchar(10) DEFAULT NULL;");
     $dbh->do("ALTER TABLE `$fieldsTable` ADD COLUMN IF NOT EXISTS `whitespace` ENUM('normal','nowrap') DEFAULT 'nowrap';");
+    $dbh->do("ALTER TABLE `$fieldsTable` ADD COLUMN IF NOT EXISTS `height` varchar(10) DEFAULT NULL;");
 }
 
 

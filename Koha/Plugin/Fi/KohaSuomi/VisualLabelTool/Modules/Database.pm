@@ -128,7 +128,7 @@ sub getFieldData {
 sub setFieldData {
     my ($self, @params) = @_;
 
-    my $sth=$self->dbh->prepare("INSERT INTO ".$self->fields." (label_id,name,type,top,`left`,`right`,`bottom`,fontsize, fontfamily, fontweight, whitespace) VALUES (?,?,?,?,?,?,?,?,?,?,?)");
+    my $sth=$self->dbh->prepare("INSERT INTO ".$self->fields." (label_id,name,type,top,`left`,`right`,`bottom`,fontsize, fontfamily, fontweight, whitespace, height) VALUES (?,?,?,?,?,?,?,?,?,?,?,?)");
     return $sth->execute(@params);
 
 }
@@ -137,7 +137,7 @@ sub updateFieldData {
     my ($self, @params) = @_;
     
     my $sth=$self->dbh->prepare("UPDATE ".$self->fields." SET 
-    label_id = ?, name = ?,type = ?, top = ?, `left` = ?,`right` = ?,`bottom` = ?,fontsize = ?, fontfamily = ?, fontweight = ?, whitespace = ? 
+    label_id = ?, name = ?,type = ?, top = ?, `left` = ?,`right` = ?,`bottom` = ?,fontsize = ?, fontfamily = ?, fontweight = ?, whitespace = ?, height = ?
     WHERE id = ?;");
     return $sth->execute(@params);
     
