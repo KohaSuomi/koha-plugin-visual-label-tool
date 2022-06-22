@@ -161,6 +161,7 @@ sub createTables {
         `whitespace` ENUM('normal','nowrap') DEFAULT 'nowrap',
 
         `height` varchar(10) DEFAULT NULL,
+        `overflow` ENUM('visible','hidden') DEFAULT 'hidden',
 
         PRIMARY KEY `id` (`id`),
         KEY (`label_id`),
@@ -197,6 +198,7 @@ sub upgradeTables {
     $dbh->do("ALTER TABLE `$fieldsTable` ADD COLUMN IF NOT EXISTS `bottom` varchar(10) DEFAULT NULL;");
     $dbh->do("ALTER TABLE `$fieldsTable` ADD COLUMN IF NOT EXISTS `whitespace` ENUM('normal','nowrap') DEFAULT 'nowrap';");
     $dbh->do("ALTER TABLE `$fieldsTable` ADD COLUMN IF NOT EXISTS `height` varchar(10) DEFAULT NULL;");
+    $dbh->do("ALTER TABLE `$fieldsTable` ADD COLUMN IF NOT EXISTS `overflow` ENUM('visible','hidden') DEFAULT 'hidden';");
 }
 
 

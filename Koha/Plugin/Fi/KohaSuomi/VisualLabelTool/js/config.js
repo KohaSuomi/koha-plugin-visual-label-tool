@@ -49,6 +49,7 @@ new Vue({
     ],
     fontWeights: ['normal', 'bold'],
     whiteSpaces: ['normal', 'nowrap'],
+    overflow: ['visible', 'hidden'],
     topMargin: 0,
     leftMargin: 0,
     loader: false,
