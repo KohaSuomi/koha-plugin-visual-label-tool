@@ -190,17 +190,12 @@
 															<div class="form-group">
 																<label>Kirjasin koko:</label> <input type="text" v-model="selectedField.dimensions.fontSize"  class="form-control" name="field" :value="selectedField.dimensions.fontSize" @change="updateDimension($event)"/>
 															</div>
-
-
-
 															<div class="form-group">	
 																<label>Rivitys:</label> <multiselect v-model="selectedField.dimensions.whiteSpace" value="value" :options="whiteSpaces" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Valitse rivitys" @input="updateDimension($event)"></multiselect>
 															</div>
-
 															<div class="form-group">
 																<label>HEIGHT:</label> <input type="text" v-model="selectedField.dimensions.height"  class="form-control" name="field" :value="selectedField.dimensions.height" @change="updateDimension($event)"/>
 															</div>
-															
 															<div class="form-group">
 																<button class="btn btn-danger" @click="deleteField($event)">Poista</button>
 															</div>
