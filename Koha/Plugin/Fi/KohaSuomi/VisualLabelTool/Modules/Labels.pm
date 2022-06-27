@@ -257,10 +257,10 @@ sub parseField {
         $field->{dimensions}->{top},
         $field->{dimensions}->{left},
         $field->{dimensions}->{right},
+        $field->{dimensions}->{bottom},
         $field->{dimensions}->{fontSize},
         $field->{dimensions}->{fontFamily},
         $field->{dimensions}->{fontWeight},
-        $field->{dimensions}->{bottom},
         $field->{dimensions}->{whiteSpace},
         $field->{dimensions}->{height},
         $field->{dimensions}->{overflow}
@@ -312,10 +312,10 @@ sub wrapFields {
                 top => $field->{top},
                 left => $field->{left},
                 right => $field->{right},
+                bottom => $field->{bottom},
                 fontSize => $field->{fontsize},
                 fontFamily => $field->{fontfamily},
                 fontWeight => $field->{fontweight},
-                bottom => $field->{bottom},
                 whiteSpace => $field->{whitespace},
                 height => $field->{height},
                 overflow => $field->{overflow}

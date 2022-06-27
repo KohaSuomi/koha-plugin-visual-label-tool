@@ -154,10 +154,10 @@ sub createTables {
         `top` varchar(10) DEFAULT NULL,
         `left` varchar(10) DEFAULT NULL,
         `right` varchar(10) DEFAULT NULL,
+        `bottom` varchar(10) DEFAULT NULL,
         `fontsize` varchar(10) DEFAULT NULL,
         `fontfamily` varchar(50) DEFAULT NULL,
         `fontweight` ENUM('normal','bold') DEFAULT 'normal',
-        `bottom` varchar(10) DEFAULT NULL,
         `whitespace` ENUM('normal','nowrap') DEFAULT 'nowrap',
         `height` varchar(10) DEFAULT NULL,
         `overflow` ENUM('visible','hidden') DEFAULT 'hidden',
@@ -190,10 +190,10 @@ sub upgradeTables {
     my $printedTable = $self->get_qualified_table_name('printed');
     my $printQueueTable = $self->get_qualified_table_name('print_queue');
 
+    $dbh->do("ALTER TABLE `$fieldsTable` ADD COLUMN IF NOT EXISTS `bottom` varchar(10) DEFAULT NULL;");
     $dbh->do("ALTER TABLE `$fieldsTable` ADD COLUMN IF NOT EXISTS `fontfamily` varchar(50) DEFAULT NULL;");
     $dbh->do("ALTER TABLE `$fieldsTable` ADD COLUMN IF NOT EXISTS `fontweight` ENUM('normal','bold') DEFAULT 'normal';");
     $dbh->do("ALTER TABLE `$fieldsTable` MODIFY `name` varchar(150) NOT NULL;");
-    $dbh->do("ALTER TABLE `$fieldsTable` ADD COLUMN IF NOT EXISTS `bottom` varchar(10) DEFAULT NULL;");
     $dbh->do("ALTER TABLE `$fieldsTable` ADD COLUMN IF NOT EXISTS `whitespace` ENUM('normal','nowrap') DEFAULT 'nowrap';");
     $dbh->do("ALTER TABLE `$fieldsTable` ADD COLUMN IF NOT EXISTS `height` varchar(10) DEFAULT NULL;");
     $dbh->do("ALTER TABLE `$fieldsTable` ADD COLUMN IF NOT EXISTS `overflow` ENUM('visible','hidden') DEFAULT 'hidden';");
