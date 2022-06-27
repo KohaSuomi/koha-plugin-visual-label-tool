@@ -196,6 +196,9 @@
 															<div class="form-group">
 																<label>Kentän korkeus:</label> <input type="text" v-model="selectedField.dimensions.height"  class="form-control" name="field" :value="selectedField.dimensions.height" @change="updateDimension($event)"/>
 															</div>
+															<div class="form-group">	
+																<label>Ylivuodon näkyvyys:</label> <multiselect v-model="selectedField.dimensions.overflow" value="value" :options="overflow" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Valitse ylivuoto" @input="updateDimension($event)"></multiselect>
+															</div>
 															<div class="form-group">
 																<button class="btn btn-danger" @click="deleteField($event)">Poista</button>
 															</div>
