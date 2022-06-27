@@ -252,8 +252,8 @@ sub parseField {
     
     return (
         $label_id,
-        $field->{name},
         $type,
+        $field->{name},
         $field->{dimensions}->{top},
         $field->{dimensions}->{left},
         $field->{dimensions}->{right},
