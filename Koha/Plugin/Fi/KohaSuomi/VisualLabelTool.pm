@@ -12,7 +12,7 @@ use utf8;
 use JSON;
 
 ## Here we set our plugin version
-our $VERSION = "1.0.5";
+our $VERSION = "1.0.6";
 
 ## Here is our metadata, some keys are required, some are optional
 our $metadata = {
@@ -161,6 +161,7 @@ sub createTables {
         `whitespace` ENUM('normal','nowrap') DEFAULT 'nowrap',
         `height` varchar(10) DEFAULT NULL,
         `overflow` ENUM('visible','hidden') DEFAULT 'hidden',
+        `width` varchar(10) DEFAULT NULL,
         PRIMARY KEY `id` (`id`),
         KEY (`label_id`),
         CONSTRAINT `label_ibfk_1` FOREIGN KEY (`label_id`) REFERENCES `$labelsTable` (`id`) ON DELETE CASCADE
@@ -197,6 +198,7 @@ sub upgradeTables {
     $dbh->do("ALTER TABLE `$fieldsTable` ADD COLUMN IF NOT EXISTS `whitespace` ENUM('normal','nowrap') DEFAULT 'nowrap';");
     $dbh->do("ALTER TABLE `$fieldsTable` ADD COLUMN IF NOT EXISTS `height` varchar(10) DEFAULT NULL;");
     $dbh->do("ALTER TABLE `$fieldsTable` ADD COLUMN IF NOT EXISTS `overflow` ENUM('visible','hidden') DEFAULT 'hidden';");
+    $dbh->do("ALTER TABLE `$fieldsTable` ADD COLUMN IF NOT EXISTS `width` varchar(10) DEFAULT NULL;");
 }
 
 

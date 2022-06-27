@@ -263,7 +263,8 @@ sub parseField {
         $field->{dimensions}->{fontWeight},
         $field->{dimensions}->{whiteSpace},
         $field->{dimensions}->{height},
-        $field->{dimensions}->{overflow}
+        $field->{dimensions}->{overflow},
+        $field->{dimensions}->{width}
     );
 }
 
@@ -318,7 +319,8 @@ sub wrapFields {
                 fontWeight => $field->{fontweight},
                 whiteSpace => $field->{whitespace},
                 height => $field->{height},
-                overflow => $field->{overflow}
+                overflow => $field->{overflow},
+                width => $field->{width}
             }
         };
         if ($field->{type} eq "signum") {
