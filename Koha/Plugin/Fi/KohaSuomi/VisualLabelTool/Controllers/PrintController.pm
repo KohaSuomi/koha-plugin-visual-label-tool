@@ -22,6 +22,7 @@ use Try::Tiny;
 use Koha::Items;
 use Koha::DateUtils qw( dt_from_string output_pref );
 use Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Print;
+use C4::Context;
 
 =head1 API
 
@@ -52,9 +53,10 @@ sub listItems {
     my $today_dt = output_pref({ dt => dt_from_string, dateformat => 'iso', dateonly => 1});
     my $items;
     my $user = $c->stash('koha.user');
+    my $userenv_branch = C4::Context->userenv->{'branch'};
     try {
         if ($type eq 'received') {
-            $items = Koha::Items->search({dateaccessioned => $today_dt})->unblessed;
+            $items = Koha::Items->search({dateaccessioned => $today_dt, homebranch => $userenv_branch})->unblessed;
         } elsif($type eq 'printed') {
             my $print = Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Print->new();
             $items = $print->getPrintQueue($user->borrowernumber, 1);
