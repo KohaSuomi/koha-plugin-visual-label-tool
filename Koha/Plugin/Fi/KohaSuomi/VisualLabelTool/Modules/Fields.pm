@@ -82,6 +82,7 @@ sub getItem {
         'items.itemcallnumber', 
         'items.location',
         'items.permanent_location',
+        'items.sub_location',
         'items.ccode', 
         'items.cn_source', 
         'items.cn_sort', 
@@ -219,6 +220,7 @@ sub customField {
     $data->{marc}->{description} = $self->marcField($data->{marc}, 'description');
     $data->{marc}->{publication} = $self->marcField($data->{marc}, 'publication');
     $data->{marc}->{volume} = $self->marcField($data->{marc}, 'volume');
+    $data->{items}->{sub_location} = Koha::AuthorisedValues->search({ category => 'SUBLOC', authorised_value => $data->{items}->{sub_location} })->next ? Koha::AuthorisedValues->search({ category => 'SUBLOC', authorised_value => $data->{items}->{sub_location} })->next->lib : $data->{items}->{sub_location};
 
     my $ors = $self->_splitToLogicSegments($field);
 
