@@ -219,6 +219,8 @@ sub customField {
     $data->{items}->{signumHeading} = $self->signumHeading($data->{items}->{itemcallnumber});
     $data->{items}->{location} = $self->location($data->{items}->{permanent_location}, $data->{items}->{location});
     $data->{items}->{branchname} = Koha::Libraries->find($data->{items}->{homebranch})->branchname;
+    $data->{items}->{subloc} = Koha::AuthorisedValues->search({ category => 'SUBLOC', authorised_value => $data->{items}->{sub_location} })->next ? Koha::AuthorisedValues->search({ category => 'SUBLOC', authorised_value => $data->{items}->{sub_location} })->next->lib : $data->{items}->{sub_location};
+    $data->{items}->{sub_location} = $data->{items}->{sub_location};
     $data->{biblioitems}->{itemtype} = Koha::AuthorisedValues->search({ category => 'MTYPE', authorised_value => $data->{biblioitems}->{itemtype} })->next ? Koha::AuthorisedValues->search({ category => 'MTYPE', authorised_value => $data->{biblioitems}->{itemtype} })->next->lib : $data->{biblioitems}->{itemtype};
     $data->{marc}->{title} = $self->marcField($data->{marc}, 'title');
     $data->{marc}->{author} = $self->marcField($data->{marc}, 'author');
@@ -226,7 +228,6 @@ sub customField {
     $data->{marc}->{description} = $self->marcField($data->{marc}, 'description');
     $data->{marc}->{publication} = $self->marcField($data->{marc}, 'publication');
     $data->{marc}->{volume} = $self->marcField($data->{marc}, 'volume');
-    $data->{items}->{sub_location} = Koha::AuthorisedValues->search({ category => 'SUBLOC', authorised_value => $data->{items}->{sub_location} })->next ? Koha::AuthorisedValues->search({ category => 'SUBLOC', authorised_value => $data->{items}->{sub_location} })->next->lib : $data->{items}->{sub_location};
 
     my $ors = $self->_splitToLogicSegments($field);
 
