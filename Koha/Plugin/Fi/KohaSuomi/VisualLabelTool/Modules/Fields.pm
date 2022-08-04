@@ -82,6 +82,7 @@ sub getItem {
         'items.itemcallnumber', 
         'items.location',
         'items.permanent_location',
+        'items.subloc',
         'items.sub_location',
         'items.ccode', 
         'items.cn_source', 
