@@ -11,7 +11,7 @@ const printView = Vue.component('print-view', {
                       <div style="height: 100%; position:relative; overflow: hidden" :style="test ? \'border: 1px solid;\' : \'\'">\
                           <span v-for="(field, index) in label.fields" :style="field.dimensions" style="position:absolute;">\
                               <span v-if="field.name == \'items.barcode\'"><barcode :value="field.value" :fontsize="field.dimensions.fontSize"></barcode></span>\
-                              <span v-else :style="smallText(field.dimensions.fontSize) ? \'letter-spacing: 0.5px;\' : \'\'">{{field.value}}</span>\
+                              <span v-else :style="smallText(field.dimensions.fontSize) ? \'letter-spacing: 0.5px;\' : \'letter-spacing: 0.01px;\'">{{field.value}}</span>\
                           </span>\
                       </div>\
                   </div>\
