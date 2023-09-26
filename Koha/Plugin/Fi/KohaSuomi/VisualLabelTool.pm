@@ -12,14 +12,14 @@ use utf8;
 use JSON;
 
 ## Here we set our plugin version
-our $VERSION = "1.0.7";
+our $VERSION = "1.0.8";
 
 ## Here is our metadata, some keys are required, some are optional
 our $metadata = {
     name            => 'Tarratulostustyökalu',
     author          => 'Johanna Räisä',
     date_authored   => '2021-02-25',
-    date_updated    => "2022-09-27",
+    date_updated    => "2023-09-26",
     minimum_version => '21.11.00.000',
     maximum_version => undef,
     version         => $VERSION,
@@ -110,7 +110,7 @@ sub api_routes {
 
 sub api_namespace {
     my ( $self ) = @_;
-    
+
     return 'kohasuomi';
 }
 

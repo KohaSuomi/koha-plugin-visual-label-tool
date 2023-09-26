@@ -27,7 +27,8 @@ new Vue({
     showPrinting: false,
     printingType: [
       { name: 'Oma tulostusjono', value: 'list' },
-      { name: 'Tänään vastaanotettu', value: 'received' },
+      { name: 'Tänään vastaanotetut', value: 'received' },
+      { name: 'Tänään vastaanotetut kausijulkaisut', value: 'receivedserials' },
       { name: 'Itse tulostetut', value: 'printed' },
     ],
     type: null,
@@ -134,7 +135,7 @@ new Vue({
       doc.save().then(() => {
         this.updatePrintQueue();
         this.loader = false;
-      });  
+      });
     },
     removeFromPrint(index) {
       this.prints.splice(index, 1);

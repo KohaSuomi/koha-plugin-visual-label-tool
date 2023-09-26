@@ -22,6 +22,7 @@ use Try::Tiny;
 use Koha::Items;
 use Koha::DateUtils qw( dt_from_string output_pref );
 use Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Print;
+use Koha::Serial::Items;
 use C4::Context;
 
 =head1 API
@@ -57,6 +58,8 @@ sub listItems {
     try {
         if ($type eq 'received') {
             $items = Koha::Items->search({dateaccessioned => $today_dt, homebranch => $userenv_branch})->unblessed;
+        } elsif($type eq 'receivedserials') {
+	    $items = Koha::Items->search({dateaccessioned => $today_dt, homebranch => $userenv_branch, itemnumber => { in => [Koha::Serial::Items->search->get_column('itemnumber')] } } )->unblessed;
         } elsif($type eq 'printed') {
             my $print = Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Print->new();
             $items = $print->getPrintQueue($user->borrowernumber, 1);
