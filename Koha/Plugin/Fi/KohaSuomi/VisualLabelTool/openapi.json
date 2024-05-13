@@ -354,7 +354,7 @@
       }
     }
   },
-  "/labels/print/queue/clean/{month}": {
+  "/labels/print/queue/clean": {
     "delete": {
       "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::PrintController#cleanQueue",
       "operationId": "cleanPrintQueue",
@@ -368,9 +368,16 @@
       ],
       "parameters": [
         {
-          "name": "month",
-          "in": "path",
-          "description": "Time value",
+          "name": "p",
+          "in": "query",
+          "description": "Printed value",
+          "required": true,
+          "type": "boolean"
+        },
+        {
+          "name": "w",
+          "in": "query",
+          "description": "Weeks value",
           "required": true,
           "type": "integer"
         }
@@ -380,7 +387,7 @@
       ],
       "responses": {
         "200": {
-          "description": "Print queue cleaned from items older than",
+          "description": "Print queue cleaned",
           "schema": {
             "type": "object"
           }

@@ -41,7 +41,7 @@
 						</ul>
 						<ul v-else class="nav">
 							<li class="nav-item pl-2">
-								<button @click="cleanFromQueue(month)">Clean</button><multiselect v-model="label" value="value" :options="savedLabels" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="Valitse pohja"></multiselect>
+								<multiselect v-model="label" value="value" :options="savedLabels" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="Valitse pohja"></multiselect>
 							</li>
 							<li v-if="label" class="nav-item pl-2">
 								<button class="btn btn-info" @click="printLabels($event)" :disabled="loader"><i v-if="loader" class="fas fa-circle-notch fa-spin"></i><span v-else>Tulosta</span></button>
@@ -87,7 +87,7 @@
 													<a href="#" class="ml-1" @click="addToPrints(index)"><i class="fas fa-chevron-right text-dark"></i></a>
 												</div>
 											</div>
-										</div>						
+										</div>
 									</div>
 								</div>
 							</div>
@@ -141,10 +141,12 @@
 		<script src="[% PLUGIN_PATH %]/includes/bootstrap.min.js"></script>
 		<script type="module" src="[% PLUGIN_PATH %]/js/main.js"></script>
 		<script>
+                        var weeks = 9;
+                        var printed = 1;
+
 			$( document ).ready(function() {
 				// Delete items from print queue for current user
-				var month = 2;
-				axios.delete('/api/v1/contrib/kohasuomi/labels/print/queue/clean/' + month);
+				axios.delete('/api/v1/contrib/kohasuomi/labels/print/queue/clean?p=' + printed + '&w=' + weeks);
 			});
 		</script>
 		<style>

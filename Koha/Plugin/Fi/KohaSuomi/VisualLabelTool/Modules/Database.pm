@@ -182,10 +182,10 @@ sub updatePrintQueue {
 }
 
 sub cleanPrintQueueData {
-    my ($self, $borrowernumber, $month) = @_;
+    my ($self, $borrowernumber, $p, $w) = @_;
 
-    my $sth = $self->dbh->prepare("DELETE FROM ".$self->printQueue." WHERE borrowernumber = ? AND printed = 1 AND timestamp < CURRENT_TIMESTAMP() - INTERVAL ? MONTH");
-    return $sth->execute($borrowernumber, $month);
+    my $sth = $self->dbh->prepare("DELETE FROM ".$self->printQueue." WHERE borrowernumber = ? AND printed = ? AND timestamp < CURRENT_TIMESTAMP() - INTERVAL ? WEEK");
+    return $sth->execute($borrowernumber, $p, $w);
 }
 
 1;

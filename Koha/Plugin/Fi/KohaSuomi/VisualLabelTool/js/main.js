@@ -204,13 +204,16 @@ var donks = new Vue({
         this.clearPrints();
       });
     },
-    cleanFromQueue(month) {
+    cleanFromQueue(printed, weeks) {
       this.errors = [];
+      var searchParams = new URLSearchParams();
+      searchParams.append('p', printed);
+      searchParams.append('w', weeks);
       axios
         .delete(
-          '/api/v1/contrib/kohasuomi/labels/print/queue/clean/' +
-            month
-        )
+          '/api/v1/contrib/kohasuomi/labels/print/queue/clean', {
+          params: searchParams,
+        })
         .then(() => {})
         .catch((error) =>  {
           this.errors.push(error);

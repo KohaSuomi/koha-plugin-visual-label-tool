@@ -132,11 +132,12 @@ sub updateQueue {
 sub cleanQueue {
     my $c = shift->openapi->valid_input or return;
 
-    my $month = $c->validation->param('month');
+    my $p = $c->validation->param('p');
+    my $w = $c->validation->param('w');
     my $user = $c->stash('koha.user');
     try {
         my $print = Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Print->new();
-        my $response = $print->cleanPrintQueue($user->borrowernumber, $month);
+        my $response = $print->cleanPrintQueue($user->borrowernumber, $p,  $w);
         return $c->render(status => 200, openapi => {message => "Success"});
         }
     } catch {
