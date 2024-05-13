@@ -6,7 +6,7 @@ const Multiselect = Vue.component(
   window.VueMultiselect.default
 );
 
-new Vue({
+var donks = new Vue({
   el: '#viewApp',
   components: {
     Multiselect,
@@ -203,6 +203,18 @@ new Vue({
       await Promise.all(promises).then(() => {
         this.clearPrints();
       });
+    },
+    cleanFromQueue(month) {
+      this.errors = [];
+      axios
+        .delete(
+          '/api/v1/contrib/kohasuomi/labels/print/queue/clean/' +
+            month
+        )
+        .then(() => {})
+        .catch((error) =>  {
+          this.errors.push(error);
+        });
     },
   },
 });

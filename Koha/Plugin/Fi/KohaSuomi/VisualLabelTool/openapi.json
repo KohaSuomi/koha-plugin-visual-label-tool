@@ -354,6 +354,40 @@
       }
     }
   },
+  "/labels/print/queue/clean/{month}": {
+    "delete": {
+      "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::PrintController#cleanQueue",
+      "operationId": "cleanPrintQueue",
+      "x-koha-authorization": {
+        "permissions": {
+          "editcatalogue": "edit_items"
+        }
+      },
+      "tags": [
+        "labels"
+      ],
+      "parameters": [
+        {
+          "name": "month",
+          "in": "path",
+          "description": "Time value",
+          "required": true,
+          "type": "integer"
+        }
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "responses": {
+        "200": {
+          "description": "Print queue cleaned from items older than",
+          "schema": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  },
   "/labels/print/{label_id}": {
     "post": {
       "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::PrintController#get",

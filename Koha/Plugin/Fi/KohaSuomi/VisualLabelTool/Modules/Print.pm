@@ -185,4 +185,10 @@ sub updatePrintQueue {
     $self->db->updatePrintQueue(@params);
 }
 
+sub cleanPrintQueue {
+    my ($self, $borrowernumber, $month) = @_;
+
+    $self->db->cleanPrintQueueData($borrowernumber, $month);
+}
+
 1;

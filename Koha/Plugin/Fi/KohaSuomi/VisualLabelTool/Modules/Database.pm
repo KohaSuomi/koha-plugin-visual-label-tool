@@ -90,7 +90,7 @@ sub getLabelData {
 sub setLabelData {
     my ($self, @params) = @_;
     
-    my $sth=$self->dbh->prepare("INSERT INTO ".$self->labels." 
+    my $sth = $self->dbh->prepare("INSERT INTO ".$self->labels." 
     (name,type,labelcount,width,height,top,bottom,`left`,`right`,signum_width,signum_height,signum_top,signum_bottom,signum_left,signum_right) 
     VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?,?);");
     $sth->execute(@params);
@@ -101,7 +101,7 @@ sub setLabelData {
 sub updateLabelData {
     my ($self, @params) = @_;
     
-    my $sth=$self->dbh->prepare("UPDATE ".$self->labels." SET 
+    my $sth = $self->dbh->prepare("UPDATE ".$self->labels." SET 
     name = ?,type = ?,labelcount = ?,width = ?,height = ? ,top = ?,bottom = ?,`left` = ?,`right` = ?,signum_width = ?,signum_height = ?,signum_top = ?,signum_bottom = ?,signum_left = ?,signum_right = ? 
     WHERE id = ?;");
     return $sth->execute(@params);
@@ -128,7 +128,7 @@ sub getFieldData {
 sub setFieldData {
     my ($self, @params) = @_;
 
-    my $sth=$self->dbh->prepare("INSERT INTO ".$self->fields." (label_id, type, name, top, `left`, `right`, `bottom`, fontsize, fontfamily, fontweight, whitespace, height, overflow, width) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+    my $sth = $self->dbh->prepare("INSERT INTO ".$self->fields." (label_id, type, name, top, `left`, `right`, `bottom`, fontsize, fontfamily, fontweight, whitespace, height, overflow, width) VALUES (?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
     return $sth->execute(@params);
 
 }
@@ -136,7 +136,7 @@ sub setFieldData {
 sub updateFieldData {
     my ($self, @params) = @_;
     
-    my $sth=$self->dbh->prepare("UPDATE ".$self->fields." SET 
+    my $sth = $self->dbh->prepare("UPDATE ".$self->fields." SET 
     label_id = ?, type = ?, name = ?, top = ?, `left` = ?,`right` = ?, `bottom` = ?, fontsize = ?, fontfamily = ?, fontweight = ?, whitespace = ?, height = ?, overflow = ?, width = ?
     WHERE id = ?;");
     return $sth->execute(@params);
@@ -162,7 +162,7 @@ sub getPrintQueue {
 sub setPrintQueue {
     my ($self, @params) = @_;
 
-    my $sth=$self->dbh->prepare("INSERT INTO ".$self->printQueue." (borrowernumber,itemnumber, printed) VALUES (?,?,?)");
+    my $sth = $self->dbh->prepare("INSERT INTO ".$self->printQueue." (borrowernumber,itemnumber, printed) VALUES (?,?,?)");
     return $sth->execute(@params);
 }
 
@@ -177,9 +177,15 @@ sub deletePrintQueueData {
 sub updatePrintQueue {
     my ($self, @params) = @_;
 
-    my $sth=$self->dbh->prepare("UPDATE ".$self->printQueue." SET borrowernumber = ?, itemnumber = ?, printed = ? WHERE id = ?");
+    my $sth = $self->dbh->prepare("UPDATE ".$self->printQueue." SET borrowernumber = ?, itemnumber = ?, printed = ? WHERE id = ?");
     return $sth->execute(@params);
 }
 
+sub cleanPrintQueueData {
+    my ($self, $borrowernumber, $month) = @_;
+
+    my $sth = $self->dbh->prepare("DELETE FROM ".$self->printQueue." WHERE borrowernumber = ? AND printed = 1 AND timestamp < CURRENT_TIMESTAMP() - INTERVAL ? MONTH");
+    return $sth->execute($borrowernumber, $month);
+}
 
 1;
