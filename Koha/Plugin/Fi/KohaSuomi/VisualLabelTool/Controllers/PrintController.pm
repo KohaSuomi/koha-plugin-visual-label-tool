@@ -139,7 +139,6 @@ sub cleanQueue {
         my $print = Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Print->new();
         my $response = $print->cleanPrintQueue($user->borrowernumber, $p,  $w);
         return $c->render(status => 200, openapi => {message => "Success"});
-        }
     } catch {
         my $error = $_;
         warn Data::Dumper::Dumper $error;
