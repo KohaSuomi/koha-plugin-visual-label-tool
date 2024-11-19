@@ -93,6 +93,7 @@ sub install() {
     my ( $self, $args ) = @_;
 
     $self->createTables();
+    return 1;
 }
 
 ## This is the 'upgrade' method. It will be triggered when a newer version of a
@@ -101,6 +102,7 @@ sub upgrade {
     my ( $self, $args ) = @_;
 
     $self->upgradeTables();
+    return 1;
 }
 
 ## This method will be run just before the plugin files are deleted
