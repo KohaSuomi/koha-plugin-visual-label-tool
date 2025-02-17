@@ -10,17 +10,18 @@ use base qw(Koha::Plugins::Base);
 use C4::Context;
 use utf8;
 use JSON;
+use File::Slurp;
 
 ## Here we set our plugin version
-our $VERSION = "1.0.7";
+our $VERSION = "1.0.9";
 
 ## Here is our metadata, some keys are required, some are optional
 our $metadata = {
     name            => 'Tarratulostustyökalu',
     author          => 'Johanna Räisä',
     date_authored   => '2021-02-25',
-    date_updated    => "2022-09-27",
-    minimum_version => '21.11.00.000',
+    date_updated    => "2024-08-06",
+    minimum_version => '23.11.00.000',
     maximum_version => undef,
     version         => $VERSION,
     description     => 'Tee ja tulosta tarroja.',
@@ -41,6 +42,22 @@ sub new {
     my $self = $class->SUPER::new($args);
 
     return $self;
+}
+
+sub intranet_js {
+    my ( $self, $args ) = @_;
+
+    my $dir=C4::Context->config('pluginsdir');
+    my $plugin_fulldir = $dir . "/Koha/Plugin/Fi/KohaSuomi/VisualLabelTool/";
+    my $js = read_file($plugin_fulldir .'script.js');
+    
+    # my $param_a = $self->retrieve_data('config_param_a');
+    
+    # # Add REPLACE_BY_CONFIG_PARAM_A to the js script to replace it with the configuration parameter
+    # $js = $js =~ s/REPLACE_BY_CONFIG_PARAM_A/$param_a/r;
+    
+    utf8::decode($js);
+    return "<script>$js</script>";
 }
 
 ## The existance of a 'tool' subroutine means the plugin is capable
@@ -76,6 +93,7 @@ sub install() {
     my ( $self, $args ) = @_;
 
     $self->createTables();
+    return 1;
 }
 
 ## This is the 'upgrade' method. It will be triggered when a newer version of a
@@ -84,6 +102,7 @@ sub upgrade {
     my ( $self, $args ) = @_;
 
     $self->upgradeTables();
+    return 1;
 }
 
 ## This method will be run just before the plugin files are deleted
@@ -110,7 +129,7 @@ sub api_routes {
 
 sub api_namespace {
     my ( $self ) = @_;
-    
+
     return 'kohasuomi';
 }
 

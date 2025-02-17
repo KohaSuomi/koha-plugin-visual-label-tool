@@ -22,6 +22,7 @@ use Try::Tiny;
 use Koha::Items;
 use Koha::DateUtils qw( dt_from_string output_pref );
 use Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Print;
+use Koha::Serial::Items;
 use C4::Context;
 
 =head1 API
@@ -57,6 +58,8 @@ sub listItems {
     try {
         if ($type eq 'received') {
             $items = Koha::Items->search({dateaccessioned => $today_dt, homebranch => $userenv_branch})->unblessed;
+        } elsif($type eq 'receivedserials') {
+	    $items = Koha::Items->search({dateaccessioned => $today_dt, homebranch => $userenv_branch, itemnumber => { in => [Koha::Serial::Items->search->get_column('itemnumber')] } } )->unblessed;
         } elsif($type eq 'printed') {
             my $print = Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Print->new();
             $items = $print->getPrintQueue($user->borrowernumber, 1);
@@ -95,7 +98,7 @@ sub removeFromQueue {
 
     my $queue_id = $c->validation->param('queue_id');
     try {
-        my $print= Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Print->new();
+        my $print = Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Print->new();
         my $response = $print->deleteFromPrintQueue($queue_id);
         return $c->render(status => 200, openapi => {message => "Success"});
     } catch {
@@ -112,7 +115,7 @@ sub updateQueue {
     my $user = $c->stash('koha.user');
     $req->{borrowernumber} = $user->borrowernumber unless $req->{borrowernumber};
     try {
-        my $print= Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Print->new();
+        my $print = Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Print->new();
         if ($req->{queue_id}) {
             $print->updatePrintQueue($req);
         } else {
@@ -123,6 +126,23 @@ sub updateQueue {
         my $error = $_;
         warn Data::Dumper::Dumper $error;
         return $c->render(status => 400, openapi => {message => $error});
+    }
+}
+
+sub cleanQueue {
+    my $c = shift->openapi->valid_input or return;
+
+    my $p = $c->validation->param('p');
+    my $w = $c->validation->param('w');
+    my $user = $c->stash('koha.user');
+    try {
+        my $print = Koha::Plugin::Fi::KohaSuomi::VisualLabelTool::Modules::Print->new();
+        my $response = $print->cleanPrintQueue($user->borrowernumber, $p,  $w);
+        return $c->render(status => 200, openapi => {message => "Success"});
+    } catch {
+        my $error = $_;
+        warn Data::Dumper::Dumper $error;
+        return $c->render(status => 400, openapi => {message => $error->message});
     }
 }
 

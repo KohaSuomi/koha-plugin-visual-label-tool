@@ -6,7 +6,7 @@ const Multiselect = Vue.component(
   window.VueMultiselect.default
 );
 
-new Vue({
+var donks = new Vue({
   el: '#viewApp',
   components: {
     Multiselect,
@@ -27,7 +27,8 @@ new Vue({
     showPrinting: false,
     printingType: [
       { name: 'Oma tulostusjono', value: 'list' },
-      { name: 'Tänään vastaanotettu', value: 'received' },
+      { name: 'Tänään vastaanotetut', value: 'received' },
+      { name: 'Tänään vastaanotetut kausijulkaisut', value: 'receivedserials' },
       { name: 'Itse tulostetut', value: 'printed' },
     ],
     type: null,
@@ -134,7 +135,7 @@ new Vue({
       doc.save().then(() => {
         this.updatePrintQueue();
         this.loader = false;
-      });  
+      });
     },
     removeFromPrint(index) {
       this.prints.splice(index, 1);
@@ -202,6 +203,21 @@ new Vue({
       await Promise.all(promises).then(() => {
         this.clearPrints();
       });
+    },
+    cleanFromQueue(printed, weeks) {
+      this.errors = [];
+      var searchParams = new URLSearchParams();
+      searchParams.append('p', printed);
+      searchParams.append('w', weeks);
+      axios
+        .delete(
+          '/api/v1/contrib/kohasuomi/labels/print/queue/clean', {
+          params: searchParams,
+        })
+        .then(() => {})
+        .catch((error) =>  {
+          this.errors.push(error);
+        });
     },
   },
 });

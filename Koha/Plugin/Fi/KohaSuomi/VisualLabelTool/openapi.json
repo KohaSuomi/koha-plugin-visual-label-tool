@@ -354,6 +354,47 @@
       }
     }
   },
+  "/labels/print/queue/clean": {
+    "delete": {
+      "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::PrintController#cleanQueue",
+      "operationId": "cleanPrintQueue",
+      "x-koha-authorization": {
+        "permissions": {
+          "editcatalogue": "edit_items"
+        }
+      },
+      "tags": [
+        "labels"
+      ],
+      "parameters": [
+        {
+          "name": "p",
+          "in": "query",
+          "description": "Printed value",
+          "required": true,
+          "type": "boolean"
+        },
+        {
+          "name": "w",
+          "in": "query",
+          "description": "Weeks value",
+          "required": true,
+          "type": "integer"
+        }
+      ],
+      "produces": [
+        "application/json"
+      ],
+      "responses": {
+        "200": {
+          "description": "Print queue cleaned",
+          "schema": {
+            "type": "object"
+          }
+        }
+      }
+    }
+  },
   "/labels/print/{label_id}": {
     "post": {
       "x-mojo-to": "Fi::KohaSuomi::VisualLabelTool::Controllers::PrintController#get",

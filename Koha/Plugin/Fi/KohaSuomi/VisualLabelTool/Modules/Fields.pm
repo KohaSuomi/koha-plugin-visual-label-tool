@@ -84,6 +84,7 @@ sub getItem {
         'items.permanent_location',
         'items.subloc',
         'items.sub_location',
+        'items.collection',
         'items.ccode', 
         'items.cn_source', 
         'items.cn_sort', 
@@ -222,6 +223,7 @@ sub customField {
     $data->{items}->{branchname} = Koha::Libraries->find($data->{items}->{homebranch})->branchname;
     $data->{items}->{subloc} = Koha::AuthorisedValues->search({ category => 'SUBLOC', authorised_value => $data->{items}->{sub_location} })->next ? Koha::AuthorisedValues->search({ category => 'SUBLOC', authorised_value => $data->{items}->{sub_location} })->next->lib : $data->{items}->{sub_location};
     $data->{items}->{sub_location} = $data->{items}->{sub_location};
+    $data->{items}->{collection} = Koha::AuthorisedValues->search({ category => 'CCODE', authorised_value => $data->{items}->{ccode} })->next ? Koha::AuthorisedValues->search({ category => 'CCODE', authorised_value => $data->{items}->{ccode} })->next->lib : $data->{items}->{ccode};
     $data->{biblioitems}->{itemtype} = Koha::AuthorisedValues->search({ category => 'MTYPE', authorised_value => $data->{biblioitems}->{itemtype} })->next ? Koha::AuthorisedValues->search({ category => 'MTYPE', authorised_value => $data->{biblioitems}->{itemtype} })->next->lib : $data->{biblioitems}->{itemtype};
     $data->{marc}->{title} = $self->marcField($data->{marc}, 'title');
     $data->{marc}->{author} = $self->marcField($data->{marc}, 'author');
