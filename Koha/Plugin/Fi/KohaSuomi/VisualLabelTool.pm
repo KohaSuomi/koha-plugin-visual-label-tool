@@ -24,7 +24,7 @@ our $metadata = {
     minimum_version => '23.11.00.000',
     maximum_version => undef,
     version         => $VERSION,
-    description     => 'Tee ja tulosta tarroja.',
+    description     => 'Tee ja tulosta tarroja. (Paikalliskannat)',
 };
 
 ## This is the minimum code required for a plugin's 'new' method
