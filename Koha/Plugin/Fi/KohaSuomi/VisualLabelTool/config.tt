@@ -32,6 +32,9 @@
 						<div class="alert alert-success" role="alert" v-if="saved">
 							<b>Tallennus onnistui!</b>
 						</div>
+						<div class="alert alert-warning" role="alert" v-if="showInfo">
+							Tarrapohja <b>{{fileName}}</b> on tuotu, muista nimetä uudelleen ja tallentaa!
+						</div>
 						<div class="row justify-content-center alert alert-info" role="alert">
 							<ul v-if="showTest" class="nav">
 								<li class="nav-item pr-2">
@@ -49,6 +52,9 @@
 								<li v-if="label" class="nav-item pl-2">
                                    <button class="btn btn-info" @click="testPrint($event)">Tulosta testi</button>
 								</li>
+								<li v-if="label" class="nav-item pl-2">
+								   <button class="btn btn-primary" @click="exportLabel($event)">Vie</button>
+								</li>
 								<li v-if="label && !updateButton" class="nav-item pl-2">
                                    <button class="btn btn-success" @click="saveLabel($event)">Tallenna</button>
 								</li>
@@ -60,6 +66,12 @@
 								</li>
 								<li class="nav-item pl-2">
 									<multiselect v-model="selectedType" value="value" :options="labelTypes" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="Luo uusi" @input="createLabel()"></multiselect>
+								</li>
+								<li class="nav-item pl-2">
+									<label class="btn btn-primary">
+										Tuo
+										<input type="file" id="import" @change="importLabel($event)" style="display: none" accept=".json">
+									</label>
 								</li>
 							</ul>
 						</div>
