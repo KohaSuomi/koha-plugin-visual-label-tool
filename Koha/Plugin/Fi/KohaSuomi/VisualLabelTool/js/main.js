@@ -120,10 +120,22 @@ var donks = new Vue({
       let pdfOrientation = this.label.type == 'roll' ? 'l' : 'p';
       var opt = {
         margin: [this.topMargin, this.leftMargin, 0, 0],
-        filename:     'printLabel.pdf',
-        image:        { type: 'jpeg', quality: 1 },
-        html2canvas:  { scale: 4, logging: true,},
-        jsPDF:        { orientation: pdfOrientation, unit: 'mm', format: pdfFormat},
+        filename: 'printLabel.pdf',
+        image: { type: 'jpeg', quality: 1 },
+        html2canvas: { 
+          scale: 6, // Increase scale for higher resolution
+          logging: false, // Disable logging for cleaner output
+          useCORS: true, // Enable cross-origin resource sharing for better image handling
+          allowTaint: false, // Prevent tainted canvas issues
+          antialias: false, // Disable antialiasing
+          imageSmoothingEnabled: false // Disable image smoothing
+        },
+        jsPDF: { 
+          orientation: pdfOrientation, 
+          unit: 'mm', 
+          format: pdfFormat, 
+          precision: 16 // Increase precision for better quality
+        },
       };
       let doc = html2pdf().set(opt).from(element).toPdf();
       for (let j = 1; j < this.labels.length; j++) {
