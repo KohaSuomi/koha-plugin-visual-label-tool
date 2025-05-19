@@ -53,6 +53,8 @@ new Vue({
     topMargin: 0,
     leftMargin: 0,
     loader: false,
+    fileName: '',
+    showInfo: false,
   },
   created() {
     this.fetchLabels();
@@ -210,6 +212,7 @@ new Vue({
     },
     fetchLabels() {
       this.errors = [];
+      this.showInfo = false;
       axios
         .get('/api/v1/contrib/kohasuomi/labels')
         .then((response) => {
@@ -299,6 +302,50 @@ new Vue({
         this.removeFromLabels();
         this.selectedField = undefined;
         this.showField = false;
+      }
+    },
+    exportLabel(e) {
+      e.preventDefault();
+      const labelData = JSON.stringify(this.label, null, 2);
+      const blob = new Blob([labelData], { type: 'application/json' });
+      const url = URL.createObjectURL(blob);
+      const link = document.createElement('a');
+      link.href = url;
+      const date = new Date().toISOString().split('T')[0];
+      link.download = `${this.label.name || 'label'}_${date}.json`;
+      link.click();
+      URL.revokeObjectURL(url);
+    },
+    importLabel(e) {
+      e.preventDefault();
+      this.errors = [];
+      this.fileName = '';
+      this.updateButton = false;
+      this.label = null;
+      const fileInput = document.getElementById('import');
+      const file = fileInput.files[0];
+      if (file) {
+        this.fileName = file.name;
+        const reader = new FileReader();
+        reader.onload = (event) => {
+          try {
+            const labelData = JSON.parse(event.target.result);
+            this.label = labelData;
+            this.label.name = this.fileName;
+            this.showTabs('labelSettings');
+            this.showInfo = true;
+          } catch (error) {
+            const message =
+              'Tiedoston muoto ei ole oikea. Varmista, että tiedosto on JSON-muodossa.';
+            this.errors.push({
+              message: message,
+              response: { data: { message: message } },
+            });
+            this.showInfo = false;
+            this.label = null;
+          }
+        };
+        reader.readAsText(file);
       }
     },
     testPrint(e) {
