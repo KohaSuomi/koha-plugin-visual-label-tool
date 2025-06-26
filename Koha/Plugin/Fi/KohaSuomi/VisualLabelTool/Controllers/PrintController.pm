@@ -57,7 +57,7 @@ sub listItems {
     my $userenv_branch = C4::Context->userenv->{'branch'};
     try {
         if ($type eq 'received') {
-            $items = Koha::Items->search({dateaccessioned => $today_dt, homebranch => $userenv_branch})->unblessed;
+            $items = Koha::Items->search({dateaccessioned => $today_dt, notforloan => { '!=' => -1 }, homebranch => $userenv_branch})->unblessed;
         } elsif($type eq 'receivedserials') {
 	    $items = Koha::Items->search({dateaccessioned => $today_dt, homebranch => $userenv_branch, itemnumber => { in => [Koha::Serial::Items->search->get_column('itemnumber')] } } )->unblessed;
         } elsif($type eq 'printed') {
