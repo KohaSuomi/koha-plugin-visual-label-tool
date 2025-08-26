@@ -91,7 +91,8 @@ sub getItem {
         'items.enumchron',
         'items.signumYKL',
         'items.signumLoc',
-        'items.signumHeading'
+        'items.signumHeading',
+        'items.newSignumHeading'
     );
 }
 
@@ -164,6 +165,14 @@ sub signumHeading {
   return ($parts[2]) ? $parts[2] : undef;
 }
 
+sub newSignumHeading
+{
+    my ($self, $itemcallnumber) = @_;
+    my ($first, $rest) = split(/\s+/, $itemcallnumber, 2);
+    my $chars = defined $rest ? substr($rest, 0, 3) : undef;
+    return ($chars) ? $chars : undef;
+}
+
 sub signumLoc {
   my ($self, $itemcallnumber) = @_;
   
@@ -219,6 +228,7 @@ sub customField {
     $data->{items}->{signumYKL} = $self->signumYKL($data->{items}->{itemcallnumber});
     $data->{items}->{signumLoc} = $self->signumLoc($data->{items}->{itemcallnumber});
     $data->{items}->{signumHeading} = $self->signumHeading($data->{items}->{itemcallnumber});
+    $data->{items}->{newSignumHeading} = $self->newSignumHeading($data->{items}->{itemcallnumber});
     $data->{items}->{location} = $self->location($data->{items}->{permanent_location}, $data->{items}->{location});
     $data->{items}->{branchname} = Koha::Libraries->find($data->{items}->{homebranch})->branchname;
     $data->{items}->{subloc} = Koha::AuthorisedValues->search({ category => 'SUBLOC', authorised_value => $data->{items}->{sub_location} })->next ? Koha::AuthorisedValues->search({ category => 'SUBLOC', authorised_value => $data->{items}->{sub_location} })->next->lib : $data->{items}->{sub_location};
