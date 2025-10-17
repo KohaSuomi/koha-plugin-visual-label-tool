@@ -30,7 +30,7 @@ function setPrintQueue(element) {
 
 /* Niteiden lisätys tarratulostustyökaluun perustiedot-näytöltä */
 $(document).ready(function () {
-  $("#holdings .itemselection_action_modify, #otherholdings .itemselection_action_modify").after(' <a href="#" class="itemselection_action_print" onclick="addItemsToPrintQueue(event, $(this))"><i class="fa fa-print"></i> Lisää valitut niteet tulostusjonoon</a>');
+  $("#holdings_panel .itemselection_action_modify, #otherholdings .itemselection_action_modify").after(' <a href="#" class="itemselection_action_print" onclick="addItemsToPrintQueue(event, $(this))"><i class="fa fa-print"></i> Lisää valitut niteet tulostusjonoon</a>');
 });
 function addItemsToPrintQueue(e, element) {
   e.preventDefault();
