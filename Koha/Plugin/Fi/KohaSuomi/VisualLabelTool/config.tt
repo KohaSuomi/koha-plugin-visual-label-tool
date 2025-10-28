@@ -1,7 +1,12 @@
+[% TRY %]
+    [% PROCESS "$PLUGIN_DIR/i18n/${LANG}.inc" %]
+[% CATCH %]
+    [% PROCESS "$PLUGIN_DIR/i18n/default.inc" %]
+[% END %]
 <!DOCTYPE html>
 <html>
 	<head>
-	<title>Koha-Suomi - Tarratulostustyökalu</title>
+	<title>[% T.title %]</title>
 	<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta name="description" content="">
@@ -17,10 +22,10 @@
 		<!-- Breadcrumb -->
         <nav aria-label="breadcrumb" class="main-breadcrumb">
             <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/cgi-bin/koha/mainpage.pl">Etusivu</a></li>
-            <li class="breadcrumb-item"><a href="/cgi-bin/koha/plugins/plugins-home.pl">Plugit</a></li>
-            <li class="breadcrumb-item"><a href="/cgi-bin/koha/plugins/plugins-home.pl">Tarratulostustyökalu</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Asetukset</li>
+            <li class="breadcrumb-item"><a href="/cgi-bin/koha/mainpage.pl">[% T.home %]</a></li>
+            <li class="breadcrumb-item"><a href="/cgi-bin/koha/plugins/plugins-home.pl">[% T.plugins %]</a></li>
+            <li class="breadcrumb-item"><a href="/cgi-bin/koha/plugins/plugins-home.pl">[% T.label_tool %]</a></li>
+            <li class="breadcrumb-item active" aria-current="page">[% T.settings %]</li>
             </ol>
         </nav>
         <!-- /Breadcrumb -->
@@ -30,48 +35,48 @@
 					<div id="configApp">
 						<error-component :errors="errors"></error-component>
 						<div class="alert alert-success" role="alert" v-if="saved">
-							<b>Tallennus onnistui!</b>
+							<b>[% T.save_success %]</b>
 						</div>
 						<div class="alert alert-warning" role="alert" v-if="showInfo">
-							Tarrapohja <b>{{fileName}}</b> on tuotu, muista nimetä uudelleen ja tallentaa!
+							[% T.template_imported %] <b>{{fileName}}</b> [% T.remember_rename_save %]
 						</div>
 						<div class="row justify-content-center alert alert-info" role="alert">
 							<ul v-if="showTest" class="nav">
 								<li class="nav-item pr-2">
-									<button class="btn btn-default" @click="back()">Takaisin</button>
+									<button class="btn btn-default" @click="back()">[% T.back %]</button>
 								</li>
 								<li><margins-component></margins-component></li>
 								<li class="nav-item pr-2">
-									<button class="btn btn-success" @click="printTest()" :disabled="loader"><i v-if="loader" class="fas fa-circle-notch fa-spin"></i><span v-else>Tulosta</span></button>
+									<button class="btn btn-success" @click="printTest()" :disabled="loader"><i v-if="loader" class="fas fa-circle-notch fa-spin"></i><span v-else>[% T.print %]</span></button>
 								</li>
 							</ul>
 							<ul v-else class="nav">
 								<li class="nav-item pl-2">
-                                    <multiselect v-model="label" value="value" :options="savedLabels" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="Tallennetut pohjat" @input="onLabelChange"></multiselect>
+        <multiselect v-model="label" value="value" :options="savedLabels" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="[% T.saved_templates %]" @input="onLabelChange"></multiselect>
 								</li>
 								<li v-if="label" class="nav-item pl-2">
-                                   <button class="btn btn-info" @click="testPrint($event)">Tulosta testi</button>
+                                   <button class="btn btn-info" @click="testPrint($event)">[% T.print_test %]</button>
 								</li>
 								<li v-if="label && !updateButton" class="nav-item pl-2">
-                                   <button class="btn btn-success" @click="saveLabel($event)">Tallenna</button>
+                                   <button class="btn btn-success" @click="saveLabel($event)">[% T.save %]</button>
 								</li>
 								<li v-if="label && updateButton" class="nav-item pl-2">
-                                   <button class="btn btn-success" @click="updateLabel($event)">Päivitä</button>
+                                   <button class="btn btn-success" @click="updateLabel($event)">[% T.update %]</button>
 								</li>
 								<li v-if="label && updateButton" class="nav-item pl-2">
-                                   <button class="btn btn-danger" @click="deleteLabel($event)">Poista</button>
+                                   <button class="btn btn-danger" @click="deleteLabel($event)">[% T.delete %]</button>
 								</li>
 								<li class="nav-item pl-2">
-									<multiselect v-model="selectedType" value="value" :options="labelTypes" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="Luo uusi" @input="createLabel()"></multiselect>
+									<multiselect v-model="selectedType" value="value" :options="labelTypes" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="[% T.create_new %]" @input="createLabel()"></multiselect>
 								</li>
 								<li class="nav-item pl-2">
 									<label class="btn btn-primary">
-										Tuo
+										[% T.import %]
 										<input type="file" id="import" @change="importLabel($event)" style="display: none" accept=".json">
 									</label>
 								</li>
 								<li v-if="label" class="nav-item pl-2">
-								   <button class="btn btn-primary" @click="exportLabel($event)">Vie</button>
+								   <button class="btn btn-primary" @click="exportLabel($event)">[% T.export %]</button>
 								</li>
 							</ul>
 						</div>
@@ -79,7 +84,10 @@
 							<div class="row gutters-sm">
 								<div class="col-md-6">
 									<div class="card">
-										<div v-if="totalWidth && totalHeight" class="row justify-content-center mt-5"><span class="mr-2">Leveys: {{totalWidth}}mm</span><span>Korkeus: {{totalHeight}}mm</span></div>
+										<div v-if="totalWidth && totalHeight" class="row justify-content-center mt-5">
+											<span class="mr-2">[% T.width %]: {{totalWidth}}mm</span>
+											<span>[% T.height %]: {{totalHeight}}mm</span>
+										</div>
 										<div class="row justify-content-center card-body mt-3 mb-5">
 											<div :style="label.dimensions" style="background: #EAF0F6;">
 												<div style="background: #FFF; height: 100%; overflow:hidden;" class="position-relative border">
@@ -104,19 +112,19 @@
 										<div class="card-header">
 											<ul class="nav nav-tabs card-header-tabs" role="tablist">
 												<li class="nav-item">
-												<a class="nav-link" :class="{active: showTab == 'labelSettings'}" href="#" role="tab" aria-controls="labelSettings" aria-selected="true" @click="showTabs('labelSettings')">Tarra</a>
+												<a class="nav-link" :class="{active: showTab == 'labelSettings'}" href="#" role="tab" aria-controls="labelSettings" aria-selected="true" @click="showTabs('labelSettings')">[% T.label %]</a>
 												</li>
 												<li class="nav-item">
-												<a class="nav-link"  href="#" :class="{active: showTab == 'labelFields'}" role="tab" aria-controls="labelFields" aria-selected="false" @click="showTabs('labelFields')">Tarran kentät</a>
+												<a class="nav-link"  href="#" :class="{active: showTab == 'labelFields'}" role="tab" aria-controls="labelFields" aria-selected="false" @click="showTabs('labelFields')">[% T.label_fields %]</a>
 												</li>
 												<li v-if="!label.signum && !showSignum" class="nav-item">
-												<a class="nav-link"  href="#" role="tab" aria-controls="addSignum" aria-selected="false" @click="addSignum($event)">+ Lisää signum</a>
+												<a class="nav-link"  href="#" role="tab" aria-controls="addSignum" aria-selected="false" @click="addSignum($event)">+ [% T.add_signum %]</a>
 												</li>
 												<li v-if="label.signum || showSignum" class="nav-item">
-												<a class="nav-link" href="#" :class="{active: showTab == 'signumSettings'}" role="tab" aria-controls="signumSettings" aria-selected="false" @click="showTabs('signumSettings')">Signum</a>
+												<a class="nav-link" href="#" :class="{active: showTab == 'signumSettings'}" role="tab" aria-controls="signumSettings" aria-selected="false" @click="showTabs('signumSettings')">[% T.signum %]</a>
 												</li>
 												<li v-if="label.signum || showSignum" class="nav-item">
-												<a class="nav-link" href="#" :class="{active: showTab == 'signumFields'}" role="tab" aria-controls="signumFields" aria-selected="false" @click="showTabs('signumFields')">Signum kentät</a>
+												<a class="nav-link" href="#" :class="{active: showTab == 'signumFields'}" role="tab" aria-controls="signumFields" aria-selected="false" @click="showTabs('signumFields')">[% T.signum_fields %]</a>
 												</li>
 											</ul>
 										</div>
@@ -124,35 +132,35 @@
 											<form>
 												<div v-if="showTab == 'labelSettings'" class="tab-pane active" id="label" role="tabpanel">
 													<div class="form-group">
-														<label for="labelName">Nimi</label>
+														<label for="labelName">[% T.name %]</label>
 														<input type="text" class="form-control" name="labelName" v-model="label.name"/>
 													</div>
 													<div class="form-group">
-														<label for="labelCount">Tarraa arkilla</label>
+														<label for="labelCount">[% T.labels_per_sheet %]</label>
 														<input type="text" class="form-control" name="labelCount" v-model="label.labelcount"/>
 													</div>
 													<div class="form-group">
-														<label for="labelWidth">Leveys</label>
+														<label for="labelWidth">[% T.width %]</label>
 														<input type="text" class="form-control" name="labelWidth" v-model="label.dimensions.width"/>
 													</div>
 													<div class="form-group">
-														<label for="labelHeight">Korkeus</label>
+														<label for="labelHeight">[% T.height %]</label>
 														<input type="text" class="form-control" name="labelHeight" v-model="label.dimensions.height"/>
 													</div>
 													<div class="form-group">
-														<label for="paddingTop">Ylämarginaali </label>
+														<label for="paddingTop">[% T.margin_top %]</label>
 														<input type="text"  class="form-control" name="paddingTop" v-model="label.dimensions.paddingTop"/>
 													</div>
 													<div class="form-group">
-														<label for="paddingBottom">Alamarginaali </label>
+														<label for="paddingBottom">[% T.margin_bottom %]</label>
 														<input type="text"  class="form-control" name="paddingBottom" v-model="label.dimensions.paddingBottom"/>
 													</div>
 													<div class="form-group">
-														<label for="paddingLeft">Vasen marginaali </label>
+														<label for="paddingLeft">[% T.margin_left %]</label>
 														<input type="text"  class="form-control" name="paddingLeft" v-model="label.dimensions.paddingLeft"/>
 													</div>
 													<div class="form-group">
-														<label for="paddingRight">Oikea marginaali </label>
+														<label for="paddingRight">[% T.margin_right %]</label>
 														<input type="text"  class="form-control" name="paddingRight" v-model="label.dimensions.paddingRight"/>
 													</div>
 												</div>
@@ -160,128 +168,146 @@
 													<div class="form-group">
 														<div class="input-group mb-3">
 															<span class="mr-3">
-																<multiselect class="float-left" v-model="selectedField" value="value" :options="label.fields" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="Valitse" @input="showFieldData($event)"></multiselect>
+																<multiselect class="float-left" v-model="selectedField" value="value" :options="label.fields" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="[% T.select %]"></multiselect>
 															</span>
 															<span>
 																<div class="input-group mb-3">
-																	<multiselect class="float-left" v-model="fieldName" value="value" :options="fields" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Uusi kenttä" @input="addField()"></multiselect>
+																	<multiselect class="float-left" v-model="fieldName" value="value" :options="fields" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="[% T.new_field %]" @input="addField()"></multiselect>
 																</div>
 															</span>
 														</div>
 														<div v-if="selectedField && showField" class="form-group pb-2 border-bottom">
 															<div class="form-group">
-																<label>Nimi:</label> <input type="text"  class="form-control" name="field" :value="selectedField.name" @change="updateFieldName($event)"/>
+																<label>[% T.name %]:</label> <input type="text"  class="form-control" name="field" :value="selectedField.name" @change="updateFieldName($event)"/>
 															</div>
 															<div class="form-group">
-																<label>Ylhäältä:</label> <input type="text" v-model="selectedField.dimensions.top"  class="form-control" name="field" :value="selectedField.dimensions.top" @change="updateDimension($event)"/>
+																<label>[% T.top %]:</label> <input type="text" v-model="selectedField.dimensions.top"  class="form-control" name="field" :value="selectedField.dimensions.top" @change="updateDimension($event)"/>
 															</div>
 															<div class="form-group">
-																<label>Alhaalta:</label> <input type="text" v-model="selectedField.dimensions.bottom"  class="form-control" name="field" :value="selectedField.dimensions.bottom" @change="updateDimension($event)"/>
+																<label>[% T.bottom %]:</label> <input type="text" v-model="selectedField.dimensions.bottom"  class="form-control" name="field" :value="selectedField.dimensions.bottom" @change="updateDimension($event)"/>
 															</div>
 															<div class="form-group">
-																<label>Vasemmalta:</label> <input type="text" v-model="selectedField.dimensions.left"  class="form-control" name="field" :value="selectedField.dimensions.left" @change="updateDimension($event)"/>
+																<label>[% T.left %]:</label> <input type="text" v-model="selectedField.dimensions.left"  class="form-control" name="field" :value="selectedField.dimensions.left" @change="updateDimension($event)"/>
 															</div>
 															<div class="form-group">
-																<label>Oikealta:</label> <input type="text" v-model="selectedField.dimensions.right"  class="form-control" name="field" :value="selectedField.dimensions.right" @change="updateDimension($event)"/>
+																<label>[% T.right %]:</label> <input type="text" v-model="selectedField.dimensions.right"  class="form-control" name="field" :value="selectedField.dimensions.right" @change="updateDimension($event)"/>
 															</div>
 															<div class="form-group">
-																<label>Kirjasin:</label> <multiselect v-model="selectedField.dimensions.fontFamily" value="value" :options="fontFamilies" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Valitse kirjasin" @input="updateDimension($event)"></multiselect>
+																<label>[% T.font %]:</label>
+																<multiselect v-model="selectedField.dimensions.fontFamily"
+																	value="value"
+																	:options="fontFamilies"
+																	:searchable="false"
+																	:close-on-select="true"
+																	:show-labels="false"
+																	placeholder="[% T.select_font %]"
+																	@input="updateDimension($event)">
+																</multiselect>
 															</div>
 															<div class="form-group">
-																<label>Kirjasin paksuus:</label> <multiselect v-model="selectedField.dimensions.fontWeight" value="value" :options="fontWeights" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Valitse paksuus" @input="updateDimension($event)"></multiselect>
+																<label>[% T.font_weight %]:</label> <multiselect v-model="selectedField.dimensions.fontWeight" value="value" :options="fontWeights" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="[% T.select_weight %]" @input="updateDimension($event)"></multiselect>
 															</div>
 															<div class="form-group">
-																<label>Kirjasin koko:</label> <input type="text" v-model="selectedField.dimensions.fontSize"  class="form-control" name="field" :value="selectedField.dimensions.fontSize" @change="updateDimension($event)"/>
+																<label>[% T.font_size %]:</label> <input type="text" v-model="selectedField.dimensions.fontSize"  class="form-control" name="field" :value="selectedField.dimensions.fontSize" @change="updateDimension($event)"/>
 															</div>
 															<div class="form-group">	
-																<label>Rivitys:</label> <multiselect v-model="selectedField.dimensions.whiteSpace" value="value" :options="whiteSpaces" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Valitse rivitys" @input="updateDimension($event)"></multiselect>
+																<label>[% T.white_space %]:</label> <multiselect v-model="selectedField.dimensions.whiteSpace" value="value" :options="whiteSpaces" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="[% T.select_whitespace %]" @input="updateDimension($event)"></multiselect>
 															</div>
 															<div class="form-group">
-																<label>Kentän korkeus:</label> <input type="text" v-model="selectedField.dimensions.height"  class="form-control" name="field" :value="selectedField.dimensions.height" @change="updateDimension($event)"/>
+																<label>[% T.field_height %]:</label> <input type="text" v-model="selectedField.dimensions.height"  class="form-control" name="field" :value="selectedField.dimensions.height" @change="updateDimension($event)"/>
 															</div>
 															<div class="form-group">	
-																<label>Ylivuodon näkyvyys:</label> <multiselect v-model="selectedField.dimensions.overflow" value="value" :options="overflow" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Valitse ylivuoto" @input="updateDimension($event)"></multiselect>
+																<label>[% T.overflow %]:</label> <multiselect v-model="selectedField.dimensions.overflow" value="value" :options="overflow" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="[% T.select_overflow %]" @input="updateDimension($event)"></multiselect>
 															</div>
 															<div class="form-group">
-																<label>Kentän leveys:</label> <input type="text" v-model="selectedField.dimensions.width"  class="form-control" name="field" :value="selectedField.dimensions.width" @change="updateDimension($event)"/>
+																<label>[% T.field_width %]:</label> <input type="text" v-model="selectedField.dimensions.width"  class="form-control" name="field" :value="selectedField.dimensions.width" @change="updateDimension($event)"/>
 															</div>
 															<div class="form-group">
-																<button class="btn btn-danger" @click="deleteField($event)">Poista</button>
+																<button class="btn btn-danger" @click="deleteField($event)">[% T.delete %]</button>
 															</div>
 														</div>
 													</div>
 												</div>
 												<div v-if="showTab == 'signumSettings' && (label.signum || showSignum) " class="tab-pane active" id="signum" role="tabpanel">
 													<div class="form-group">
-														<label for="labelWidth">Leveys</label>
+														<label for="labelWidth">[% T.width %]</label>
 														<input type="text" class="form-control" name="labelWidth" v-model="label.signum.dimensions.width"/>
 													</div>
 													<div class="form-group">
-														<label for="labelHeight">Korkeus</label>
+														<label for="labelHeight">[% T.height %]</label>
 														<input type="text" class="form-control" name="labelHeight" v-model="label.signum.dimensions.height"/>
 													</div>
 													<div class="form-group">
-														<label for="paddingTop">Ylämarginaali </label>
+														<label for="paddingTop">[% T.margin_top %]</label>
 														<input type="text"  class="form-control" name="paddingTop" v-model="label.signum.dimensions.paddingTop"/>
 													</div>
 													<div class="form-group">
-														<label for="paddingBottom">Alamarginaali </label>
+														<label for="paddingBottom">[% T.margin_bottom %]</label>
 														<input type="text"  class="form-control" name="paddingBottom" v-model="label.signum.dimensions.paddingBottom"/>
 													</div>
 													<div class="form-group">
-														<label for="paddingLeft">Vasen marginaali </label>
+														<label for="paddingLeft">[% T.margin_left %]</label>
 														<input type="text"  class="form-control" name="paddingLeft" v-model="label.signum.dimensions.paddingLeft"/>
 													</div>
 													<div class="form-group">
-														<label for="paddingRight">Oikea marginaali </label>
+														<label for="paddingRight">[% T.margin_right %]</label>
 														<input type="text"  class="form-control" name="paddingRight" v-model="label.signum.dimensions.paddingRight"/>
 													</div>
 													<div class="form-group">
-														<button class="btn btn-danger" @click="deleteSignum($event)">Poista</button>
+														<button class="btn btn-danger" @click="deleteSignum($event)">[% T.delete %]</button>
 													</div>
 												</div>
 												<div v-if="showTab == 'signumFields' && (label.signum || showSignum)" class="tab-pane active" id="signumFields" role="tabpanel">
 													<div class="form-group">
 														<div class="input-group mb-3">
 															<span class="mr-3">
-																<multiselect class="float-left" v-model="selectedField" value="value" :options="label.signum.fields" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="Valitse"></multiselect>
+																<multiselect class="float-left" v-model="selectedField" value="value" :options="label.signum.fields" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="[% T.select %]"></multiselect>
 															</span>
 															<span>
 																<div class="input-group mb-3">
-																	<multiselect class="float-left" v-model="fieldName" value="value" :options="fields" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Uusi kenttä" @input="addField('signum')"></multiselect>
+																	<multiselect class="float-left" v-model="fieldName" value="value" :options="fields" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="[% T.new_field %]" @input="addField('signum')"></multiselect>
 																</div>
 															</span>
 														</div>
 														<div v-if="selectedField" class="form-group pb-2 border-bottom">
 															<div class="form-group">
-																<label>Nimi:</label> <input type="text"  class="form-control" name="field" :value="selectedField.name" @change="updateFieldName($event)"/>
+																<label>[% T.name %]:</label> <input type="text"  class="form-control" name="field" :value="selectedField.name" @change="updateFieldName($event)"/>
 															</div>
 															<div class="form-group">
-																<label>Ylhäältä:</label> <input type="text" v-model="selectedField.dimensions.top"  class="form-control" name="field" :value="selectedField.dimensions.top" @change="updateDimension($event)"/>
+																<label>[% T.top %]:</label> <input type="text" v-model="selectedField.dimensions.top"  class="form-control" name="field" :value="selectedField.dimensions.top" @change="updateDimension($event)"/>
 															</div>
 															<div class="form-group">
-																<label>Alhaalta:</label> <input type="text" v-model="selectedField.dimensions.bottom"  class="form-control" name="field" :value="selectedField.dimensions.bottom" @change="updateDimension($event)"/>
+																<label>[% T.bottom %]:</label> <input type="text" v-model="selectedField.dimensions.bottom"  class="form-control" name="field" :value="selectedField.dimensions.bottom" @change="updateDimension($event)"/>
 															</div>
 															<div class="form-group">
-																<label>Vasemmalta:</label> <input type="text" v-model="selectedField.dimensions.left"  class="form-control" name="field" :value="selectedField.dimensions.left" @change="updateDimension($event)"/>
+																<label>[% T.left %]:</label> <input type="text" v-model="selectedField.dimensions.left"  class="form-control" name="field" :value="selectedField.dimensions.left" @change="updateDimension($event)"/>
 															</div>
 															<div class="form-group">
-																<label>Oikealta:</label> <input type="text" v-model="selectedField.dimensions.right"  class="form-control" name="field" :value="selectedField.dimensions.right" @change="updateDimension($event)"/>
+																<label>[% T.right %]:</label> <input type="text" v-model="selectedField.dimensions.right"  class="form-control" name="field" :value="selectedField.dimensions.right" @change="updateDimension($event)"/>
 															</div>
 															<div class="form-group">
-																<label>Kirjasin:</label> <multiselect v-model="selectedField.dimensions.fontFamily" value="value" :options="fontFamilies" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Valitse kirjasin" @input="updateDimension($event)"></multiselect>
+																<label>[% T.font %]:</label> <multiselect v-model="selectedField.dimensions.fontFamily" value="value" :options="fontFamilies" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="[% T.select_font %]" @input="updateDimension($event)"></multiselect>
 															</div>
 															<div class="form-group">
-																<label>Kirjasin paksuus:</label> <multiselect v-model="selectedField.dimensions.fontWeight" value="value" :options="fontWeights" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Valitse paksuus" @input="updateDimension($event)"></multiselect>
+																<label>[% T.font_weight %]:</label> <multiselect v-model="selectedField.dimensions.fontWeight" value="value" :options="fontWeights" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="[% T.select_weight %]" @input="updateDimension($event)"></multiselect>
 															</div>
 															<div class="form-group">
-																<label>Kirjasinkoko:</label> <input type="text" v-model="selectedField.dimensions.fontSize"  class="form-control" name="field" :value="selectedField.dimensions.fontSize" @change="updateDimension($event)"/>
+																<label>[% T.font_size %]:</label> <input type="text" v-model="selectedField.dimensions.fontSize"  class="form-control" name="field" :value="selectedField.dimensions.fontSize" @change="updateDimension($event)"/>
 															</div>
 															<div class="form-group">
-																<label>Rivitys:</label> <multiselect v-model="selectedField.dimensions.whiteSpace" value="value" :options="whiteSpaces" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="Valitse rivitys" @input="updateDimension($event)"></multiselect>
+																<label>[% T.white_space %]:</label> <multiselect v-model="selectedField.dimensions.whiteSpace" value="value" :options="whiteSpaces" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="[% T.select_whitespace %]" @input="updateDimension($event)"></multiselect>
 															</div>
 															<div class="form-group">
-																<button class="btn btn-danger" @click="deleteField($event)">Poista</button>
+																<label>[% T.field_height %]:</label> <input type="text" v-model="selectedField.dimensions.height"  class="form-control" name="field" :value="selectedField.dimensions.height" @change="updateDimension($event)"/>
+															</div>
+															<div class="form-group">	
+																<label>[% T.overflow %]:</label> <multiselect v-model="selectedField.dimensions.overflow" value="value" :options="overflow" :searchable="false" :close-on-select="true" :show-labels="false" placeholder="[% T.select_overflow %]" @input="updateDimension($event)"></multiselect>
+															</div>
+															<div class="form-group">
+																<label>[% T.field_width %]:</label> <input type="text" v-model="selectedField.dimensions.width"  class="form-control" name="field" :value="selectedField.dimensions.width" @change="updateDimension($event)"/>
+															</div>
+															<div class="form-group">
+																<button class="btn btn-danger" @click="deleteField($event)">[% T.delete %]</button>
 															</div>
 														</div>
 													</div>
@@ -318,6 +344,9 @@
 		<script src="[% PLUGIN_PATH %]/includes/jquery.3.2.1.min.js"></script>
 		<script src="[% PLUGIN_PATH %]/includes/popper.min.js"></script>
 		<script src="[% PLUGIN_PATH %]/includes/bootstrap.min.js"></script>
+		<script>
+			var pageLang = '[% LANG %]';
+		</script>
 		<script type="module" src="[% PLUGIN_PATH %]/js/config.js"></script>
 		<style>
 			.multiselect .multiselect__content-wrapper {

@@ -1,7 +1,8 @@
+import { t } from './translations.js';
 const errors = Vue.component('error-component', {
   template:
     '<div class="alert alert-danger" role="alert" v-if="errors.length">\
-        <b>Tapahtui virhe:</b>\
+        <b>{{ t("Tapahtui virhe:") }}</b>\
         <ul class="text-danger">\
             <li v-for="error in errors">{{ error | errorMessage }}</li>\
         </ul>\
@@ -16,6 +17,7 @@ const errors = Vue.component('error-component', {
       }
       return errormessage;
     },
+    t // Make translation function available in template
   },
 });
 

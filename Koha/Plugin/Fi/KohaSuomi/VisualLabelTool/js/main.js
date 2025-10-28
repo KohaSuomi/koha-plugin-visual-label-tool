@@ -1,12 +1,18 @@
 import printView from './printView.js';
 import margins from './margins.js';
 import errorComp from './errors.js';
+import { t, setLang } from './translations.js';
+
+// Set language based on browser or user preference
+const browserLang = (pageLang || navigator.language || navigator.userLanguage || 'en').substring(0,2);
+setLang(['en', 'fi', 'sv'].includes(browserLang) ? browserLang : 'en');
+
 const Multiselect = Vue.component(
   'vue-multiselect',
   window.VueMultiselect.default
 );
 
-var donks = new Vue({
+new Vue({
   el: '#viewApp',
   components: {
     Multiselect,
@@ -26,10 +32,10 @@ var donks = new Vue({
     label: null,
     showPrinting: false,
     printingType: [
-      { name: 'Oma tulostusjono', value: 'list' },
-      { name: 'Tänään vastaanotetut', value: 'received' },
-      { name: 'Tänään vastaanotetut kausijulkaisut', value: 'receivedserials' },
-      { name: 'Itse tulostetut', value: 'printed' },
+      { name: t('Oma tulostusjono'), value: 'list' },
+      { name: t('Tänään vastaanotetut'), value: 'received' },
+      { name: t('Tänään vastaanotetut kausijulkaisut'), value: 'receivedserials' },
+      { name: t('Itse tulostetut'), value: 'printed' },
     ],
     type: null,
     barcode: '',
@@ -155,7 +161,7 @@ var donks = new Vue({
     removeFromItems(index) {
       this.errors = [];
       if (
-        confirm('Haluatko varmasti poistaa niteen ' + this.items[index].barcode)
+        confirm(t('Haluatko varmasti poistaa niteen') + ' ' + this.items[index].barcode)
       ) {
         axios
           .delete(
@@ -231,5 +237,6 @@ var donks = new Vue({
           this.errors.push(error);
         });
     },
+    t // Make translation function available in template
   },
 });

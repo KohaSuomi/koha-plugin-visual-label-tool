@@ -1,6 +1,12 @@
 import printView from './printView.js';
 import margins from './margins.js';
 import errorComp from './errors.js';
+import { t, setLang } from './translations.js';
+
+// Set language based on browser or user preference
+const browserLang = (pageLang || navigator.language || navigator.userLanguage || 'en').substring(0,2);
+setLang(['en', 'fi', 'sv'].includes(browserLang) ? browserLang : 'en');
+
 const Multiselect = Vue.component(
   'vue-multiselect',
   window.VueMultiselect.default
@@ -26,11 +32,11 @@ new Vue({
     saved: false,
     errors: [],
     labelTypes: [
-      { name: 'A4/14', value: '14' },
-      { name: 'A4/12', value: '12' },
-      { name: 'A4/10', value: '10' },
-      { name: 'Rulla', value: 'roll' },
-      { name: 'A4/signum', value: 'signum' },
+      { name: t('A4/14'), value: '14' },
+      { name: t('A4/12'), value: '12' },
+      { name: t('A4/10'), value: '10' },
+      { name: t('Rulla'), value: 'roll' },
+      { name: t('A4/signum'), value: 'signum' },
     ],
     showSignum: false,
     selectedType: null,
@@ -266,7 +272,7 @@ new Vue({
     deleteLabel(e) {
       e.preventDefault();
       this.errors = [];
-      if (confirm('Haluatko varmasti poistaa tarran ' + this.label.name)) {
+      if (confirm(t('Haluatko varmasti poistaa tarran') + ' ' + this.label.name)) {
         axios
           .delete('/api/v1/contrib/kohasuomi/labels/' + this.label.id)
           .then(() => {
@@ -284,7 +290,7 @@ new Vue({
       this.errors = [];
       if (
         this.selectedField.id &&
-        confirm('Haluatko varmasti poistaa kentän ' + this.selectedField.name)
+        confirm(t('Haluatko varmasti poistaa kentän') + ' ' + this.selectedField.name)
       ) {
         axios
           .delete(
@@ -336,7 +342,7 @@ new Vue({
             this.showInfo = true;
           } catch (error) {
             const message =
-              'Tiedoston muoto ei ole oikea. Varmista, että tiedosto on JSON-muodossa.';
+              t('Tiedoston muoto ei ole oikea. Varmista, että tiedosto on JSON-muodossa.');
             this.errors.push({
               message: message,
               response: { data: { message: message } },
@@ -395,5 +401,6 @@ new Vue({
         this.loader = false;
       });
     },
+    t // Make translation function available in template
   },
 });

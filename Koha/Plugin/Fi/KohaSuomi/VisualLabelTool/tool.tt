@@ -1,7 +1,12 @@
+[% TRY %]
+    [% PROCESS "$PLUGIN_DIR/i18n/${LANG}.inc" %]
+[% CATCH %]
+    [% PROCESS "$PLUGIN_DIR/i18n/default.inc" %]
+[% END %]
 <!DOCTYPE html>
 <html>
 	<head>
-	<title>Koha-Suomi - Tarratulostustyökalu</title>
+	<title>[% T.title %]</title>
 	<meta charset="UTF-8">
 		<meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
 		<meta name="description" content="">
@@ -18,9 +23,9 @@
 		<!-- Breadcrumb -->
         <nav aria-label="breadcrumb" class="main-breadcrumb">
             <ol class="breadcrumb">
-            <li class="breadcrumb-item"><a href="/cgi-bin/koha/mainpage.pl">Etusivu</a></li>
-            <li class="breadcrumb-item"><a href="/cgi-bin/koha/plugins/plugins-home.pl">Liitännäiset</a></li>
-            <li class="breadcrumb-item active" aria-current="page">Tarratulostustyökalu</li>
+            <li class="breadcrumb-item"><a href="/cgi-bin/koha/mainpage.pl">[% T.home %]</a></li>
+            <li class="breadcrumb-item"><a href="/cgi-bin/koha/plugins/plugins-home.pl">[% T.plugins %]</a></li>
+            <li class="breadcrumb-item active" aria-current="page">[% T.label_tool %]</li>
             </ol>
         </nav>
         <!-- /Breadcrumb -->
@@ -32,19 +37,19 @@
 					<div class="row justify-content-center alert alert-info" role="alert">
 						<ul v-if="showPrinting" class="nav">
 							<li class="nav-item pr-2">
-								<button class="btn btn-default" @click="back()">Takaisin</button>
+								<button class="btn btn-default" @click="back()">[% T.back %]</button>
 							</li>
 							<li><margins-component></margins-component></li>
 							<li class="nav-item pr-2">
-								<button class="btn btn-success" @click="print()" :disabled="loader"><i v-if="loader" class="fas fa-circle-notch fa-spin"></i><span v-else>Tulosta</button>
+								<button class="btn btn-success" @click="print()" :disabled="loader"><i v-if="loader" class="fas fa-circle-notch fa-spin"></i><span v-else>[% T.print %]</span></button>
 							</li>
 						</ul>
 						<ul v-else class="nav">
 							<li class="nav-item pl-2">
-								<multiselect v-model="label" value="value" :options="savedLabels" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="Valitse pohja"></multiselect>
+								<multiselect v-model="label" value="value" :options="savedLabels" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="[% T.select_template %]"></multiselect>
 							</li>
 							<li v-if="label" class="nav-item pl-2">
-								<button class="btn btn-info" @click="printLabels($event)" :disabled="loader"><i v-if="loader" class="fas fa-circle-notch fa-spin"></i><span v-else>Tulosta</span></button>
+								<button class="btn btn-info" @click="printLabels($event)" :disabled="loader"><i v-if="loader" class="fas fa-circle-notch fa-spin"></i><span v-else>[% T.print %]</span></button>
 							</li>
 						</ul>
 					</div>
@@ -65,10 +70,10 @@
 									<div class="card-header">
 										<div class="row">
 											<div class="col-sm-9">
-												<multiselect v-model="type" value="value" :options="printingType" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="Valitse lista" @input="fetchItems()"></multiselect>
+												<multiselect v-model="type" value="value" :options="printingType" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="[% T.select_list %]" @input="fetchItems()"></multiselect>
 											</div>
 											<div class="col-sm-3">
-												<button class="btn btn-outline-secondary" type="button" @click="addToPrints()">Lisää kaikki</button>
+												<button class="btn btn-outline-secondary" type="button" @click="addToPrints()">[% T.add_all %]</button>
 											</div>
 										</div>
 									</div>
@@ -96,10 +101,10 @@
 									<div class="card-header">
 										<div class="row">
 											<div class="col-sm-9">
-												<h5>Tulostettavat niteet</h5>
+												<h5>[% T.items_to_print %]</h5>
 											</div>
 											<div class="col-sm-3">
-												<button class="btn btn-outline-secondary" type="button" @click="clearPrints()">Tyhjennä</button>
+												<button class="btn btn-outline-secondary" type="button" @click="clearPrints()">[% T.clear %]</button>
 											</div>
 										</div>
 									</div>
@@ -115,7 +120,7 @@
 									</div>
 									<div class="card-footer">
 										<div class="form-group">
-											<input v-model="barcode" type="text" class="form-control" placeholder="Lue viivakoodi(t)" @change="setBarcode($event)"></input>
+											<input v-model="barcode" type="text" class="form-control" placeholder="[% T.scan_barcode %]" @change="setBarcode($event)"></input>
 										</div>
 									</div>
 								</div>
@@ -139,6 +144,9 @@
 		<script src="[% PLUGIN_PATH %]/includes/jquery.3.2.1.min.js"></script>
 		<script src="[% PLUGIN_PATH %]/includes/popper.min.js"></script>
 		<script src="[% PLUGIN_PATH %]/includes/bootstrap.min.js"></script>
+		<script>
+			var pageLang = '[% LANG %]';
+		</script>
 		<script type="module" src="[% PLUGIN_PATH %]/js/main.js"></script>
 		<script>
                         var weeks = 9;
