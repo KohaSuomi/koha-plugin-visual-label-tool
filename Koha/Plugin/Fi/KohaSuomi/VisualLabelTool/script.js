@@ -43,7 +43,7 @@ function lt(key, ...args) {
 // --- ORIGINAL SCRIPT WITH TRANSLATIONS ---
 
 $(document).ready(function () {
-  $(".print_label").after(`<li><a href="#" onclick="setPrintQueue($(this))">${lt("add_to_queue")}</a></li>`);
+  $(".print_label").after(`<li><a class="dropdown-item" href="#" onclick="setPrintQueue($(this))">${lt("add_to_queue")}</a></li>`);
   $(".print_label").hide();
   $("#addnewitem").after(`<input type="button" style="margin-left:3px;" value="${lt("add_to_queue")}" onclick="setPrintQueue($(this))"/>`);
 });
