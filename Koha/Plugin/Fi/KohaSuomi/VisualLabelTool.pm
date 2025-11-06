@@ -13,18 +13,32 @@ use JSON;
 use File::Slurp;
 
 ## Here we set our plugin version
-our $VERSION = "1.0.9";
+our $VERSION = "1.1.0";
+
+my $lang = C4::Languages::getlanguage() || 'en';
+my $name = "";
+my $description = "";
+if ( $lang eq 'sv-SE' ) {
+    $name = "Etikettverktyg";
+    $description = "Skapa och skriv ut etiketter. (Lokala databaser)";
+} elsif ( $lang eq 'fi-FI' ) {
+    $name = "Tarratulostustyökalu";
+    $description = "Tee ja tulosta tarroja. (Paikalliskannat)";
+} else {
+    $name = "Visual Label Tool";
+    $description = "Create and print labels.";
+}
 
 ## Here is our metadata, some keys are required, some are optional
 our $metadata = {
-    name            => 'Tarratulostustyökalu',
+    name            => $name,
     author          => 'Johanna Räisä',
     date_authored   => '2021-02-25',
-    date_updated    => "2024-08-06",
+    date_updated    => "2025-11-06",
     minimum_version => '23.11.00.000',
     maximum_version => undef,
     version         => $VERSION,
-    description     => 'Tee ja tulosta tarroja. (Paikalliskannat)',
+    description     => $description,
 };
 
 ## This is the minimum code required for a plugin's 'new' method
