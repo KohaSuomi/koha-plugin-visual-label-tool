@@ -13,7 +13,7 @@ use JSON;
 use File::Slurp;
 
 ## Here we set our plugin version
-our $VERSION = "1.1.0";
+our $VERSION = "1.1.1";
 
 my $lang = C4::Languages::getlanguage() || 'en';
 my $name = "";
