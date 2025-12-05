@@ -13,33 +13,37 @@ use JSON;
 use File::Slurp;
 
 ## Here we set our plugin version
-our $VERSION = "1.1.1";
-
-my $lang = C4::Languages::getlanguage() || 'en';
-my $name = "";
-my $description = "";
-if ( $lang eq 'sv-SE' ) {
-    $name = "Etikettverktyg";
-    $description = "Skapa och skriv ut etiketter. (Lokala databaser)";
-} elsif ( $lang eq 'fi-FI' ) {
-    $name = "Tarratulostustyökalu";
-    $description = "Tee ja tulosta tarroja. (Paikalliskannat)";
-} else {
-    $name = "Visual Label Tool";
-    $description = "Create and print labels.";
-}
+our $VERSION = "1.1.2";
 
 ## Here is our metadata, some keys are required, some are optional
 our $metadata = {
-    name            => $name,
+    name            => "Visual Label Tool",
     author          => 'Johanna Räisä',
     date_authored   => '2021-02-25',
     date_updated    => "2025-11-06",
     minimum_version => '23.11.00.000',
     maximum_version => undef,
     version         => $VERSION,
-    description     => $description,
+    description     => "Create and print labels.",
 };
+
+sub get_localized_metadata {
+    my ($self) = @_;
+    my $lang = C4::Languages::getlanguage() || 'en';
+    my ($name, $description);
+
+    if ( $lang eq 'sv-SE' ) {
+        $name = "Etikettverktyg";
+        $description = "Skapa och skriv ut etiketter. (Lokala databaser)";
+    } elsif ( $lang eq 'fi-FI' ) {
+        $name = "Tarratulostustyökalu";
+        $description = "Tee ja tulosta tarroja. (Paikalliskannat)";
+    } else {
+        $name = "Visual Label Tool";
+        $description = "Create and print labels.";
+    }
+    return ($name, $description);
+}
 
 ## This is the minimum code required for a plugin's 'new' method
 ## More can be added, but none should be removed
@@ -54,6 +58,10 @@ sub new {
     ## This runs some additional magic and checking
     ## and returns our actual $self
     my $self = $class->SUPER::new($args);
+
+    my ($name, $description) = $self->get_localized_metadata();
+    $self->{'metadata'}->{'name'} = $name;
+    $self->{'metadata'}->{'description'} = $description;
 
     return $self;
 }
