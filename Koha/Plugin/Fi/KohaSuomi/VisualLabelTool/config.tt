@@ -168,7 +168,7 @@
 													<div class="form-group">
 														<div class="input-group mb-3">
 															<span class="mr-3">
-																<multiselect class="float-left" v-model="selectedField" value="value" :options="label.fields" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="[% T.select %]"></multiselect>
+																<multiselect class="float-left" v-model="selectedField" value="value" :options="label.fields" :searchable="false" label="name" track-by="name" :close-on-select="true" :show-labels="false" placeholder="[% T.select %]" @input="showField = true"></multiselect>
 															</span>
 															<span>
 																<div class="input-group mb-3">
