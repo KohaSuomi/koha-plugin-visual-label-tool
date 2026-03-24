@@ -50,7 +50,8 @@ $(document).ready(function () {
 
 function setPrintQueue(element) {
   let searchParams = new URLSearchParams(element.parent().parent().find(".print_label a").attr("href"));
-  let itemnumber = element.parent().find('input[name="itemnumber"]').val();
+  console.log(element);
+  let itemnumber = element.parent().find('input[name="itemnumber"]').val() || element.parent().parent().find('input[name="itemnumber"]').val();
   let number = itemnumber ? itemnumber : searchParams.get('number_list');
   $.ajax({
     url: "/api/v1/contrib/kohasuomi/labels/print/queue",
