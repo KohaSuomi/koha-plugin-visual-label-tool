@@ -409,7 +409,7 @@ sub _evalSegment {
         }
         else {
             my @cc = caller(0);
-            die "($op):> Couldn't parse this source definition '$op'";
+            die "Invalid source definition: '$op'. Source definition must be either a MARC selector (Eg. 245\$a), a database selector (Eg. items.barcode) or a text string (Eg. \"Hello world\")\n";
         }
     }
     return \@payload;
@@ -435,14 +435,14 @@ sub _isMARCSelector {
 }
 sub _isDBSelector {
     my ($self,$op) = @_;
-    if ($op =~ /^\s*(\w+)\.(\w+)\s*$/) { #Eg. biblio.3_little_musketeers
+    if ($op =~ /^\s*(\w+)\.(\w+)\s*$/) { #Eg. items.barcode
         return {table => "$1", column => "$2"};
     }
     return undef;
 }
 sub _isText {
     my ($self, $op) = @_;
-    if ($op =~ /^"(.+)"$/) { #Eg. biblio.3_little_musketeers
+    if ($op =~ /^"(.+)"$/) { #Eg. "Hello world"
         return $1;
     }
     return undef;
@@ -453,11 +453,11 @@ sub _getDBSelectorValue {
     my $table = $dbData->{$selector->{table}};
     unless ($table) {
         my @cc = caller(0);
-        die "'".$selector->{table}."' table doesn't exist!";
+        die "Incorrect field definition: '".$selector->{table}.".".$selector->{column}."'. No such table '".$selector->{table}."' in database.\n";
     }
     unless (exists($table->{ $selector->{column} })) {
         my @cc = caller(0);
-        die "'".$selector->{column}."' column doesn't exist!";
+        die "Incorrect field definition: '".$selector->{table}.".".$selector->{column}."'. No such column '".$selector->{column}."' in table '".$selector->{table}."'.\n";
     }
     return $table->{ $selector->{column} };
 }
