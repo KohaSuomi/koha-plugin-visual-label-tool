@@ -409,7 +409,7 @@ sub _evalSegment {
         }
         else {
             my @cc = caller(0);
-            die "Invalid source definition: $op. Source definition must be either a MARC selector (Eg. 245\$a), a database selector (Eg. items.barcode) or a text string (Eg. \"Hello world\")\n";
+            die "Invalid source definition: $op. Source definition must be either a MARC selector (Eg. 245\$a), a database selector (Eg. items.barcode) or a quoted text string (Eg. \"Hello world\")\n";
         }
     }
     return \@payload;
